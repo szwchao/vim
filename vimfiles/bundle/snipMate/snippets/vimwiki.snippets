@@ -1,0 +1,29 @@
+# Some useful Unicode entities
+# Non-Breaking Space
+snippet diverror
+	<div class="alert alert-error">
+		${1}
+	</div>
+snippet divsuccess
+	<div class="alert alert-success">
+		${1}
+	</div>
+snippet divinfo
+	<div class="alert alert-info">
+		${1}
+	</div>
+snippet navtab
+	<div class="tabbable">
+	<ul class="nav nav-tabs">
+	<li class="active"><a href="#navtab1" data-toggle="tab">${1:title1}</a></li>
+	<li><a href="#navtab2" data-toggle="tab">${2:title2}</a></li>
+	</ul>
+	<div class="tab-content">
+	<div class="tab-pane active" id="navtab1">
+	<p>${3:content1}</p>
+	</div>
+	<div class="tab-pane" id="navtab2">
+	<p>${4:content2}</p>
+	</div>
+	</div>
+	</div>
