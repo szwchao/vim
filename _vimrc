@@ -26,6 +26,7 @@ Bundle 'majutsushi/tagbar'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Shougo/neocomplcache'
+"Bundle 'spolu/dwm.vim'
 Bundle 'CRefVim'
 Bundle 'MatchTag'
 Bundle 'FencView.vim'
@@ -34,6 +35,7 @@ Bundle 'DoxygenToolkit.vim'
 Bundle 'matchit.zip'
 Bundle 'python_match.vim'
 Bundle 'QuickBuf'
+Bundle 'buftabs'
 
 "Bundle 'Mark'
 "Bundle 'Visual-Mark'
@@ -134,8 +136,8 @@ set cmdheight=1                           " 设定命令行的行数为 1
 set laststatus=2                          " 显示状态栏 (默认值为 1, 无法显示状态栏)
 au BufEnter,BufNew,BufRead,BufNewFile * call SetMyStatusLine()
 " 标题栏显示函数名
-set updatetime=500
-autocmd CursorHold * if ((&filetype == 'c') || (&filetype == 'python')) | let &titlestring='%f%m (%F)%<%='.GetFunctionName() | endif
+"set updatetime=500
+"autocmd CursorHold * if ((&filetype == 'c') || (&filetype == 'python')) | let &titlestring='%f%m (%F)%<%='.GetFunctionName() | endif
 
 " 自动命令 {{{2
 "当vimrc改变时自动重新载入vimrc
@@ -433,17 +435,6 @@ nmap <M-j> :FufJumpList<CR>
 nmap <M-k> :FufChangeList<CR>
 
 "-------------------------------------------------------------------------------
-" Calendar.vim {{{2
-"-------------------------------------------------------------------------------
-" 设置月份及星期显示
-let g:calendar_mruler = '一月,二月,三月,四月,五月,六月,七月,八月,九月,十月,十一月,十二月'
-let g:calendar_wruler = '日 一 二 三 四 五 六'
-" 设置周一为一周开始
-let g:calendar_monday = 1
-" 设置日记目录
-let g:calendar_diary = "d:\\vim\\vimfiles\\mydiary"
-
-"-------------------------------------------------------------------------------
 " TagBar :TagbarToggle {{{2
 "-------------------------------------------------------------------------------
 let g:tagbar_sort = 0
@@ -521,14 +512,5 @@ let g:vimwiki_list = [my_wiki, wiki]
 let g:rainbow_active = 1 
 let g:rainbow_operators = 1 
 
-"-------------------------------------------------------------------------------
-" EasyAlign {{{2
-" ------------------------------------------------------------------------------
-vnoremap <silent> <Enter> :EasyAlign<cr>
-
-"-------------------------------------------------------------------------------
-" Bufstop {{{2
-" ------------------------------------------------------------------------------
-nmap <Leader>b :Bufstop<cr>
-
+let g:buftabs_in_statusline=1
 " vim:fdm=marker:fmr={{{,}}}

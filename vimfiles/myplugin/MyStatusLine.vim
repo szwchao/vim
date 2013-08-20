@@ -73,7 +73,7 @@ fun! SetMyStatusLine()
     setlocal statusline+=%{GetStatusLineSpace()}                " 空格
     setlocal statusline+=%#SL_Flag#%m                           " %m             当前文件修改状态
     setlocal statusline+=%{GetStatusLineSpace()}                " 空格
-    "setlocal statusline+=%#SL_AllBuf#%{g:bufPartStr}            " 所有buffer
+    setlocal statusline+=%#SL_AllBuf#%{buftabs#statusline()}    " 所有buffer
     setlocal statusline+=%<                                     " 行过长，在此截短 
     setlocal statusline+=%=                                     " 左对齐和右对齐项目之间的分割点
     setlocal statusline+=%#SL_FileEnc#%{&fileformat}            " %{&fileformat} 当前文件编码，dos/unix等

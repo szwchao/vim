@@ -82,8 +82,8 @@ hi String	guifg=#76BEB0
 hi Boolean	guifg=#d2ff00
 hi Comment	guifg=#7b8487
 "hi Constant	guifg=#eb7aa0			gui=none
-"hi Identifier	guifg=white
-hi Identifier      guifg=#FD971F
+hi Identifier	guifg=#CDB38B
+"hi Identifier      guifg=#FD971F
 hi Statement    guifg=#f19dae			gui=none
 
 " Define, def
