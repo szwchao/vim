@@ -31,12 +31,15 @@ endfun
 call s:Set('g:current_project', '')
 call s:Set('g:AllwaysUseSameDirToCreateFilenametags', '1')
 call s:Set('g:AllwaysUseDefaultTagsCscopeName', '1')
-"call s:Set('g:MyProjectDir', $HOME.'\MyProject')
-call s:Set('g:MyProjectDir', 'E:\Workspace\MyProject')
-call s:Set('g:MyProjectFile', 'MyProjectFile')
+call s:Set('g:EnableMultiSourceCodeDir', '0')
+"call s:Set('g:MyProjectConfigDir', $HOME.'\MyProject')
+call s:Set('g:MyProjectConfigDir', 'E:\Workspace\MyProject')
+call s:Set('g:MyProjectConfigFile', 'MyProjectFile')
 call s:Set('g:MyProjectFilter', '*.h *.c *.py')
 call s:Set('g:MyProjectFindProgram', "dir /B /S /A-D /ON")
 call s:Set('g:MyProjectWinHeight', "15")
+call s:Set('g:EnableAddF3MakeVar', '1')
+call s:Set('g:MyGID', '435736')
 "}}}
 
 "获取当前工程名{{{2
@@ -53,27 +56,27 @@ endfun
 "设置工程目录{{{2
 "-----------------------------------------------------------------------------"
 fun! s:SetMyProjectDir()
-    if !isdirectory(g:MyProjectDir)
-        call mkdir(g:MyProjectDir, "p")
-        let s:my_project_dir = g:MyProjectDir
+    if !isdirectory(g:MyProjectConfigDir)
+        call mkdir(g:MyProjectConfigDir, "p")
+        let s:my_project_config_dir = g:MyProjectConfigDir
         return 1
-    elseif exists('g:MyProjectDir')
-        let s:my_project_dir = g:MyProjectDir
+    elseif exists('g:MyProjectConfigDir')
+        let s:my_project_config_dir = g:MyProjectConfigDir
         return 1
     else
         return 0
     endif
 endfun
 
-fun! s:GetMyProjectDir()
-    return s:my_project_dir
+fun! s:GetMyProjectConfigDir()
+    return s:my_project_config_dir
 endfun
 "}}}
 
 "设置工程文件{{{2
 "-----------------------------------------------------------------------------"
-fun! s:SetMyProjectFile()
-    let l:filename = expand(s:GetMyProjectDir() .'\'. g:MyProjectFile)
+fun! s:SetMyProjectConfigFile()
+    let l:filename = expand(s:GetMyProjectConfigDir() .'\'. g:MyProjectConfigFile)
     if filereadable(l:filename)
         let s:my_project_file = l:filename
         return 1
@@ -85,8 +88,14 @@ fun! s:SetMyProjectFile()
     endif 
 endfun
 
-fun! s:GetMyProjectFile()
+fun! GetMyProjectConfigFile()
     return s:my_project_file
+endfun
+
+fun! s:EditMyProjectFile()
+    let l:filename = GetMyProjectConfigFile()
+    silent! close
+    exec "e ". l:filename
 endfun
 "}}}
 
@@ -132,7 +141,7 @@ fun! s:SetMyProjectDict()
     return 1
 endfun
 
-fun! s:GetMyProjectDict()
+fun! GetMyProjectDict()
     return s:my_project_dict
 endfun
 "}}}
@@ -141,7 +150,7 @@ endfun
 "-----------------------------------------------------------------------------"
 fun! s:SetCurrentProject()
 endfun
-fun! s:GetCurrentProject()
+fun! GetCurrentProjectDict()
     if exists('s:current_project')
         return s:current_project
     else
@@ -169,7 +178,7 @@ fun! s:SetMyProjectList()
 
     endif
 endfun
-fun! s:GetMyProjectList()
+fun! s:GetMyProjectNameList()
     if exists('s:my_project_list')
         return s:my_project_list
     endif
@@ -183,7 +192,7 @@ fun! s:InitMyProject()
     if !s:SetMyProjectDir()
         call s:EchoError('Dir Error')
     endif
-    if !s:SetMyProjectFile()
+    if !s:SetMyProjectConfigFile()
         call s:EchoError('File Error')
     endif
     if !s:SetMyProjectDict()
@@ -194,21 +203,21 @@ endfun
 
 fun! StartMyProject()
     call s:InitMyProject()
-    call s:DisplayMyProject(s:GetMyProjectList())
+    call s:DisplayMyProject(s:GetMyProjectNameList())
 endfun
 "}}}
 
 "添加新工程{{{2
 "-----------------------------------------------------------------------------"
 fun! s:IsProjectExist(project_name)
-    if has_key(s:GetMyProjectDict(), a:project_name)
+    if has_key(GetMyProjectDict(), a:project_name)
         return 1
     else
         return 0
     endif
 endfun
 
-fun! s:GetSourceDir(source_type)
+fun! s:InputSourceCodeDir(source_type)
     let l:ans = 'y'
     let l:str = a:source_type
     "源程序目录
@@ -229,10 +238,68 @@ fun! s:GetSourceDir(source_type)
             call add(source_dir, dir)
         endif
         echohl normal
-        let ans = input("是否再增加另一个". l:str. "目录？(Y/N) ")
+        if g:EnableMultiSourceCodeDir == 1
+            let l:ans = input("是否再增加另一个". l:str. "目录？(Y/N) ")
+        else
+            break
+        endif
     endwhile
     return source_dir
     call s:EchoError('源目录: ' . string(source_code_dir))
+endfun
+
+"* --------------------------------------------------------------------------*/
+" @函数说明：   输入f3make的相关参数，会猜测这些参数，但不一定准确，包括：
+"               1. f3make.bat文件
+"               2. target编译命令
+"               3. 生成的zip文件
+"               4. 解压zip文件到 var\merlin\dlfiles\ 下面的路径
+"               5. zip文件里CFW，OVL，TPM的名字
+" @参    数：   project_name - 工程名
+" @参    数：   source_dir - 源码目录
+" @返 回 值：   f3make的参数列表
+"* --------------------------------------------------------------------------*/
+fun! s:InputF3MakeVar(project_name, source_dir)
+    let f3make_list = []
+
+    let guess_f3make_cmd = a:source_dir . "F1_Dev\\source\\f3make.bat"
+    if filereadable(guess_f3make_cmd)
+        let f3make_cmd = input("指定f3make.bat文件: ", guess_f3make_cmd, "file")
+    else
+        let f3make_cmd = input("指定f3make.bat文件: ", a:source_dir , "file")
+    endif
+    let build_target = input("指定编译的Target: ")
+
+    let guess_zip_file = a:source_dir . "BuildOutput\\Objects\\final\\ST_DLFILES_SD.00000000.00.00." . build_target . ".00000000.00" . g:MyGID . ".zip"
+    let project_zip_file = input("指定编译成功后生成的zip文件: ", guess_zip_file, "file")
+
+    let guess_download_dir = "C:\\var\\merlin\\dlfiles\\". a:project_name
+    let project_download_dir = input("指定解压CFW，OVL到指定的目录: ", guess_download_dir, "dir")
+    if !isdirectory(project_download_dir)
+        call mkdir(project_download_dir, "p")
+    endif
+
+    let temp_str = substitute(project_zip_file, "^.*" . build_target, build_target, "g")
+    let temp_str = substitute(temp_str, "\.zip$", "", "g")
+    let project_cfw_file = temp_str . ".CFW.LOD"
+    let project_ovl_file = temp_str . ".S_OVL.LOD"
+    let project_tpm_file = temp_str . ".TPM.LOD"
+
+    "let guess_cfw_file = build_target. ".00000000.00" . g:MyGID . ".CFW.LOD"
+    "let guess_ovl_file = build_target. ".00000000.00" . g:MyGID . ".S_OVL.LOD"
+    "let guess_tpm_file = build_target. ".00000000.00" . g:MyGID . ".TPM.LOD"
+    "let project_cfw_file = input("指定zip包内CFW文件的名字: ", guess_cfw_file)
+    "let project_ovl_file = input("指定zip包内OVL文件的名字: ", guess_ovl_file)
+    "let project_tpm_file = input("指定zip包内TPM文件的名字: ", guess_tpm_file)
+
+    call add(f3make_list, 'f3make_cmd = '. f3make_cmd)
+    call add(f3make_list, 'build_target = '. build_target)
+    call add(f3make_list, 'project_zip_file = '. project_zip_file)
+    call add(f3make_list, 'project_download_dir = '. project_download_dir)
+    call add(f3make_list, 'project_cfw_file = '. project_cfw_file)
+    call add(f3make_list, 'project_ovl_file = '. project_ovl_file)
+    call add(f3make_list, 'project_tpm_file = '. project_tpm_file)
+    return f3make_list
 endfun
 
 fun! s:AddNewMyProject()
@@ -252,7 +319,7 @@ fun! s:AddNewMyProject()
     endwhile
 
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    let source_code_dir = s:GetSourceDir('Source Code')
+    let source_code_dir = s:InputSourceCodeDir('Source Code')
 
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     if g:AllwaysUseSameDirToCreateFilenametags == 1
@@ -262,7 +329,7 @@ fun! s:AddNewMyProject()
         if (choice == 'y') || (choice == 'Y')
             let filenametags_dir = source_code_dir
         elseif (choice == 'n') || (choice == 'N')
-            let filenametags_dir = s:GetSourceDir('Filenametags')
+            let filenametags_dir = s:InputSourceCodeDir('Filenametags')
         else
             let filenametags_dir = source_code_dir
         endif
@@ -282,7 +349,7 @@ fun! s:AddNewMyProject()
         let cache = input("input cache file name(Default:cache)")
     endif
     let esc_filename_chars = ' *?[{`$%#"|!<>();&' . "'\t\n"
-    let this_project_dir = escape(s:GetMyProjectDir().'\'.project_name, esc_filename_chars)
+    let this_project_dir = escape(s:GetMyProjectConfigDir().'\'.project_name, esc_filename_chars)
     let tags = this_project_dir.'\'.tags
     let cscope = this_project_dir.'\'.cscope
     let filenametags = this_project_dir.'\'.filenametags
@@ -303,7 +370,7 @@ fun! s:AddNewMyProject()
     endfor
 
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    call mkdir(s:GetMyProjectDir().'\'.project_name, 'p')
+    call mkdir(s:GetMyProjectConfigDir().'\'.project_name, 'p')
 
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     let tags_cscope_filenametags_list = []
@@ -316,9 +383,18 @@ fun! s:AddNewMyProject()
     call add(cache_list, 'cache = '.cache)
 
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    let f3make_list = []
+    if g:EnableAddF3MakeVar == 1
+        let l:ans = input("添加f3make相关参数？[Y/N] ")
+        if l:ans == 'y' || l:ans == 'Y'
+            let f3make_list = s:InputF3MakeVar(project_name, source_code_dir[0])
+        endif
+    endif
+
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     "输出到文件
     let item = ['', '[' . project_name . ']']
-    let output = readfile(s:my_project_file) + item + source_list + filenametags_list + tags_cscope_filenametags_list + cache_list
+    let output = readfile(s:my_project_file) + item + source_list + filenametags_list + tags_cscope_filenametags_list + cache_list + f3make_list
     call writefile(output, s:my_project_file)
     echo "成功添加新工程：" . project_name 
     call StartMyProject()
@@ -361,7 +437,7 @@ fun! s:RemoveProjectUnderCursor()
             let cur_prj_name = l:cur_prj['name']
         endif
         let esc_filename_chars = ' *?[{`$%#"|!<>();&' . "'\t\n"
-        let my_cur_prj_dir = escape(s:GetMyProjectDir().'\'.cur_prj_name, esc_filename_chars)
+        let my_cur_prj_dir = escape(s:GetMyProjectConfigDir().'\'.cur_prj_name, esc_filename_chars)
         call s:DeleteDir(my_cur_prj_dir)
         echo "删除成功！"
     endif
@@ -403,17 +479,16 @@ endfun
 fun! s:GetProjectUnderCursor()
     let prj_name = getline('.')
     if prj_name == ''
-        return
+        return {}
     endif
-    let prj_dict = s:GetMyProjectDict()
+    let prj_dict = GetMyProjectDict()
     if has_key(prj_dict, prj_name)
         let l:cur_prj = prj_dict[prj_name]
         call extend(l:cur_prj, {'name':prj_name})
         let esc_filename_chars = ' *?[{`$%#"|!<>();&' . "'\t\n"
-        let prj_dir = escape(s:GetMyProjectDir().'\'.prj_name, esc_filename_chars)
+        let prj_dir = escape(s:GetMyProjectConfigDir().'\'.prj_name, esc_filename_chars)
         call extend(l:cur_prj, {'MyPrjDir':prj_dir})
         return l:cur_prj
-        "echo s:current_project
     elseif
         return {}
     endif
@@ -425,10 +500,16 @@ endfun
 "-----------------------------------------------------------------------------"
 fun! s:LoadProjectUnderCursor()
     let l:cur_prj = s:GetProjectUnderCursor()
+    if l:cur_prj == {}
+        echo "没有工程!"
+        silent! close
+        return
+    endif
     if !empty(l:cur_prj)
         let s:current_project = l:cur_prj
         call s:SetTagsCscopeFilenametags()
     elseif
+        let s:current_project = {}
         echo "项目不存在!"
     endif
     silent! close
@@ -482,8 +563,7 @@ fun! s:SetTagsCscopeFilenametags()
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     "MRU
-    "let g:MRU_File = s:current_project['MyPrjDir'].'\'.s:current_project['name'].'_Mru_File'
-    let g:MRU_File = g:MyProjectDir.'\'.s:current_project['name'].'\mru'
+    let g:MRU_File = s:GetMyProjectConfigDir() . '\' . s:current_project['name'] . '\mru'
 endfun
 "-----------------------------------------------------------------------------"
 "}}}
@@ -547,7 +627,7 @@ endfun
 "-----------------------------------------------------------------------------"
 fun! s:RefreshDisplayWindow()
     call s:InitMyProject()
-    call s:DisplayMyProject(s:GetMyProjectList())
+    call s:DisplayMyProject(s:GetMyProjectNameList())
 endfun
 "-----------------------------------------------------------------------------"
 "}}}
@@ -642,6 +722,7 @@ function! s:MyProjectCreateHelp()
         call add(header, '" a : 增加新工程')
         call add(header, '" u : 更新tags/cscope/filenametags/cache')
         call add(header, '" d : 删除工程')
+        call add(header, '" e : 编辑config文件')
         call add(header, '" <ESC> : 退出')
     else
         call add(header, '" Press <F1> for Help')
@@ -660,6 +741,7 @@ fun! s:MyProjectMapKeys()
     nnoremap <buffer> <silent> a             :call <SID>AddNewMyProject()<cr>
     nnoremap <buffer> <silent> d             :call <SID>RemoveProjectUnderCursor()<cr>
     nnoremap <buffer> <silent> r             :call <SID>RefreshDisplayWindow()<cr>
+    nnoremap <buffer> <silent> e             :call <SID>EditMyProjectFile()<cr>
     nnoremap <buffer> <silent> <ESC>         :close<CR>
 endfun
 "}}}

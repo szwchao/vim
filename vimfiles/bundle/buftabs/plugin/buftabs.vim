@@ -272,6 +272,7 @@ function! Buftabs_show(deleted_buf)
 
 	" If the resulting list is too long to fit on the screen, chop
 	" out the appropriate part
+  let s:cur_buf_name = ' [' . fnamemodify(bufname('%'), ":t") . '] '
 
   let l:tot_len = 0
   let l:prj_name_len = strlen(GetProjectName())
@@ -291,30 +292,44 @@ function! Buftabs_show(deleted_buf)
   endif
   " 空格
   let l:tot_len = l:prj_name_len+l:cur_buf_name_len+l:readonly_len+l:modified_len+2
-  let g:g_totlen = [l:prj_name_len,l:cur_buf_name_len,l:readonly_len,l:modified_len]
+  "let g:g_totlen = [l:prj_name_len,l:cur_buf_name_len,l:readonly_len,l:modified_len]
 
 	let l:width = winwidth(0) - 50
 
   let g:debug_len = [l:start, l:end, strlen(s:list), w:from]
 
+  let s:before_cur_buf_list = strpart(s:list, 0, l:start) . ' '
+  let s:after_cur_buf_list = strpart(s:list, l:end, strlen(s:list))
+
+  " 去头去尾剩下的空间
   let l:left_len = winwidth(0) - l:tot_len - 50
-  let g:g_len = winwidth(0) - l:tot_len - 50
-  let g:glist = s:list
+  "let g:g_len = winwidth(0) - l:tot_len - 50
+  "let g:glist = s:list
   if strlen(s:list) < l:left_len
-     "nothing
+     " 如果所有buffer的名字长度都不及剩下的长度，则直接用
+     let s:before_cur_buf_list = strpart(s:list, 0, l:start) . ' '
+     let s:after_cur_buf_list = strpart(s:list, l:end, strlen(s:list))
   else
     if l:end < l:left_len
+      " 如果当前buffer的末尾未超出剩下的长度，则截取0到剩下长度部分的bufferlist
+      let s:before_cur_buf_list = strpart(s:list, 0, l:start) . ' '
+      let s:after_cur_buf_list = strpart(s:list, l:end, l:left_len)
       let s:list = strpart(s:list, 0, l:left_len)
     else
+      " 如果当前buffer的末尾超出剩下的长度
       if (strlen(s:list) - l:start) > l:left_len
+        " 如果当前buffer的末尾到bufferlist最后的距离超出剩下的长度，截取
+        let s:before_cur_buf_list = ' '
+        let s:after_cur_buf_list = strpart(s:list, l:end, l:left_len)
         let s:list = "<<< " . strpart(s:list, l:start, l:left_len)
       else
+        let s:before_cur_buf_list = ' '
+        let s:after_cur_buf_list = strpart(s:list, l:end, strlen(s:list)-l:start)
         let s:list = "<<< " . strpart(s:list, l:start, strlen(s:list)-l:start)
       endif
     endif
   endif
 		
-  let g:xlist = s:list
 	"let s:list = strpart(s:list, w:from, l:width)
 
 	" Replace the magic characters by visible markers for highlighting the
@@ -343,16 +358,16 @@ function! Buftabs_show(deleted_buf)
 	" is displayed in the command line (volatile) or in the statusline
 	" (persistent)
 
-	if exists("g:buftabs_in_statusline")
+	"if exists("g:buftabs_in_statusline")
 		" Only overwrite the statusline if buftabs#statusline() has not been
 		" used to specify a location
-		if match(&statusline, "%{buftabs#statusline()}") == -1
-			let &l:statusline = s:list . w:original_statusline
-		end
-	else
-		redraw
-		call s:Pecho(s:list)
-	end
+		"if match(&statusline, "%{buftabs#statusline()}") == -1
+			"let &l:statusline = s:list . w:original_statusline
+		"end
+	"else
+		"redraw
+		"call s:Pecho(s:list)
+	"end
 
 endfunction
 
@@ -367,7 +382,17 @@ function! buftabs#statusline(...)
 	return s:list
 endfunction
 
+function! buftabs#statusline_before(...)
+  return s:before_cur_buf_list
+endfunction
 
+function! buftabs#statusline_after(...)
+  return s:after_cur_buf_list
+endfunction
+
+function! buftabs#statusline_cur(...)
+  return s:cur_buf_name
+endfunction
 "
 " Hook to events to show buftabs at startup, when creating and when switching
 " buffers

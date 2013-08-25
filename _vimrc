@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 3/21/2011 4:58:13 PM
+"         Modified: 2013/8/24 22:56:03
 "===============================================================================
 "ÉèÖÃ {{{
 "===============================================================================
@@ -21,12 +21,10 @@ set rtp+=$VIM/vimfiles/vundle/vundle
 call vundle#rc('$VIM/vimfiles/vundle/')
 Bundle 'gmarik/vundle'
 
-" same
 Bundle 'majutsushi/tagbar'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Shougo/neocomplcache'
-"Bundle 'spolu/dwm.vim'
 Bundle 'CRefVim'
 Bundle 'MatchTag'
 Bundle 'FencView.vim'
@@ -35,7 +33,6 @@ Bundle 'DoxygenToolkit.vim'
 Bundle 'matchit.zip'
 Bundle 'python_match.vim'
 Bundle 'QuickBuf'
-Bundle 'buftabs'
 
 "Bundle 'Mark'
 "Bundle 'Visual-Mark'
@@ -50,6 +47,14 @@ let g:fencview_autodetect = 0
 let &termencoding=&encoding
 set fileencodings=ucs-bom,utf-8,gbk,cp936
 set helplang=cn
+
+" ÅäÉ«·½°¸ {{{2
+"colorscheme colorful
+colorscheme bluechia
+
+" ×ÖÌå {{{2
+set guifont=YaHei\ Consolas\ Hybrid:h12:cANSI
+"set guifont=Yahei_Mono:h12:cANSI 
 
 " Ò»°ãÉèÖÃ {{{2
 let mapleader = ","                       " ÉèÖÃmapleaderÎª,¼ü
@@ -83,6 +88,7 @@ set scrolloff=3                           " ¹â±êÀë´°¿ÚÉÏÏÂ±ß½çµÄ3ĞĞÊ±»áÒıÆğ´°¿Ú¹
 set noswapfile                            " ½ûÓÃswf½»»»ÎÄ¼ş
 "set iskeyword+=-                         " ĞÎÈça-bµÄ×÷ÎªÕû´Ê
 set fileformat=dos                        " ÎÄ¼ş¸ñÊ½Îªdos£¬·ñÔò¼ÇÊÂ±¾´ò¿ªÓĞºÚ¿ò
+
 syntax on                                 " ´ò¿ªÓï·¨¸ßÁÁ
 filetype on                               " ×Ô¶¯¼ì²âÎÄ¼şÀàĞÍ
 filetype plugin on                        " ÌØ¶¨ÎÄ¼şÀàĞÍ¼ÓÔØ²å¼ş
@@ -119,10 +125,6 @@ set cscopequickfix=s-,d-,c-,t-,e-,i-      " Ê¹ÓÃquickfix´°¿ÚÀ´ÏÔÊ¾cscope½á¹û
 set cst                                   " CTRL-]Í¬Ê±ËÑË÷cscopeÊı¾İ¿âºÍtag
 set csto=1                                " |:cstag| ÃüÁî²éÕÒµÄ´ÎĞò¡£0:cscopeÓÅÏÈ; 1:tagÓÅÏÈ
 
-" ×ÖÌå {{{2
-set guifont=YaHei\ Consolas\ Hybrid:h12:cANSI
-"set guifont=Yahei_Mono:h12:cANSI 
-
 " Êó±êÖ§³Ö {{{2
 if has('mouse')
   set mouse=a
@@ -142,6 +144,8 @@ au BufEnter,BufNew,BufRead,BufNewFile * call SetMyStatusLine()
 " ×Ô¶¯ÃüÁî {{{2
 "µ±vimrc¸Ä±äÊ±×Ô¶¯ÖØĞÂÔØÈëvimrc
 "autocmd! bufwritepost _vimrc source $VIM\\_vimrc
+"µ±vimrc¸Ä±äÊ±×Ô¶¯¸üĞÂĞŞ¸ÄÊ±¼ä
+autocmd BufWritePre * call LastModified()
 " ³¹µ×¹Ø±Õ¾¯¸æÉù
 autocmd VimEnter * set vb t_vb=
 " WindowsÏÂÆô¶¯Ê±×î´ó»¯´°¿Ú
@@ -179,10 +183,6 @@ au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=mkd
 autocmd FileType c set dictionary+=$VIM\vimfiles\dictionary\c_keywords.txt
 autocmd FileType python set dictionary+=$VIM\vimfiles\dictionary\python_keywords.txt
 autocmd FileType txt set dictionary+=$VIM\vimfiles\dictionary\c_keywords.txt
-
-" ÅäÉ«·½°¸ {{{2
-"colorscheme colorful
-colorscheme bluechia
 
 " ²éÕÒ/Ìæ»»Ïà¹ØµÄÉèÖÃ {{{2
 set ic                                 " ËÑË÷²»·Ö´óĞ¡Ğ´
@@ -394,6 +394,11 @@ vmap ' <Esc>:call VisualWrap("'", "'")<CR>
 
 "²å¼şÅäÖÃ {{{1
 "===============================================================================
+"-------------------------------------------------------------------------------
+" MyProject {{{2
+"-------------------------------------------------------------------------------
+let g:MyProjectConfigDir = 'D:\Workspace\MyProject'
+let g:MyGID = '435736'
 
 "-------------------------------------------------------------------------------
 " MRU.vim {{{2
@@ -415,6 +420,9 @@ let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_auto_select = 1
 " ÏÔÊ¾Æô¶¯½ø¶È
 let g:neocomplcache_enable_caching_message=1
+" ¿ì½İ¼ü
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-u>  neocomplcache#cancel_popup()
 
 "-------------------------------------------------------------------------------
 " FuzzyFinder.vim {{{2
@@ -435,7 +443,7 @@ nmap <M-j> :FufJumpList<CR>
 nmap <M-k> :FufChangeList<CR>
 
 "-------------------------------------------------------------------------------
-" TagBar :TagbarToggle {{{2
+" TagBar {{{2
 "-------------------------------------------------------------------------------
 let g:tagbar_sort = 0
 
@@ -512,5 +520,10 @@ let g:vimwiki_list = [my_wiki, wiki]
 let g:rainbow_active = 1 
 let g:rainbow_operators = 1 
 
+"-------------------------------------------------------------------------------
+" buftabs {{{2
+" ------------------------------------------------------------------------------
+let g:buftabs_only_basename=1
 let g:buftabs_in_statusline=1
+
 " vim:fdm=marker:fmr={{{,}}}

@@ -26,7 +26,7 @@ func! CompileRun()
     if exists('g:current_project')
         if !empty(g:current_project)
             echo "开始编译工程"
-            call F3make()
+            call F3make(1)
             return
         endif
     endif
@@ -76,6 +76,13 @@ endfunc
 
 "定义Debug函数，用来调试程序
 func! Debug()
+    if exists('g:current_project')
+        if !empty(g:current_project)
+            echo "开始编译工程"
+            call F3make(0)
+            return
+        endif
+    endif
     exec "w"
     "C程序
     if &filetype == 'c'
@@ -332,6 +339,19 @@ endfun
 command! -nargs=* DisplayAllColors call DisplayAllColors()
 "------------------------------------------------------------------------------"
 "}}}
+
+" 自动修改Modified后面的时间 {{{2
+"------------------------------------------------------------------------------"
+function! LastModified()
+  if &modified
+    let save_cursor = getpos(".")
+    let n = min([20, line("$")])
+    keepjumps exe '1,' . n . 's#^\(.\{,50}Modified: \).*#\1' .
+          \ strftime('%c') . '#e'
+    call histdel('search', -1)
+    call setpos('.', save_cursor)
+  endif
+endfun
 
 " vim:fdm=marker:fmr={{{,}}} foldlevel=1:
 "}}}

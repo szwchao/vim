@@ -15,44 +15,6 @@ let g:f3make_error = "Error"
 let g:f3make_warning = "Warning"
 let g:f3_zip_tool = 'C:\Program Files\7-Zip\7z.exe'
 
-fun! s:strip(text)
-    let text = substitute(a:text, '^[[:space:][:cntrl:]]\+', '', '')
-    let text = substitute(text, '[[:space:][:cntrl:]]\+$', '', '')
-    return text
-endfun
-
-fun! s:ParseIni(ini)
-    let parsed = {}
-    for line in a:ini
-        let line = s:strip(line)
-        if strlen(line) > 0
-            if match(line, '^\s*;') == 0
-                continue
-            elseif match(line, '[') == 0
-                let header = split(line, ';')[0]
-                let section = strpart(header, 1, strlen(line) - 2)
-                let parsed[section] = {}
-
-            else
-                let optline = map(split(line, '='), 's:strip(v:val)')
-
-                if len(optline) > 1
-                    let optval = split(optline[1], ';')[0]
-                else
-                    let optval = 1
-                end
-
-                let parsed[section][optline[0]] = optval
-            end
-        end
-    endfor
-    return parsed
-endfun
-
-fun! s:SetMyProjectDict()
-    let s:my_project_dict = s:ParseIni(readfile(s:my_project_file))
-    return 1
-endfun
 
 " s:Handle_String {{{
 fun! s:Handle_String(string)
@@ -69,27 +31,57 @@ fun! s:Handle_String(string)
 endfun
 "}}}
 
+"s:LoadCurrentProjectDictFromMyProject: description {{{2
+fun! s:LoadCurrentProjectDictFromMyProject()
+    let l:cur_prj_dict = GetCurrentProjectDict()
+    return l:cur_prj_dict
+endfun
+"}}}
+
 " F3Make.vim {{{2
-fun! F3make()
-    if !exists('g:project_root_dir')
+fun! F3make(increment_build)
+    let cur_prj_dict = s:LoadCurrentProjectDictFromMyProject()
+    if has_key(cur_prj_dict, "name")
+        let cur_prj_name = cur_prj_dict['name']
+    else
         echo "请先指定工程"
         return
     endif
-    let cmd = g:project_root_dir . 'F1_Dev\source\f3make.bat'
-    if !filereadable(cmd)
-        echo "F3make.bat路径错误，请手动指定"
+
+    let target = ""
+    if a:increment_build == 0
+        if has_key(cur_prj_dict, "build_target")
+            let target = cur_prj_dict['build_target']
+        else
+            let target = ""
+        endif
+    endif
+    let f3make = ""
+    if has_key(cur_prj_dict, "f3make_cmd")
+        let f3make = cur_prj_dict['f3make_cmd']
+        if !filereadable(f3make)
+            let f3make = input("F3make.bat路径错误，请重新指定: ", "", "file")
+        endif
+    else
+        echo "没有f3make.bat"
         return
     endif
+
+    let cmd = f3make . " " . target
+    echo cmd
 
     let s = localtime()
     let l:result=system(cmd)
     let e = localtime() - s
     "echo e
+
     if matchstr(l:result, '-------------- Failed Build ---------------') != ""
+        echohl errormsg
         echo 'Failed'
+        echohl normal
     else
-        echo 'Pass, 现在开始解压'
-        "let l:result = F3_Extract()
+        echo 'Pass, 现在开始解压...'
+        echo F3_Extract()
     endif
 
     " Show results
@@ -177,11 +169,12 @@ endfun
 "F3MakeSyntax {{{2
 fun! s:F3MakeSyntax()
     sy case ignore
-    let e = ":syn match F3Make_Word ". '"'. g:f3make_error .'"'
+    let e = ":syn match F3Make_Error ". '"'. g:f3make_error .'"'
     exe e
-    let w = ":syn match F3Make_Word ". '"'. g:f3make_warning .'"'
+    let w = ":syn match F3Make_Warning ". '"'. g:f3make_warning .'"'
     exe w
-    hi def link F3Make_Word Type
+    hi def link F3Make_Error Error
+    hi def link F3Make_Warning Type
 endfun
 "}}}
 
@@ -201,8 +194,15 @@ fun! s:Open_Error_File()
     if line == ''
         return
     endif
+    let cur_prj_dict = s:LoadCurrentProjectDictFromMyProject()
+    if has_key(cur_prj_dict, "f3make_cmd")
+        let f3make_file = cur_prj_dict['f3make_cmd']
+    else
+        echo "找不到f3make"
+    endif
+    let source_dir = substitute(f3make_file, 'F1_Dev\\source\\f3make.bat', '', 'g')
     " 将工程目录的\转成/
-    let project_dir = substitute(g:project_root_dir, '\\', '/', 'g')
+    let project_dir = substitute(source_dir, '\\', '/', 'g')
     " 用工程目录名代替..\..\
     let error_file = substitute(line, '"\.\.\\\.\.\\', project_dir, 'g')
     " 转换/为\
@@ -244,20 +244,40 @@ endfun
 
 "F3_Extract: {{{2
 fun! F3_Extract()
+    if !filereadable(g:f3_zip_tool)
+        echo "没有7z解压工具"
+        return
+    endif
+
     let zip_tool = s:Handle_String(g:f3_zip_tool)
-    let project_zip_file = 'E:\Workspace\LightningBug\BuildOutput\Objects\final\ST_DLFILES_SD.00000000.00.00.LSGEN200.STF0.00000000.00435736.zip'
-    let Project_DownDir = 'C:\var\merlin\dlfiles\LightningBug\'
-    let Project_CFW_File= 'LSGEN200.STF0.00000000.00435736.CFW.LOD'
-    let Project_OVL_File= 'LSGEN200.STF0.00000000.00435736.S_OVL.LOD'
-    let Project_TPM_File= 'LSGEN200.STF0.00000000.00435736.TPM.LOD'
-    let cmd = zip_tool .' e ' . project_zip_file . ' -o' . Project_DownDir . ' -aoa ' . Project_CFW_File . ' ' . Project_OVL_File . ' ' . Project_TPM_File
-    echo cmd
+    let cur_prj_dict = s:LoadCurrentProjectDictFromMyProject()
+    if has_key(cur_prj_dict, "project_zip_file")
+        let project_zip_file = cur_prj_dict['project_zip_file']
+    endif
+    if has_key(cur_prj_dict, "project_zip_file")
+        let project_download_dir = cur_prj_dict['project_download_dir']
+    endif
+    if has_key(cur_prj_dict, "project_cfw_file")
+        let project_cfw_file = cur_prj_dict['project_cfw_file']
+    endif
+    if has_key(cur_prj_dict, "project_ovl_file")
+        let project_ovl_file = cur_prj_dict['project_ovl_file']
+    endif
+    if has_key(cur_prj_dict, "project_tpm_file")
+        let project_tpm_file = cur_prj_dict['project_tpm_file']
+    endif
+    let cmd = zip_tool .' e ' . project_zip_file . ' -o' . project_download_dir . ' -aoa ' . project_cfw_file . ' ' . project_ovl_file . ' ' . project_tpm_file
     let result=system(cmd)
-    return result
+    if matchstr(result, 'Everything is Ok') != ""
+        return "解压成功"
+    else
+        return result
+    endif
 endfun
 "}}}
 
-command! -nargs=* F3 call F3make()
+command! -nargs=* F3 call F3make(1)
+command! -nargs=* F3NEW call F3make(0)
 command! -nargs=* FT call ToggleF3MakeResultWindow()
 
 " vim:fdm=marker:fmr={{{,}}}
