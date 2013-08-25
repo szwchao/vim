@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 2013/8/24 22:56:03
+"         Modified: 2013/8/25 9:17:47
 "===============================================================================
 "设置 {{{
 "===============================================================================
@@ -14,6 +14,22 @@ else
    let g:platform = 'linux'
 endif
 
+
+" 设定文件编码类型，解决中文编码问题 {{{2
+"set encoding=utf-8
+let &termencoding=&encoding
+set fileencodings=ucs-bom,utf-8,gbk,cp936
+set helplang=cn
+
+" 配色方案 {{{2
+colorscheme colorful
+"colorscheme bluechia
+
+" 字体 {{{2
+set guifont=YaHei\ Consolas\ Hybrid:h14:cANSI
+"set guifont=Yahei_Mono:h12:cANSI 
+
+" bundle设置 {{{2
 call pathogen#infect()
 
 filetype off                   " required!
@@ -40,21 +56,6 @@ Bundle 'QuickBuf'
 "Bundle 'buf_it'
 "Bundle 'rainbow.zip'
 "Bundle 'mru.vim'
-let g:fencview_autodetect = 0
-
-" 设定文件编码类型，解决中文编码问题 {{{2
-"set encoding=utf-8
-let &termencoding=&encoding
-set fileencodings=ucs-bom,utf-8,gbk,cp936
-set helplang=cn
-
-" 配色方案 {{{2
-"colorscheme colorful
-colorscheme bluechia
-
-" 字体 {{{2
-set guifont=YaHei\ Consolas\ Hybrid:h12:cANSI
-"set guifont=Yahei_Mono:h12:cANSI 
 
 " 一般设置 {{{2
 let mapleader = ","                       " 设置mapleader为,键
@@ -401,6 +402,11 @@ let g:MyProjectConfigDir = 'D:\Workspace\MyProject'
 let g:MyGID = '435736'
 
 "-------------------------------------------------------------------------------
+" fencview.vim {{{2
+"-------------------------------------------------------------------------------
+" 不自动检测编码
+let g:fencview_autodetect = 0
+"-------------------------------------------------------------------------------
 " MRU.vim {{{2
 "-------------------------------------------------------------------------------
 " 最大列表数目200
@@ -420,6 +426,12 @@ let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_auto_select = 1
 " 显示启动进度
 let g:neocomplcache_enable_caching_message=1
+inoremap <expr><C-g>     neocomplcache#undo_completion()
+inoremap <expr><C-l>     neocomplcache#complete_common_string()
+if !exists('g:neocomplcache_omni_patterns')
+  let g:neocomplcache_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
 " 快捷键
 inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
 inoremap <expr><C-u>  neocomplcache#cancel_popup()
