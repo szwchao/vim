@@ -44,29 +44,6 @@ command! -nargs=0 MyVimGrep :call MyVimGrep()
 " GNUGrep{{{2
 "------------------------------------------------------------------------------"
 fun! MyGrep()
-
-   "if exists("g:project_grep_ext")
-      "let l:ext_list = g:project_grep_ext
-   "else
-      "let l:ext_list = g:mygrep_ext
-   "endif
-
-   "let l:skip_ext_list = ['exe']
-
-   "if !len(l:dir)
-      "let l:dir = '*'
-   "else
-      "let l:dir = substitute(l:dir, "\\\\$", "", "")
-   "endif
-
-   "for l:ext in l:ext_list
-      "let include = '--include=*.'.l:ext.' '
-      "let cmd = cmd. include
-   "endfor
-   "for l:ext in l:skip_ext_list
-      "let exclude = '--exclude=*.'.l:ext.' '
-      "let cmd = cmd. exclude
-   "endfor
    call s:InitGrepOptions()
    call s:DoGrepCmd()
 endfun

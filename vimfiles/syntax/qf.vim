@@ -13,9 +13,9 @@ syn match	qfFileName	"^[^|]*" nextgroup=qfSeparator
 syn match	qfSeparator	"|" nextgroup=qfLineNr contained
 syn match	qfLineNr	"[^|]*" contained contains=qfError
 syn match	qfError		"error" contained
-syn match Function "\<[a-zA-Z_][a-zA-Z_0-9]*\>[^()]*)("me=e-2
-syn match Function "\<[a-zA-Z_][a-zA-Z_0-9]*\>\s*("me=e-1
 syn match       qfFunc          "<<.*>>"
+syn match       Function "\<[a-zA-Z_][a-zA-Z_0-9]*\>\s*("me=e-1
+syn match       Function "\<[a-zA-Z_][a-zA-Z_0-9]*\>[^()]*)("me=e-2
 
 " The default highlighting.
 hi def link qfFileName	Type

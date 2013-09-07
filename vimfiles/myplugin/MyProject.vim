@@ -9,10 +9,41 @@ if exists('g:loaded_myproject')
 endif
 let g:loaded_myproject = 1
 
-let g:debugmsg = 1
+fun! s:Set(var, val)
+    if !exists(a:var)
+        exec 'let ' . a:var . ' = ' . string(a:val)
+    end
+endfun
+
+"供状态条以及编译使用
+call s:Set('g:current_project_name', '')
+" 用源码目录创建filenametags
+call s:Set('g:AllwaysUseSameDirToCreateFilenametags', '1')
+" 用默认名创建tag, cscope
+call s:Set('g:AllwaysUseDefaultTagsCscopeName', '1')
+" 是否可以添加多个源码目录
+call s:Set('g:EnableMultiSourceCodeDir', '0')
+" 工程目录名
+"call s:Set('g:MyProjectConfigDir', $HOME.'\MyProject')
+call s:Set('g:MyProjectConfigDir', 'E:\Workspace\MyProject')
+" 配置文件名
+call s:Set('g:MyProjectConfigFile', 'MyProjectFile')
+" 过滤文件类型
+call s:Set('g:MyProjectFileFilter', '*.h *.c *.py')
+" 生成文件列表的命令
+call s:Set('g:MyProjectFindProgram', "dir /B /S /A-D /ON")
+" 窗口高度
+call s:Set('g:MyProjectWinHeight', "15")
+" seagate编译选项
+call s:Set('g:EnableAddF3MakeVar', '1')
+"}}}
+
+"调试{{{2
+"-----------------------------------------------------------------------------"
+let s:debugmsg = 0
 
 fun! s:EchoError(msg)
-    if !exists('g:debugmsg')
+    if s:debugmsg != 1
         return
     endif
     echohl errormsg
@@ -20,35 +51,15 @@ fun! s:EchoError(msg)
     echo a:msg
     echohl normal
 endfun
-
-fun! s:Set(var, val)
-    if !exists(a:var)
-        exec 'let ' . a:var . ' = ' . string(a:val)
-    end
-endfun
-
-"供状态条使用
-call s:Set('g:current_project', '')
-call s:Set('g:AllwaysUseSameDirToCreateFilenametags', '1')
-call s:Set('g:AllwaysUseDefaultTagsCscopeName', '1')
-call s:Set('g:EnableMultiSourceCodeDir', '0')
-"call s:Set('g:MyProjectConfigDir', $HOME.'\MyProject')
-call s:Set('g:MyProjectConfigDir', 'E:\Workspace\MyProject')
-call s:Set('g:MyProjectConfigFile', 'MyProjectFile')
-call s:Set('g:MyProjectFilter', '*.h *.c *.py')
-call s:Set('g:MyProjectFindProgram', "dir /B /S /A-D /ON")
-call s:Set('g:MyProjectWinHeight', "15")
-call s:Set('g:EnableAddF3MakeVar', '1')
-call s:Set('g:MyGID', '435736')
 "}}}
 
 "获取当前工程名{{{2
 "-----------------------------------------------------------------------------"
 fun! GetProjectName()
-    if g:current_project == ''
-        return g:current_project
+    if g:current_project_name == ''
+        return g:current_project_name
     else
-        return g:current_project . ' | '
+        return g:current_project_name . ' | '
     endif
 endfun
 "}}}
@@ -121,13 +132,11 @@ fun! s:ParseIni(ini)
 
             else
                 let optline = map(split(line, '='), 's:strip(v:val)')
-
                 if len(optline) > 1
                     let optval = split(optline[1], ';')[0]
                 else
                     let optval = 1
                 end
-
                 let parsed[section][optline[0]] = optval
             end
         end
@@ -135,7 +144,7 @@ fun! s:ParseIni(ini)
     return parsed
 endfun
 
-"s:my_project_dict格式:{'name':{'SourceCodeDir[x]':xxx, 'FilenametagsDir[x]':'xxx', 'tags':'xxx', 'cscope':'xxx', 'filenametags':'xxx'}}
+"s:my_project_dict格式:{'name':{'SourceCodeDirx':xxx, 'FilenametagsDirx':'xxx', 'tags':'xxx', 'cscope':'xxx', 'filenametags':'xxx'}}
 fun! s:SetMyProjectDict()
     let s:my_project_dict = s:ParseIni(readfile(s:my_project_file))
     return 1
@@ -163,9 +172,6 @@ endfun
 "-----------------------------------------------------------------------------"
 fun! s:SetMyProjectList()
     let s:my_project_list = []
-    "for key in keys(s:my_project_dict)
-    "call add(s:my_project_list, key)
-    "endfor
     if filereadable(s:my_project_file)
         let file = readfile(s:my_project_file)
         for line in file
@@ -175,7 +181,6 @@ fun! s:SetMyProjectList()
                 call add(s:my_project_list, section)
             endif
         endfor
-
     endif
 endfun
 fun! s:GetMyProjectNameList()
@@ -190,13 +195,13 @@ endfun
 "-----------------------------------------------------------------------------"
 fun! s:InitMyProject()
     if !s:SetMyProjectDir()
-        call s:EchoError('Dir Error')
+        call s:EchoError('Project Dir Error')
     endif
     if !s:SetMyProjectConfigFile()
-        call s:EchoError('File Error')
+        call s:EchoError('Config File Error')
     endif
     if !s:SetMyProjectDict()
-        call s:EchoError('Dict Error')
+        call s:EchoError('Project Dict Error')
     endif
     call s:SetMyProjectList()
 endfun
@@ -244,17 +249,13 @@ fun! s:InputSourceCodeDir(source_type)
             break
         endif
     endwhile
+    call s:EchoError('源目录: ' . string(source_dir))
     return source_dir
-    call s:EchoError('源目录: ' . string(source_code_dir))
 endfun
 
 "* --------------------------------------------------------------------------*/
-" @函数说明：   输入f3make的相关参数，会猜测这些参数，但不一定准确，包括：
-"               1. f3make.bat文件
-"               2. target编译命令
-"               3. 生成的zip文件
-"               4. 解压zip文件到 var\merlin\dlfiles\ 下面的路径
-"               5. zip文件里CFW，OVL，TPM的名字
+" @函数说明：   输入f3make的相关参数，包括：
+"               1. target编译命令
 " @参    数：   project_name - 工程名
 " @参    数：   source_dir - 源码目录
 " @返 回 值：   f3make的参数列表
@@ -262,43 +263,8 @@ endfun
 fun! s:InputF3MakeVar(project_name, source_dir)
     let f3make_list = []
 
-    let guess_f3make_cmd = a:source_dir . "F1_Dev\\source\\f3make.bat"
-    if filereadable(guess_f3make_cmd)
-        let f3make_cmd = input("指定f3make.bat文件: ", guess_f3make_cmd, "file")
-    else
-        let f3make_cmd = input("指定f3make.bat文件: ", a:source_dir , "file")
-    endif
     let build_target = input("指定编译的Target: ")
-
-    let guess_zip_file = a:source_dir . "BuildOutput\\Objects\\final\\ST_DLFILES_SD.00000000.00.00." . build_target . ".00000000.00" . g:MyGID . ".zip"
-    let project_zip_file = input("指定编译成功后生成的zip文件: ", guess_zip_file, "file")
-
-    let guess_download_dir = "C:\\var\\merlin\\dlfiles\\". a:project_name
-    let project_download_dir = input("指定解压CFW，OVL到指定的目录: ", guess_download_dir, "dir")
-    if !isdirectory(project_download_dir)
-        call mkdir(project_download_dir, "p")
-    endif
-
-    let temp_str = substitute(project_zip_file, "^.*" . build_target, build_target, "g")
-    let temp_str = substitute(temp_str, "\.zip$", "", "g")
-    let project_cfw_file = temp_str . ".CFW.LOD"
-    let project_ovl_file = temp_str . ".S_OVL.LOD"
-    let project_tpm_file = temp_str . ".TPM.LOD"
-
-    "let guess_cfw_file = build_target. ".00000000.00" . g:MyGID . ".CFW.LOD"
-    "let guess_ovl_file = build_target. ".00000000.00" . g:MyGID . ".S_OVL.LOD"
-    "let guess_tpm_file = build_target. ".00000000.00" . g:MyGID . ".TPM.LOD"
-    "let project_cfw_file = input("指定zip包内CFW文件的名字: ", guess_cfw_file)
-    "let project_ovl_file = input("指定zip包内OVL文件的名字: ", guess_ovl_file)
-    "let project_tpm_file = input("指定zip包内TPM文件的名字: ", guess_tpm_file)
-
-    call add(f3make_list, 'f3make_cmd = '. f3make_cmd)
     call add(f3make_list, 'build_target = '. build_target)
-    call add(f3make_list, 'project_zip_file = '. project_zip_file)
-    call add(f3make_list, 'project_download_dir = '. project_download_dir)
-    call add(f3make_list, 'project_cfw_file = '. project_cfw_file)
-    call add(f3make_list, 'project_ovl_file = '. project_ovl_file)
-    call add(f3make_list, 'project_tpm_file = '. project_tpm_file)
     return f3make_list
 endfun
 
@@ -522,7 +488,7 @@ endfun
 fun! s:SetTagsCscopeFilenametags()
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     if has_key(s:current_project, "name")
-        let g:current_project = s:current_project['name']
+        let g:current_project_name = s:current_project['name']
         " fuf提示符
         let g:fuf_mytaggedfile_prompt = '>'.s:current_project['name'].'>'
     endif
@@ -606,6 +572,7 @@ fun! s:UpdateProjectUnderCursor()
             let l:update_option['cache'] = 0
         endif
     endif
+    echo "\n"
     if l:update_option['tags'] == 1
         call UpdateMyProjectTags(l:src_dir_list, l:cur_prj["tags"])
     endif
@@ -754,7 +721,7 @@ fun! UpdateMyProjectTags(src_dir_list, tags)
     let l:output_dir = fnamemodify(a:tags, ":p:h")
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     let l:cmd = g:MyProjectFindProgram
-    let l:ext_filter = g:MyProjectFilter
+    let l:ext_filter = g:MyProjectFileFilter
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     if filereadable(l:tags)
         call delete(l:tags)
@@ -802,7 +769,7 @@ fun! UpdateMyProjectCscope(src_dir_list, cscope)
     let l:output_dir = fnamemodify(a:cscope, ":p:h")
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     let l:cmd = g:MyProjectFindProgram
-    let l:ext_filter = g:MyProjectFilter
+    let l:ext_filter = g:MyProjectFileFilter
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     let l:output_cscope = l:output_dir.'\cscope.files'
     if !filereadable(l:output_cscope)
@@ -843,7 +810,7 @@ function! UpdateMyProjectFilenametags(fntags_dir_list, filenametags)
     let l:output_filenametags = a:filenametags
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     let l:cmd = g:MyProjectFindProgram
-    let l:ext_filter = g:MyProjectFilter
+    let l:ext_filter = g:MyProjectFileFilter
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     echo "生成filenametags中..."
     if filereadable(l:output_filenametags)

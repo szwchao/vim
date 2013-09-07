@@ -23,9 +23,9 @@ endif
 "------------------------------------------------------------------------------"
 "定义CompileRun函数，用来调用进行编译和运行
 func! CompileRun()
-    if exists('g:current_project')
-        if !empty(g:current_project)
-            echo "开始编译工程"
+    if exists('g:current_project_name')
+        if !empty(g:current_project_name)
+            echo "开始编译工程（增量）：" . g:current_project_name
             call F3make(1)
             return
         endif
@@ -76,9 +76,9 @@ endfunc
 
 "定义Debug函数，用来调试程序
 func! Debug()
-    if exists('g:current_project')
-        if !empty(g:current_project)
-            echo "开始编译工程"
+    if exists('g:current_project_name')
+        if !empty(g:current_project_name)
+            echo "开始编译工程（全新）：" . g:current_project_name
             call F3make(0)
             return
         endif

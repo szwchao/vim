@@ -2,34 +2,43 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 2013/8/25 9:17:47
+"         Modified: 2013/9/7 19:24:59
 "===============================================================================
-"设置 {{{
+"设置 {{{1
 "===============================================================================
+
 "-------------------------------------------------------------------------------
 " 平台判断 {{{2
+"-------------------------------------------------------------------------------
 if (has("win32") || has("win95") || has("win64") || has("win16"))
    let g:platform = 'win'
 else
    let g:platform = 'linux'
 endif
 
-
+"-------------------------------------------------------------------------------
 " 设定文件编码类型，解决中文编码问题 {{{2
+"-------------------------------------------------------------------------------
 "set encoding=utf-8
 let &termencoding=&encoding
 set fileencodings=ucs-bom,utf-8,gbk,cp936
 set helplang=cn
 
+"-------------------------------------------------------------------------------
 " 配色方案 {{{2
+"-------------------------------------------------------------------------------
 colorscheme colorful
 "colorscheme bluechia
 
+"-------------------------------------------------------------------------------
 " 字体 {{{2
+"-------------------------------------------------------------------------------
 set guifont=YaHei\ Consolas\ Hybrid:h14:cANSI
 "set guifont=Yahei_Mono:h12:cANSI 
 
+"-------------------------------------------------------------------------------
 " bundle设置 {{{2
+"-------------------------------------------------------------------------------
 call pathogen#infect()
 
 filetype off                   " required!
@@ -40,7 +49,7 @@ Bundle 'gmarik/vundle'
 Bundle 'majutsushi/tagbar'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
-Bundle 'Shougo/neocomplcache'
+Bundle 'Shougo/neocomplete.vim'
 Bundle 'CRefVim'
 Bundle 'MatchTag'
 Bundle 'FencView.vim'
@@ -57,7 +66,9 @@ Bundle 'QuickBuf'
 "Bundle 'rainbow.zip'
 "Bundle 'mru.vim'
 
+"-------------------------------------------------------------------------------
 " 一般设置 {{{2
+"-------------------------------------------------------------------------------
 let mapleader = ","                       " 设置mapleader为,键
 source $VIMRUNTIME/mswin.vim              " 加载mswin.vim
 unmap <C-A>
@@ -110,7 +121,9 @@ if has("persistent_undo")
   set undofile
 endif
 
+"-------------------------------------------------------------------------------
 " 编程相关的设置 {{{2
+"-------------------------------------------------------------------------------
 set completeopt=longest,menu,preview      " 关掉智能补全时的预览窗口
                                           " 自动补全(ctrl-p)时的一些选项：
                                           " 多于一项时显示菜单，最长选择，显示当前选择的额外信息
@@ -121,19 +134,25 @@ set autoindent                            " 自动对齐
 set cindent                               " C格式自动缩进
 set ai!                                   " 设置自动缩进
 
+"-------------------------------------------------------------------------------
 " cscope设置 {{{2
+"-------------------------------------------------------------------------------
 set cscopequickfix=s-,d-,c-,t-,e-,i-      " 使用quickfix窗口来显示cscope结果
 set cst                                   " CTRL-]同时搜索cscope数据库和tag
 set csto=1                                " |:cstag| 命令查找的次序。0:cscope优先; 1:tag优先
 
+"-------------------------------------------------------------------------------
 " 鼠标支持 {{{2
+"-------------------------------------------------------------------------------
 if has('mouse')
   set mouse=a
 endif
 set cursorline                            " 增加鼠标水平线
 set cursorcolumn                          " 增加鼠标垂直线
 
+"-------------------------------------------------------------------------------
 " 状态栏 {{{2
+"-------------------------------------------------------------------------------
 set ruler                                 " 在编辑过程中，在右下角显示光标位置的状态行
 set cmdheight=1                           " 设定命令行的行数为 1
 set laststatus=2                          " 显示状态栏 (默认值为 1, 无法显示状态栏)
@@ -142,7 +161,9 @@ au BufEnter,BufNew,BufRead,BufNewFile * call SetMyStatusLine()
 "set updatetime=500
 "autocmd CursorHold * if ((&filetype == 'c') || (&filetype == 'python')) | let &titlestring='%f%m (%F)%<%='.GetFunctionName() | endif
 
+"-------------------------------------------------------------------------------
 " 自动命令 {{{2
+"-------------------------------------------------------------------------------
 "当vimrc改变时自动重新载入vimrc
 "autocmd! bufwritepost _vimrc source $VIM\\_vimrc
 "当vimrc改变时自动更新修改时间
@@ -185,12 +206,16 @@ autocmd FileType c set dictionary+=$VIM\vimfiles\dictionary\c_keywords.txt
 autocmd FileType python set dictionary+=$VIM\vimfiles\dictionary\python_keywords.txt
 autocmd FileType txt set dictionary+=$VIM\vimfiles\dictionary\c_keywords.txt
 
+"-------------------------------------------------------------------------------
 " 查找/替换相关的设置 {{{2
+"-------------------------------------------------------------------------------
 set ic                                 " 搜索不分大小写
 set hlsearch                           " 高亮显示搜索结果
 set incsearch                          " 输入搜索命令时，显示目前输入的模式的匹配位置
 
+"-------------------------------------------------------------------------------
 " 比较文件 {{{2
+"-------------------------------------------------------------------------------
 " 使用 ":DiffOrig" 查看更改后的文件与源文件不同之处。
 command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 
@@ -213,10 +238,13 @@ set foldmethod=syntax
 set foldenable
 set foldlevel=100
 
-"-------------------------------------------------------------------------------
+"===============================================================================
 " 自定义快捷键 {{{1
+"===============================================================================
+
 "-------------------------------------------------------------------------------
 " 重新设置vim自带快捷键 {{{2
+"-------------------------------------------------------------------------------
 " 插入模式下jj转到普通模式
 imap jj <Esc>
 " 用b来开关折叠
@@ -241,10 +269,10 @@ nmap <silent> gW "_yiw:s/\(\w\+\)\(\_W\+\)\(\%#\w\+\)/\3\2\1/<cr><c-o>
 nmap Y y$
 " 分为两行
 nmap F i<CR><ESC>
-" B添加{{{
-nmap B A{{{2<ESC>
 
+"-------------------------------------------------------------------------------
 " <Leader>相关 {{{2
+"-------------------------------------------------------------------------------
 " <leader>rr重新载入vimrc
 nmap <silent> <leader>rr :source $VIM\\_vimrc<cr>
 " <leader>e编辑vimrc
@@ -266,7 +294,9 @@ nmap <leader>t :ToggleNuMode<CR>
 " 切换补全函数
 nmap <leader>of :call ToggleOmnifunc()<CR>
 
+"-------------------------------------------------------------------------------
 " Fx相关 {{{2
+"-------------------------------------------------------------------------------
 " F1加载项目
 nmap <F1> :call StartMyProject()<CR>
 " F2跳转书签
@@ -302,7 +332,9 @@ nmap <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
 " Ctrl+F12生成tags
 nmap <silent> <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 
+"-------------------------------------------------------------------------------
 " cscope快捷键 {{{2
+"-------------------------------------------------------------------------------
 "s: 查找C语言符号，即查找函数名、宏、枚举值等出现的地方
 nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
 " 0或g: 查找函数、宏、枚举等定义的位置，类似ctags所提供的功能
@@ -328,7 +360,9 @@ nmap <C-_>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
 nmap <C-_>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-_>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
 
+"-------------------------------------------------------------------------------
 " 其它 {{{2
+"-------------------------------------------------------------------------------
 " 按Alt+m即可切换显示或者关闭显示菜单栏和工具栏.
 map <silent> <M-m> :if &guioptions =~# 'T' <Bar>
          \set guioptions-=T <Bar>
@@ -393,19 +427,36 @@ vmap < <Esc>:call VisualWrap('<', '>')<CR>
 vmap " <Esc>:call VisualWrap('"', '"')<CR>
 vmap ' <Esc>:call VisualWrap("'", "'")<CR>
 
+"===============================================================================
 "插件配置 {{{1
 "===============================================================================
+
 "-------------------------------------------------------------------------------
 " MyProject {{{2
 "-------------------------------------------------------------------------------
+" 工程目录
 let g:MyProjectConfigDir = 'D:\Workspace\MyProject'
-let g:MyGID = '435736'
+
+"-------------------------------------------------------------------------------
+" startify {{{2
+"-------------------------------------------------------------------------------
+let g:startify_show_sessions = 1
+let g:startify_custom_header = [
+\' ___    __    ___  ______  __    __       ___       ______    __     _______.   ___    ___  __  .___  ___. ',
+\' \  \  /  \  /  / /      ||  |  |  |     /   \     /  __  \  (_ )   /       |   \  \  /  / |  | |   \/   | ',
+\'  \  \/    \/  / |  .----`|  |__|  |    /  ^  \   |  |  |  |  |/   |   (----`    \  \/  /  |  | |  \  /  | ',
+\'   \          /  |  |     |   __   |   /  /_\  \  |  |  |  |        \   \         \    /   |  | |  |\/|  | ',
+\'    \   /\   /   |  `----.|  |  |  |  /  _____  \ |  `--`  |    .----)   |         \  /    |  | |  |  |  | ',
+\'     \_/  \_/     \______||__|  |__| /__/     \__\ \______/     |_______/           \/     |__| |__|  |__| ',
+\'',
+\]
 
 "-------------------------------------------------------------------------------
 " fencview.vim {{{2
 "-------------------------------------------------------------------------------
 " 不自动检测编码
 let g:fencview_autodetect = 0
+
 "-------------------------------------------------------------------------------
 " MRU.vim {{{2
 "-------------------------------------------------------------------------------
@@ -418,23 +469,14 @@ let MRU_Max_Entries = 200
 map <silent> <unique> <Leader>ct <Plug>CRV_CRefVimInvoke
 
 "-------------------------------------------------------------------------------
-" neocomplcache {{{2
+" neocomplete {{{2
 " ------------------------------------------------------------------------------
-" 使neocomplcache自动启动
-let g:neocomplcache_enable_at_startup = 1
-" 使neocomplcache自动选择第一个
-let g:neocomplcache_enable_auto_select = 1
-" 显示启动进度
-let g:neocomplcache_enable_caching_message=1
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-" 快捷键
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-u>  neocomplcache#cancel_popup()
+" 使neocomplete自动启动
+let g:neocomplete#enable_at_startup = 1
+" 使neocomplete自动选择第一个
+let g:neocomplete#enable_auto_select = 1
+" <C-u>取消选择
+inoremap <expr><C-u>  neocomplete#cancel_popup()
 
 "-------------------------------------------------------------------------------
 " FuzzyFinder.vim {{{2
@@ -537,5 +579,7 @@ let g:rainbow_operators = 1
 " ------------------------------------------------------------------------------
 let g:buftabs_only_basename=1
 let g:buftabs_in_statusline=1
+
+"}}}1
 
 " vim:fdm=marker:fmr={{{,}}}

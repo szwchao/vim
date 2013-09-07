@@ -194,7 +194,7 @@ if exists("c_gnu")
 endif
 syn keyword	cType		int long short char void
 
-" For firmware source code
+" For seagate firmware source code
 syn keyword	cType		uint8 sint8 sint16 uint16 sint32 uint32 sint64 uint64 ulong byte
 
 syn keyword	cType		signed unsigned float double

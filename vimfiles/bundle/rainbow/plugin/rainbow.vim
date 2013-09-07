@@ -33,6 +33,11 @@
 "	:RainbowToggle		--you can use it to toggle this plugin.
 "	:Rainbow			--you can use it to toggle this plugin.
 
+"加个全局变量供更换主题时使用
+if exists('g:loaded_rain_bow')
+    finish
+endif
+let g:loaded_rain_bow = 1
 
 " read file vim73/rgb.txt for all named colors
 let s:guifgs = exists('g:rainbow_guifgs')? g:rainbow_guifgs : [

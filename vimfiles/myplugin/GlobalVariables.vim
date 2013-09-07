@@ -15,11 +15,7 @@ let g:vim_tools_dir = g:vim_dir . '\Tools'
 
 " 自己写的函数所用的全局变量{{{2
 "------------------------------------------------------------------------------"
-" 工程目录
-let g:MyProjectDir = 'D:\Workspace\MyProject'
-
 " Python解释器
-"let g:python_dir='C:\\Python25\\python.exe'
 let g:python_dir='C:\\Python27\\python.exe'
 
 " TotalCommander路径
