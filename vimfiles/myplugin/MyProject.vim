@@ -54,7 +54,10 @@ endfun
 "}}}
 
 "获取当前工程名{{{2
-"-----------------------------------------------------------------------------"
+"* --------------------------------------------------------------------------*/
+" @函数说明：   获取project名称
+" @返 回 值：   字符串
+"* --------------------------------------------------------------------------*/
 fun! GetProjectName()
     if g:current_project_name == ''
         return g:current_project_name
@@ -64,8 +67,11 @@ fun! GetProjectName()
 endfun
 "}}}
 
-"设置工程目录{{{2
-"-----------------------------------------------------------------------------"
+"设置工程配置目录{{{2
+"* --------------------------------------------------------------------------*/
+" @函数说明：   设置工程配置目录，不存在则创建目录
+" @返 回 值：   1 - 成功， 0 - 失败
+"* --------------------------------------------------------------------------*/
 fun! s:SetMyProjectDir()
     if !isdirectory(g:MyProjectConfigDir)
         call mkdir(g:MyProjectConfigDir, "p")
@@ -79,38 +85,53 @@ fun! s:SetMyProjectDir()
     endif
 endfun
 
+"* --------------------------------------------------------------------------*/
+" @函数说明：   获取工程配置目录
+" @返 回 值：   目录名称字符串
+"* --------------------------------------------------------------------------*/
 fun! s:GetMyProjectConfigDir()
     return s:my_project_config_dir
 endfun
 "}}}
 
-"设置工程文件{{{2
-"-----------------------------------------------------------------------------"
+"设置工程配置文件{{{2
+"* --------------------------------------------------------------------------*/
+" @函数说明：   设置工程配置文件
+" @返 回 值：   1 - 成功， 0 - 失败
+"* --------------------------------------------------------------------------*/
 fun! s:SetMyProjectConfigFile()
     let l:filename = expand(s:GetMyProjectConfigDir() .'\'. g:MyProjectConfigFile)
     if filereadable(l:filename)
-        let s:my_project_file = l:filename
+        let s:my_project_config_file = l:filename
         return 1
     elseif !writefile([], l:filename)
-        let s:my_project_file = l:filename
+        let s:my_project_config_file = l:filename
         return 1
     else
         return 0
     endif 
 endfun
 
-fun! GetMyProjectConfigFile()
-    return s:my_project_file
+"* --------------------------------------------------------------------------*/
+" @函数说明：   获取工程配置文件
+" @返 回 值：   无
+"* --------------------------------------------------------------------------*/
+fun! s:GetMyProjectConfigFile()
+    return s:my_project_config_file
 endfun
 
+"* --------------------------------------------------------------------------*/
+" @函数说明：   编辑工程配置文件
+" @返 回 值：   无
+"* --------------------------------------------------------------------------*/
 fun! s:EditMyProjectFile()
-    let l:filename = GetMyProjectConfigFile()
+    let l:filename = s:GetMyProjectConfigFile()
     silent! close
     exec "e ". l:filename
 endfun
 "}}}
 
-"解析工程文件{{{2
+"解析工程配置文件{{{2
 "-----------------------------------------------------------------------------"
 fun! s:strip(text)
     let text = substitute(a:text, '^[[:space:][:cntrl:]]\+', '', '')
@@ -118,19 +139,26 @@ fun! s:strip(text)
     return text
 endfun
 
-fun! s:ParseIni(ini)
+"* --------------------------------------------------------------------------*/
+" @函数说明：   解析配置文件
+" @参    数：   config_file，配置文件的路径
+" @返 回 值：   解析好的字典
+"* --------------------------------------------------------------------------*/
+fun! s:ParseIni(config_file)
     let parsed = {}
-    for line in a:ini
+    for line in a:config_file
         let line = s:strip(line)
         if strlen(line) > 0
             if match(line, '^\s*;') == 0
+                " 空行
                 continue
             elseif match(line, '[') == 0
+                " []里的头部
                 let header = split(line, ';')[0]
                 let section = strpart(header, 1, strlen(line) - 2)
                 let parsed[section] = {}
-
             else
+                " xxx = yyy，xxx作为key，yyy作为value
                 let optline = map(split(line, '='), 's:strip(v:val)')
                 if len(optline) > 1
                     let optval = split(optline[1], ';')[0]
@@ -144,9 +172,15 @@ fun! s:ParseIni(ini)
     return parsed
 endfun
 
-"s:my_project_dict格式:{'name':{'SourceCodeDirx':xxx, 'FilenametagsDirx':'xxx', 'tags':'xxx', 'cscope':'xxx', 'filenametags':'xxx'}}
+"* --------------------------------------------------------------------------*/
+" @函数说明：   由配置文件解析工程字典
+" @返 回 值：   字典s:my_project_dict，格式:
+"               {'name':{'SourceCodeDirx':xxx, 'FilenametagsDirx':'xxx', 
+"                        'tags':'xxx', 'cscope':'xxx', 'filenametags':'xxx',
+"                        'cache':'xxx'}}
+"* --------------------------------------------------------------------------*/
 fun! s:SetMyProjectDict()
-    let s:my_project_dict = s:ParseIni(readfile(s:my_project_file))
+    let s:my_project_dict = s:ParseIni(readfile(s:my_project_config_file))
     return 1
 endfun
 
@@ -157,7 +191,8 @@ endfun
 
 "设置当前工程{{{2
 "-----------------------------------------------------------------------------"
-fun! s:SetCurrentProject()
+fun! s:SetCurrentProject(cur_prj)
+    let s:current_project = a:cur_prj
 endfun
 fun! GetCurrentProjectDict()
     if exists('s:current_project')
@@ -172,8 +207,8 @@ endfun
 "-----------------------------------------------------------------------------"
 fun! s:SetMyProjectList()
     let s:my_project_list = []
-    if filereadable(s:my_project_file)
-        let file = readfile(s:my_project_file)
+    if filereadable(s:my_project_config_file)
+        let file = readfile(s:my_project_config_file)
         for line in file
             if match(line, '[') == 0
                 let header = split(line, ';')[0]
@@ -360,8 +395,8 @@ fun! s:AddNewMyProject()
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     "输出到文件
     let item = ['', '[' . project_name . ']']
-    let output = readfile(s:my_project_file) + item + source_list + filenametags_list + tags_cscope_filenametags_list + cache_list + f3make_list
-    call writefile(output, s:my_project_file)
+    let output = readfile(s:my_project_config_file) + item + source_list + filenametags_list + tags_cscope_filenametags_list + cache_list + f3make_list
+    call writefile(output, s:my_project_config_file)
     echo "成功添加新工程：" . project_name 
     call StartMyProject()
     "定位到最后一行
@@ -381,7 +416,7 @@ fun! s:RemoveProjectUnderCursor()
     let l:ans = input("确定移除项目\"". prj_name. "\"？[Y/N] ")
     if l:ans == 'y' || l:ans == 'Y'
         let prj_name = '['.prj_name.']'
-        let file_content_list = readfile(s:my_project_file)
+        let file_content_list = readfile(s:my_project_config_file)
         for i in range(len(file_content_list))
             if prj_name == file_content_list[i]
                 let index = i
@@ -396,7 +431,7 @@ fun! s:RemoveProjectUnderCursor()
         let end = index
         call remove(file_content_list, start, end)
         "echo file_content_list
-        call writefile(file_content_list, s:my_project_file)
+        call writefile(file_content_list, s:my_project_config_file)
         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         let l:cur_prj = s:GetProjectUnderCursor()
         if has_key(l:cur_prj, "name")
@@ -472,10 +507,10 @@ fun! s:LoadProjectUnderCursor()
         return
     endif
     if !empty(l:cur_prj)
-        let s:current_project = l:cur_prj
+        call s:SetCurrentProject(l:cur_prj)
         call s:SetTagsCscopeFilenametags()
     elseif
-        let s:current_project = {}
+        call s:SetCurrentProject({})
         echo "项目不存在!"
     endif
     silent! close
@@ -486,50 +521,51 @@ endfun
 " 设置当前工程的tags，cscope，filenametags {{{2
 "-----------------------------------------------------------------------------"
 fun! s:SetTagsCscopeFilenametags()
+    let cur_prj = GetCurrentProjectDict()
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    if has_key(s:current_project, "name")
-        let g:current_project_name = s:current_project['name']
+    if has_key(cur_prj, "name")
+        let g:current_project_name = cur_prj['name']
         " fuf提示符
-        let g:fuf_mytaggedfile_prompt = '>'.s:current_project['name'].'>'
+        let g:fuf_mytaggedfile_prompt = '>'.cur_prj['name'].'>'
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    if has_key(s:current_project, "tags")
-        if filereadable(s:current_project["tags"])
+    if has_key(cur_prj, "tags")
+        if filereadable(cur_prj["tags"])
             exe ":set tags="
-            exe ":set tags+=".s:current_project["tags"]
+            exe ":set tags+=".cur_prj["tags"]
         endif
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    if has_key(s:current_project, "cscope")
-        if filereadable(s:current_project["cscope"])
+    if has_key(cur_prj, "cscope")
+        if filereadable(cur_prj["cscope"])
             exe ":cscope reset"
-            exe ":cscope add ".s:current_project["cscope"]
+            exe ":cscope add ".cur_prj["cscope"]
         endif
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    if has_key(s:current_project, "filenametags")
-        if filereadable(s:current_project["filenametags"])
-            let g:filenametags = s:current_project["filenametags"]
+    if has_key(cur_prj, "filenametags")
+        if filereadable(cur_prj["filenametags"])
+            let g:filenametags = cur_prj["filenametags"]
         endif
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     "供fuf使用
-    if has_key(s:current_project, "cache")
-        if filereadable(s:current_project["cache"])
-            let g:project_cache = s:current_project["cache"]
+    if has_key(cur_prj, "cache")
+        if filereadable(cur_prj["cache"])
+            let g:project_cache = cur_prj["cache"]
         endif
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     "供MyGrep使用
-    if has_key(s:current_project, "SourceCodeDir0")
-        let g:project_root_dir = s:current_project["SourceCodeDir0"]
+    if has_key(cur_prj, "SourceCodeDir0")
+        let g:project_root_dir = cur_prj["SourceCodeDir0"]
     endif
-    if has_key(s:current_project, "grep_ext")
-        let g:project_grep_ext = s:current_project["grep_ext"]
+    if has_key(cur_prj, "grep_ext")
+        let g:project_grep_ext = cur_prj["grep_ext"]
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     "MRU
-    let g:MRU_File = s:GetMyProjectConfigDir() . '\' . s:current_project['name'] . '\mru'
+    let g:MRU_File = s:GetMyProjectConfigDir() . '\' . cur_prj['name'] . '\mru'
 endfun
 "-----------------------------------------------------------------------------"
 "}}}
@@ -888,5 +924,6 @@ function! s:saveDataFile(dataName, items)
 endfunction
 "-----------------------------------------------------------------------------"
 "}}}
+
 " vim:fdm=marker:fmr={{{,}}} foldlevel=1:
 "}}}

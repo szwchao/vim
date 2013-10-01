@@ -18,7 +18,7 @@ endif
 
 let g:f3make_error = "Error"
 let g:f3make_warning = "Warning"
-let s:f3make = ""
+let s:f3make_cmd = ""
 
 " s:LoadCurrentProjectDictFromMyProject {{{2
 fun! s:LoadCurrentProjectDictFromMyProject()
@@ -27,7 +27,12 @@ fun! s:LoadCurrentProjectDictFromMyProject()
 endfun
 "}}}
 
-" F3Make {{{2
+" F3Make: 编译{{{2
+"* --------------------------------------------------------------------------*/
+" @函数说明：   编译
+" @参    数：   increment_build: 是否增量编译
+" @返 回 值：   无
+"* --------------------------------------------------------------------------*/
 fun! F3make(increment_build)
     let cur_prj_dict = s:LoadCurrentProjectDictFromMyProject()
     if has_key(cur_prj_dict, "name")
@@ -47,16 +52,16 @@ fun! F3make(increment_build)
         if has_key(cur_prj_dict, "build_target")
             let l:build_target = cur_prj_dict['build_target']
         else
-            let target = ""
+            let l:build_target = ""
         endif
     endif
 
-    let s:f3make = Py_find_f3make(l:cur_prj_path)
-    if s:f3make == ""
+    let s:f3make_cmd = Py_find_f3make(l:cur_prj_path)
+    if s:f3make_cmd == ""
         echo "找不到f3make.bat"
     endif
 
-    let cmd = s:f3make . " " . l:build_target
+    let cmd = s:f3make_cmd . " " . l:build_target
     let s = localtime()
     let l:result=system(cmd)
     let e = localtime() - s
@@ -90,7 +95,7 @@ for r,d,f in os.walk(path):
    for files in f:
       if files == "f3make.bat":
          f3make = os.path.join(r,files)
-vim.command("let l:f3make = '" + f3make + "'")
+         vim.command("let l:f3make = '" + f3make + "'")
 EOF
     return l:f3make
 endfun
@@ -144,7 +149,7 @@ endfun
 " Py_f3make: 用Python调用系统命令编译 {{{2
 "* --------------------------------------------------------------------------*/
 " @函数说明：   用Python调用系统命令编译
-"               实在没法处理引号双引号输出到vim的问题，弃用
+"               TODO: 实在没法处理引号双引号输出到vim的问题，弃用
 " @参    数：   f3make_cmd: f3make.bat
 " @参    数：   target: 编译命令
 " @返 回 值：   编译输出的结果
@@ -164,7 +169,11 @@ EOF
 endfun
 "}}}
 
-" ToggleF3MakeResultWindow {{{
+" ToggleF3MakeResultWindow: 切换结果显示窗口 {{{
+"* --------------------------------------------------------------------------*/
+" @函数说明：   切换结果显示窗口
+" @返 回 值：   无
+"* --------------------------------------------------------------------------*/
 fun! ToggleF3MakeResultWindow()
     let bname = '__F3Make_Result__'
     let winnum = bufwinnr(bname)
@@ -190,7 +199,13 @@ fun! ToggleF3MakeResultWindow()
 endfun
 "}}}
 
-" s:Show_F3Make_Result {{{
+" s:Show_F3Make_Result: 显示结果 {{{
+"* --------------------------------------------------------------------------*/
+" @函数说明：   显示结果
+" @参    数：   result: 结果
+" @参    数：   open_close_option: 打开还是关闭窗口
+" @返 回 值：   
+"* --------------------------------------------------------------------------*/
 fun! s:Show_F3Make_Result(result, open_close_option)
     let bname = '__F3Make_Result__'
     " If the window is already open, jump to it
@@ -272,12 +287,12 @@ fun! s:Open_Error_File()
     if line == ''
         return
     endif
-    if s:f3make == ""
-        echo "找不到s:f3make"
+    if s:f3make_cmd == ""
+        echo "找不到s:f3make_cmd"
         return
     endif
     " 先通过f3make.bat定位到工程目录
-    let source_dir = substitute(s:f3make, 'F1_Dev\\source\\f3make.bat', '', 'g')
+    let source_dir = substitute(s:f3make_cmd, 'F1_Dev\\source\\f3make.bat', '', 'g')
     " 将工程目录的\转成/
     let project_dir = substitute(source_dir, '\\', '/', 'g')
     " 用工程目录名代替..\..\

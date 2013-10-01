@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 2013/9/7 19:24:59
+"         Modified: 2013/10/1 20:23:14
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -58,13 +58,6 @@ Bundle 'DoxygenToolkit.vim'
 Bundle 'matchit.zip'
 Bundle 'python_match.vim'
 Bundle 'QuickBuf'
-
-"Bundle 'Mark'
-"Bundle 'Visual-Mark'
-"Bundle 'occur.vim'
-"Bundle 'buf_it'
-"Bundle 'rainbow.zip'
-"Bundle 'mru.vim'
 
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
@@ -185,9 +178,9 @@ autocmd FileType qf :call QuickfixMap()
 " 在wiki文件中的map
 autocmd FileType vimwiki :call WikiMap()
 " txt, cue, lrc
-autocmd BufNewFile,BufRead *.txt			setf txt
-autocmd BufNewFile,BufRead *.cue       setf cue
-autocmd BufNewFile,BufRead *.lrc       setf lrc
+autocmd BufNewFile,BufRead *.txt    setf txt
+autocmd BufNewFile,BufRead *.cue    setf cue
+autocmd BufNewFile,BufRead *.lrc    setf lrc
 " c的tab长度
 autocmd FileType c,cpp,h set tabstop=3
 autocmd FileType c,cpp,h set shiftwidth=3
@@ -204,7 +197,6 @@ au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=mkd
 " 设定字典补全文件
 autocmd FileType c set dictionary+=$VIM\vimfiles\dictionary\c_keywords.txt
 autocmd FileType python set dictionary+=$VIM\vimfiles\dictionary\python_keywords.txt
-autocmd FileType txt set dictionary+=$VIM\vimfiles\dictionary\c_keywords.txt
 
 "-------------------------------------------------------------------------------
 " 查找/替换相关的设置 {{{2
@@ -389,9 +381,9 @@ nmap <S-LEFT> <ESC>:NERDTreeToggle<CR>
 " Shift+RIGHT打开Tlist
 nmap <S-RIGHT> <ESC>:TagbarToggle<CR>
 " Shift+DOWN打开SrcExplToggle
-"nmap <S-DOWN> <ESC>:SrcExplToggle<CR>
+nmap <S-DOWN> <ESC>:SrcExplToggle<CR>
 " Shift+UP打开Calendar
-nmap <S-UP> <ESC>:Calendar<CR>
+"nmap <S-UP> <ESC>:Calendar<CR>
 
 " Insert下Alt+h,j,k,l移动光标
 imap <M-h> <LEFT>
@@ -530,7 +522,6 @@ let g:DoxygenToolkit_returnTag="@返 回 值：   "
 let g:DoxygenToolkit_blockHeader="--------------------------------------------------------------------------"
 let g:DoxygenToolkit_blockFooter="--------------------------------------------------------------------------"
 let g:DoxygenToolkit_authorName="wchao"
-"let g:DoxygenToolkit_licenseTag="My own license\n"
 
 "-------------------------------------------------------------------------------
 " VimWiki (vimwiki.vim) {{{2
@@ -579,6 +570,11 @@ let g:rainbow_operators = 1
 " ------------------------------------------------------------------------------
 let g:buftabs_only_basename=1
 let g:buftabs_in_statusline=1
+
+"-------------------------------------------------------------------------------
+" SrcExpl {{{2
+" ------------------------------------------------------------------------------
+let g:SrcExpl_isUpdateTags = 0 
 
 "}}}1
 
