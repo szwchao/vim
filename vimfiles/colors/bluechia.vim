@@ -12,9 +12,8 @@ endif
 let g:colors_name = 'bluechia'
 
 " Default colors
-"hi Normal	guifg=#d3daed	guibg=#05131c
-hi Normal	guifg=#FFF5EE	guibg=#05131c
-"hi Normal       guifg=#FFF5EE guibg=#1B1D1E
+"hi Normal	guifg=#FFF5EE	guibg=#242424
+hi Normal	guifg=#FFF5EE	guibg=#002b36
 
 "hi NonText	guifg=#92add3	guibg=#071925	gui=none
 hi NonText      ctermfg=5  guifg=#333333 gui=underline
@@ -51,7 +50,7 @@ hi Folded	guifg=#b265a4	guibg=black
 hi FoldColumn	guifg=#557755	guibg=#102010
 
 " Search
-hi Search	guifg=#000000	guibg=#BEBEBE	gui=none
+hi Search	guifg=#000000	guibg=#FFFF00	gui=none
 hi IncSearch	guifg=#3a553a	guibg=#d2ff00	gui=none
 
 " 行号

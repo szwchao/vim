@@ -1,6 +1,6 @@
-" ×Ô¶¨Òåº¯Êı{{{1
+" è‡ªå®šä¹‰å‡½æ•°{{{1
 
-" ·ÀÖ¹ÖØĞÂÔØÈë½Å±¾{{{2
+" é˜²æ­¢é‡æ–°è½½å…¥è„šæœ¬{{{2
 "------------------------------------------------------------------------------"
 if exists('g:loaded_myplugin')
     finish
@@ -9,29 +9,19 @@ let g:loaded_myplugin = 1
 "------------------------------------------------------------------------------"
 "}}}
 
-" Æ½Ì¨ÅĞ¶Ï{{{2
+" ç¼–è¯‘ã€è¿è¡Œã€è°ƒè¯• {{{2
 "------------------------------------------------------------------------------"
-if (has("win32") || has("win95") || has("win64") || has("win16"))
-    let g:platform = 'win'
-else
-    let g:platform = 'linux'
-endif
-"------------------------------------------------------------------------------"
-"}}}
-
-" ±àÒë¡¢ÔËĞĞ¡¢µ÷ÊÔ {{{2
-"------------------------------------------------------------------------------"
-"¶¨ÒåCompileRunº¯Êı£¬ÓÃÀ´µ÷ÓÃ½øĞĞ±àÒëºÍÔËĞĞ
+"å®šä¹‰CompileRunå‡½æ•°ï¼Œç”¨æ¥è°ƒç”¨è¿›è¡Œç¼–è¯‘å’Œè¿è¡Œ
 func! CompileRun()
     if exists('g:current_project_name')
         if !empty(g:current_project_name)
-            echo "¿ªÊ¼±àÒë¹¤³Ì£¨ÔöÁ¿£©£º" . g:current_project_name
+            echo "å¼€å§‹ç¼–è¯‘å·¥ç¨‹ï¼ˆå¢é‡ï¼‰ï¼š" . g:current_project_name
             call F3make(1)
             return
         endif
     endif
     if (&filetype != 'c') && (&filetype != 'cpp') && (&filetype != 'python')
-        echo 'Ö»ÄÜ±àÒëc,cpp,pythonÎÄ¼ş!'
+        echo 'åªèƒ½ç¼–è¯‘c,cpp,pythonæ–‡ä»¶!'
         return
     endif
     exec "w"
@@ -72,37 +62,37 @@ func! CompileRun()
     endif
     exe ":cw"
 endfunc
-"½áÊø¶¨ÒåCompileRun
+"ç»“æŸå®šä¹‰CompileRun
 
-"¶¨ÒåDebugº¯Êı£¬ÓÃÀ´µ÷ÊÔ³ÌĞò
+"å®šä¹‰Debugå‡½æ•°ï¼Œç”¨æ¥è°ƒè¯•ç¨‹åº
 func! Debug()
     if exists('g:current_project_name')
         if !empty(g:current_project_name)
-            echo "¿ªÊ¼±àÒë¹¤³Ì£¨È«ĞÂ£©£º" . g:current_project_name
+            echo "å¼€å§‹ç¼–è¯‘å·¥ç¨‹ï¼ˆå…¨æ–°ï¼‰ï¼š" . g:current_project_name
             call F3make(0)
             return
         endif
     endif
     exec "w"
-    "C³ÌĞò
+    "Cç¨‹åº
     if &filetype == 'c'
         exec "!gcc % -g -o %<.exe"
         exec "!gdb %<.exe"
-        "C++³ÌĞò
+        "C++ç¨‹åº
     elseif &filetype == 'cpp'
         exec "!g++ % -g -o %<.exe"
         exec "!gdb %<.exe"
-        "Java³ÌĞò
+        "Javaç¨‹åº
     elseif &filetype == 'java'
         exec "!javac %"
         exec "!jdb %<"
     endif
 endfunc
-"½áÊø¶¨ÒåDebug
+"ç»“æŸå®šä¹‰Debug
 "------------------------------------------------------------------------------"
 "}}}
 
-" »ñÈ¡µ±Ç°¹â±êÏÂµÄº¯ÊıÃû{{{2
+" è·å–å½“å‰å…‰æ ‡ä¸‹çš„å‡½æ•°å{{{2
 "------------------------------------------------------------------------------"
 function! GetFunctionName()
     " search backwards for our magic regex that works most of the time
@@ -129,42 +119,46 @@ endfun
 "------------------------------------------------------------------------------"
 "}}}
 
-" ¸ü»»Ö÷Ìâ{{{2
+" æ›´æ¢ä¸»é¢˜{{{2
 "------------------------------------------------------------------------------"
 func! ToggleColorScheme(...)
     if a:0 == 0
-        "È¡µÃËùÓĞÅäÉ«
-        let dir = $VIM . '/vimfiles/colors/'
+        "å–å¾—æ‰€æœ‰é…è‰²
+        if g:platform == 'win'
+            let dir = $VIM . '/vimfiles/colors/'
+        else
+            let dir = expand('~/.vim/colors/')
+        endif
         let colors = GetAllFilesInDir(dir, 'vim')
-        "È¥µôÂ·¾¶¼°À©Õ¹Ãû
+        "å»æ‰è·¯å¾„åŠæ‰©å±•å
         for i in range(len(colors))
             let colors[i] = fnamemodify(colors[i], ':t:r')
         endfor
-        "´Óg:colors_nameµÃµ½µ±Ç°ÅäÉ«µÄË÷Òı
+        "ä»g:colors_nameå¾—åˆ°å½“å‰é…è‰²çš„ç´¢å¼•
         let i = index(colors, g:colors_name)
-        "È¡ÏÂÒ»¸öÅäÉ«·½°¸
+        "å–ä¸‹ä¸€ä¸ªé…è‰²æ–¹æ¡ˆ
         let i = (i+1) % len(colors)
-        "¼ÓÔØÅäÉ«·½°¸
+        "åŠ è½½é…è‰²æ–¹æ¡ˆ
         exe 'colorscheme ' . get(colors, i)
-        call SetMyStatusLine()
+        "call SetMyStatusLine()
     elseif a:0 == 1
         let color = a:1
-        "¼ÓÔØÅäÉ«·½°¸
+        "åŠ è½½é…è‰²æ–¹æ¡ˆ
         exe 'colorscheme ' . color
-        " ÖØĞÂ¸ßÁÁ×´Ì¬À¸
-        call SetMyStatusLine()
+        " é‡æ–°é«˜äº®çŠ¶æ€æ 
+        "call SetMyStatusLine()
     endif
 
-    "Notice:Èç¹ûÒª¿´µ±Ç°ÅäÉ«£¬echo g:colors_name
+    "Notice:å¦‚æœè¦çœ‹å½“å‰é…è‰²ï¼Œecho g:colors_name
 
-    " ÖØĞÂ¸ßÁÁvisualmark.vimÊéÇ©
+    " é‡æ–°é«˜äº®visualmark.vimä¹¦ç­¾
     if &bg == "dark"
         highlight SignColor ctermfg=white ctermbg=blue guifg=white guibg=#2f4f4f
     else
         highlight SignColor ctermbg=white ctermfg=blue guibg=DarkOrange1 guifg=black
     endif
 
-    " ÖØĞÂ¸ßÁÁÆ¥ÅäÀ¨ºÅ
+    " é‡æ–°é«˜äº®åŒ¹é…æ‹¬å·
     if exists('g:loaded_rain_bow')
         cal rainbow#clear()
         cal rainbow#activate()
@@ -182,7 +176,7 @@ endfun
 "------------------------------------------------------------------------------"
 "}}}
 
-" ¸ü»»ĞĞºÅ/Ïà¶ÔĞĞºÅ {{{2
+" æ›´æ¢è¡Œå·/ç›¸å¯¹è¡Œå· {{{2
 "------------------------------------------------------------------------------"
 function! ToggleNuMode()
     if version >= 703
@@ -197,12 +191,16 @@ command! -nargs=0 ToggleNuMode :call ToggleNuMode()
 "------------------------------------------------------------------------------"
 "}}}
 
-" °Ñµ±Ç°ÎÄ¼şÁí´æµ½×ÀÃæ {{{2
+" æŠŠå½“å‰æ–‡ä»¶å¦å­˜åˆ°æ¡Œé¢ {{{2
 "------------------------------------------------------------------------------"
 function! SaveCurrentFileToDesktop()
     "let filename = fnamemodify(getcwd(), "%:t")
     let filename = expand("%")
-    let save_name = $HOME .'\Desktop\'. filename
+    if g:platform == 'win'
+        let save_name = $HOME . '\Desktop\' . filename
+    else
+        let save_name = $HOME . '/æ¡Œé¢/' . filename
+    endif
     if filereadable(save_name)
         let l:inputkey = input("File Exist! Overwrite? (Y/N) ")
         if l:inputkey == 'y' || l:inputkey == 'Y' || l:inputkey ==# "" 
@@ -216,7 +214,7 @@ command! -nargs=0 SaveCurrentFileToDesktop :call SaveCurrentFileToDesktop()
 "------------------------------------------------------------------------------"
 "}}}
 
-" ÇĞ»»²¹È«º¯Êı {{{2
+" åˆ‡æ¢è¡¥å…¨å‡½æ•° {{{2
 "------------------------------------------------------------------------------"
 fun! ToggleOmnifunc()
     if &omnifunc == ''
@@ -230,7 +228,7 @@ endfun
 "------------------------------------------------------------------------------"
 "}}}
 
-" ²åÈëÈÕÆÚÊ±¼ä {{{2
+" æ’å…¥æ—¥æœŸæ—¶é—´ {{{2
 "------------------------------------------------------------------------------"
 fun! InsertDateTime()
     silent! execute "normal a".strftime("%c")."\<ESC>"
@@ -238,7 +236,7 @@ endfun
 "------------------------------------------------------------------------------"
 "}}}
 
-" ÏÔÊ¾rgb.txtÀïËùÓĞÑÕÉ« {{{2
+" æ˜¾ç¤ºrgb.txté‡Œæ‰€æœ‰é¢œè‰² {{{2
 "------------------------------------------------------------------------------"
 fun! DisplayAllColors()
    let bname = '_All_Colors_'
@@ -279,16 +277,16 @@ fun! DisplayAllColors()
    " Display the result
    silent! %delete _
 
-   let fname = $VIMRUNTIME . '\rgb.txt'
+   let fname = $VIMRUNTIME . g:slash . 'rgb.txt'
    let rgb_pattern = '^\s*\zs\(\d\+\s*\)\{3}\ze\w*$'
    let color_pattern = '^\s*\(\d\+\s*\)\{3}\zs\w*$'
    let result = []
    for line in readfile(fname)
-       " Æ¥Åäµ½µÄÑÕÉ«rgbÊıÖµ
+       " åŒ¹é…åˆ°çš„é¢œè‰²rgbæ•°å€¼
        let match_rgb = matchstr(line, rgb_pattern)
-       " Æ¥Åäµ½µÄÑÕÉ«×Ö·û´®
+       " åŒ¹é…åˆ°çš„é¢œè‰²å­—ç¬¦ä¸²
        let match_color_str = matchstr(line, color_pattern)
-       " È¥µôËùÓĞ°üº¬greyµÄĞĞ
+       " å»æ‰æ‰€æœ‰åŒ…å«greyçš„è¡Œ
        let grey_str = matchstr(line, '^\s*\(\d\+\s*\)\{3}\zs.*grey.*$')
        if len(grey_str) > 1
            continue
@@ -312,7 +310,7 @@ fun! DisplayAllColors()
            let g_hex = printf("%02X", g)
            let b_hex = printf("%02X", b)
            let rgb_hex = '#'.r_hex.g_hex.b_hex
-           " Êä³öµÃ¸üÕûÆëÒ»µã
+           " è¾“å‡ºå¾—æ›´æ•´é½ä¸€ç‚¹
            let str1 = match_rgb . rgb_hex . '    ' . match_color_str
            let len1 = len(str1)
            let str2 = _match_color_str_
@@ -340,7 +338,7 @@ command! -nargs=* DisplayAllColors call DisplayAllColors()
 "------------------------------------------------------------------------------"
 "}}}
 
-" ×Ô¶¯ĞŞ¸ÄModifiedºóÃæµÄÊ±¼ä {{{2
+" è‡ªåŠ¨ä¿®æ”¹Modifiedåé¢çš„æ—¶é—´ {{{2
 "------------------------------------------------------------------------------"
 function! LastModified()
   if &modified

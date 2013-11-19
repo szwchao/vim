@@ -95,7 +95,7 @@ for r,d,f in os.walk(path):
    for files in f:
       if files == "f3make.bat":
          f3make = os.path.join(r,files)
-         vim.command("let l:f3make = '" + f3make + "'")
+vim.command("let l:f3make = '" + f3make + "'")
 EOF
     return l:f3make
 endfun

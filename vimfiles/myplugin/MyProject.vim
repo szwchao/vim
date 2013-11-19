@@ -1,6 +1,6 @@
-" ×Ô¶¨Òå¹¤³Ì{{{1
+" è‡ªå®šä¹‰å·¥ç¨‹{{{1
 
-"ÉèÖÃÈ«¾Ö±äÁ¿{{{2
+"è®¾ç½®å…¨å±€å˜é‡{{{2
 "-----------------------------------------------------------------------------"
 
 " Prevent reloading
@@ -15,30 +15,30 @@ fun! s:Set(var, val)
     end
 endfun
 
-"¹©×´Ì¬ÌõÒÔ¼°±àÒëÊ¹ÓÃ
+"ä¾›çŠ¶æ€æ¡ä»¥åŠç¼–è¯‘ä½¿ç”¨
 call s:Set('g:current_project_name', '')
-" ÓÃÔ´ÂëÄ¿Â¼´´½¨filenametags
+" ç”¨æºç ç›®å½•åˆ›å»ºfilenametags
 call s:Set('g:AllwaysUseSameDirToCreateFilenametags', '1')
-" ÓÃÄ¬ÈÏÃû´´½¨tag, cscope
+" ç”¨é»˜è®¤ååˆ›å»ºtag, cscope
 call s:Set('g:AllwaysUseDefaultTagsCscopeName', '1')
-" ÊÇ·ñ¿ÉÒÔÌí¼Ó¶à¸öÔ´ÂëÄ¿Â¼
+" æ˜¯å¦å¯ä»¥æ·»åŠ å¤šä¸ªæºç ç›®å½•
 call s:Set('g:EnableMultiSourceCodeDir', '0')
-" ¹¤³ÌÄ¿Â¼Ãû
+" å·¥ç¨‹ç›®å½•å
 "call s:Set('g:MyProjectConfigDir', $HOME.'\MyProject')
 call s:Set('g:MyProjectConfigDir', 'E:\Workspace\MyProject')
-" ÅäÖÃÎÄ¼şÃû
+" é…ç½®æ–‡ä»¶å
 call s:Set('g:MyProjectConfigFile', 'MyProjectFile')
-" ¹ıÂËÎÄ¼şÀàĞÍ
+" è¿‡æ»¤æ–‡ä»¶ç±»å‹
 call s:Set('g:MyProjectFileFilter', '*.h *.c *.py')
-" Éú³ÉÎÄ¼şÁĞ±íµÄÃüÁî
+" ç”Ÿæˆæ–‡ä»¶åˆ—è¡¨çš„å‘½ä»¤
 call s:Set('g:MyProjectFindProgram', "dir /B /S /A-D /ON")
-" ´°¿Ú¸ß¶È
+" çª—å£é«˜åº¦
 call s:Set('g:MyProjectWinHeight', "15")
-" seagate±àÒëÑ¡Ïî
+" seagateç¼–è¯‘é€‰é¡¹
 call s:Set('g:EnableAddF3MakeVar', '1')
 "}}}
 
-"µ÷ÊÔ{{{2
+"è°ƒè¯•{{{2
 "-----------------------------------------------------------------------------"
 let s:debugmsg = 0
 
@@ -53,24 +53,24 @@ fun! s:EchoError(msg)
 endfun
 "}}}
 
-"»ñÈ¡µ±Ç°¹¤³ÌÃû{{{2
+"è·å–å½“å‰å·¥ç¨‹å{{{2
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   »ñÈ¡projectÃû³Æ
-" @·µ »Ø Öµ£º   ×Ö·û´®
+" @å‡½æ•°è¯´æ˜ï¼š   è·å–projectåç§°
+" @è¿” å› å€¼ï¼š   å­—ç¬¦ä¸²
 "* --------------------------------------------------------------------------*/
 fun! GetProjectName()
     if g:current_project_name == ''
         return g:current_project_name
     else
-        return g:current_project_name . ' | '
+        return g:current_project_name
     endif
 endfun
 "}}}
 
-"ÉèÖÃ¹¤³ÌÅäÖÃÄ¿Â¼{{{2
+"è®¾ç½®å·¥ç¨‹é…ç½®ç›®å½•{{{2
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ÉèÖÃ¹¤³ÌÅäÖÃÄ¿Â¼£¬²»´æÔÚÔò´´½¨Ä¿Â¼
-" @·µ »Ø Öµ£º   1 - ³É¹¦£¬ 0 - Ê§°Ü
+" @å‡½æ•°è¯´æ˜ï¼š   è®¾ç½®å·¥ç¨‹é…ç½®ç›®å½•ï¼Œä¸å­˜åœ¨åˆ™åˆ›å»ºç›®å½•
+" @è¿” å› å€¼ï¼š   1 - æˆåŠŸï¼Œ 0 - å¤±è´¥
 "* --------------------------------------------------------------------------*/
 fun! s:SetMyProjectDir()
     if !isdirectory(g:MyProjectConfigDir)
@@ -86,18 +86,18 @@ fun! s:SetMyProjectDir()
 endfun
 
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   »ñÈ¡¹¤³ÌÅäÖÃÄ¿Â¼
-" @·µ »Ø Öµ£º   Ä¿Â¼Ãû³Æ×Ö·û´®
+" @å‡½æ•°è¯´æ˜ï¼š   è·å–å·¥ç¨‹é…ç½®ç›®å½•
+" @è¿” å› å€¼ï¼š   ç›®å½•åç§°å­—ç¬¦ä¸²
 "* --------------------------------------------------------------------------*/
 fun! s:GetMyProjectConfigDir()
     return s:my_project_config_dir
 endfun
 "}}}
 
-"ÉèÖÃ¹¤³ÌÅäÖÃÎÄ¼ş{{{2
+"è®¾ç½®å·¥ç¨‹é…ç½®æ–‡ä»¶{{{2
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ÉèÖÃ¹¤³ÌÅäÖÃÎÄ¼ş
-" @·µ »Ø Öµ£º   1 - ³É¹¦£¬ 0 - Ê§°Ü
+" @å‡½æ•°è¯´æ˜ï¼š   è®¾ç½®å·¥ç¨‹é…ç½®æ–‡ä»¶
+" @è¿” å› å€¼ï¼š   1 - æˆåŠŸï¼Œ 0 - å¤±è´¥
 "* --------------------------------------------------------------------------*/
 fun! s:SetMyProjectConfigFile()
     let l:filename = expand(s:GetMyProjectConfigDir() .'\'. g:MyProjectConfigFile)
@@ -113,16 +113,16 @@ fun! s:SetMyProjectConfigFile()
 endfun
 
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   »ñÈ¡¹¤³ÌÅäÖÃÎÄ¼ş
-" @·µ »Ø Öµ£º   ÎŞ
+" @å‡½æ•°è¯´æ˜ï¼š   è·å–å·¥ç¨‹é…ç½®æ–‡ä»¶
+" @è¿” å› å€¼ï¼š   æ— 
 "* --------------------------------------------------------------------------*/
 fun! s:GetMyProjectConfigFile()
     return s:my_project_config_file
 endfun
 
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ±à¼­¹¤³ÌÅäÖÃÎÄ¼ş
-" @·µ »Ø Öµ£º   ÎŞ
+" @å‡½æ•°è¯´æ˜ï¼š   ç¼–è¾‘å·¥ç¨‹é…ç½®æ–‡ä»¶
+" @è¿” å› å€¼ï¼š   æ— 
 "* --------------------------------------------------------------------------*/
 fun! s:EditMyProjectFile()
     let l:filename = s:GetMyProjectConfigFile()
@@ -131,7 +131,7 @@ fun! s:EditMyProjectFile()
 endfun
 "}}}
 
-"½âÎö¹¤³ÌÅäÖÃÎÄ¼ş{{{2
+"è§£æå·¥ç¨‹é…ç½®æ–‡ä»¶{{{2
 "-----------------------------------------------------------------------------"
 fun! s:strip(text)
     let text = substitute(a:text, '^[[:space:][:cntrl:]]\+', '', '')
@@ -140,9 +140,9 @@ fun! s:strip(text)
 endfun
 
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ½âÎöÅäÖÃÎÄ¼ş
-" @²Î    Êı£º   config_file£¬ÅäÖÃÎÄ¼şµÄÂ·¾¶
-" @·µ »Ø Öµ£º   ½âÎöºÃµÄ×Öµä
+" @å‡½æ•°è¯´æ˜ï¼š   è§£æé…ç½®æ–‡ä»¶
+" @å‚    æ•°ï¼š   config_fileï¼Œé…ç½®æ–‡ä»¶çš„è·¯å¾„
+" @è¿” å› å€¼ï¼š   è§£æå¥½çš„å­—å…¸
 "* --------------------------------------------------------------------------*/
 fun! s:ParseIni(config_file)
     let parsed = {}
@@ -150,15 +150,15 @@ fun! s:ParseIni(config_file)
         let line = s:strip(line)
         if strlen(line) > 0
             if match(line, '^\s*;') == 0
-                " ¿ÕĞĞ
+                " ç©ºè¡Œ
                 continue
             elseif match(line, '[') == 0
-                " []ÀïµÄÍ·²¿
+                " []é‡Œçš„å¤´éƒ¨
                 let header = split(line, ';')[0]
                 let section = strpart(header, 1, strlen(line) - 2)
                 let parsed[section] = {}
             else
-                " xxx = yyy£¬xxx×÷Îªkey£¬yyy×÷Îªvalue
+                " xxx = yyyï¼Œxxxä½œä¸ºkeyï¼Œyyyä½œä¸ºvalue
                 let optline = map(split(line, '='), 's:strip(v:val)')
                 if len(optline) > 1
                     let optval = split(optline[1], ';')[0]
@@ -173,8 +173,8 @@ fun! s:ParseIni(config_file)
 endfun
 
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ÓÉÅäÖÃÎÄ¼ş½âÎö¹¤³Ì×Öµä
-" @·µ »Ø Öµ£º   ×Öµäs:my_project_dict£¬¸ñÊ½:
+" @å‡½æ•°è¯´æ˜ï¼š   ç”±é…ç½®æ–‡ä»¶è§£æå·¥ç¨‹å­—å…¸
+" @è¿” å› å€¼ï¼š   å­—å…¸s:my_project_dictï¼Œæ ¼å¼:
 "               {'name':{'SourceCodeDirx':xxx, 'FilenametagsDirx':'xxx', 
 "                        'tags':'xxx', 'cscope':'xxx', 'filenametags':'xxx',
 "                        'cache':'xxx'}}
@@ -189,7 +189,7 @@ fun! GetMyProjectDict()
 endfun
 "}}}
 
-"ÉèÖÃµ±Ç°¹¤³Ì{{{2
+"è®¾ç½®å½“å‰å·¥ç¨‹{{{2
 "-----------------------------------------------------------------------------"
 fun! s:SetCurrentProject(cur_prj)
     let s:current_project = a:cur_prj
@@ -203,7 +203,7 @@ fun! GetCurrentProjectDict()
 endfun
 "}}}
 
-"µ±Ç°¹¤³ÌÁĞ±í{{{2
+"å½“å‰å·¥ç¨‹åˆ—è¡¨{{{2
 "-----------------------------------------------------------------------------"
 fun! s:SetMyProjectList()
     let s:my_project_list = []
@@ -226,7 +226,7 @@ fun! s:GetMyProjectNameList()
 endfun
 "}}}
 
-" Èë¿Ú {{{2
+" å…¥å£ {{{2
 "-----------------------------------------------------------------------------"
 fun! s:InitMyProject()
     if !s:SetMyProjectDir()
@@ -247,7 +247,7 @@ fun! StartMyProject()
 endfun
 "}}}
 
-"Ìí¼ÓĞÂ¹¤³Ì{{{2
+"æ·»åŠ æ–°å·¥ç¨‹{{{2
 "-----------------------------------------------------------------------------"
 fun! s:IsProjectExist(project_name)
     if has_key(GetMyProjectDict(), a:project_name)
@@ -260,16 +260,16 @@ endfun
 fun! s:InputSourceCodeDir(source_type)
     let l:ans = 'y'
     let l:str = a:source_type
-    "Ô´³ÌĞòÄ¿Â¼
+    "æºç¨‹åºç›®å½•
     let source_dir = []
     while ((l:ans == 'y') || (l:ans == 'Y'))
-        let dir = input("Ôö¼Ó" . l:str . "Ä¿Â¼: ", "", "dir")
+        let dir = input("å¢åŠ " . l:str . "ç›®å½•: ", "", "dir")
         if dir !~ '\S'
             break
         endif
         while !isdirectory(dir)
             echohl errormsg
-            let dir = input("±ØĞëÊÇÒÑ´æÔÚµÄÄ¿Â¼!\n" . l:str. " Directory: ", "", "dir")
+            let dir = input("å¿…é¡»æ˜¯å·²å­˜åœ¨çš„ç›®å½•!\n" . l:str. " Directory: ", "", "dir")
             if dir !~ '\S'
                 break
             endif
@@ -279,40 +279,40 @@ fun! s:InputSourceCodeDir(source_type)
         endif
         echohl normal
         if g:EnableMultiSourceCodeDir == 1
-            let l:ans = input("ÊÇ·ñÔÙÔö¼ÓÁíÒ»¸ö". l:str. "Ä¿Â¼£¿(Y/N) ")
+            let l:ans = input("æ˜¯å¦å†å¢åŠ å¦ä¸€ä¸ª". l:str. "ç›®å½•ï¼Ÿ(Y/N) ")
         else
             break
         endif
     endwhile
-    call s:EchoError('Ô´Ä¿Â¼: ' . string(source_dir))
+    call s:EchoError('æºç›®å½•: ' . string(source_dir))
     return source_dir
 endfun
 
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ÊäÈëf3makeµÄÏà¹Ø²ÎÊı£¬°üÀ¨£º
-"               1. target±àÒëÃüÁî
-" @²Î    Êı£º   project_name - ¹¤³ÌÃû
-" @²Î    Êı£º   source_dir - Ô´ÂëÄ¿Â¼
-" @·µ »Ø Öµ£º   f3makeµÄ²ÎÊıÁĞ±í
+" @å‡½æ•°è¯´æ˜ï¼š   è¾“å…¥f3makeçš„ç›¸å…³å‚æ•°ï¼ŒåŒ…æ‹¬ï¼š
+"               1. targetç¼–è¯‘å‘½ä»¤
+" @å‚    æ•°ï¼š   project_name - å·¥ç¨‹å
+" @å‚    æ•°ï¼š   source_dir - æºç ç›®å½•
+" @è¿” å› å€¼ï¼š   f3makeçš„å‚æ•°åˆ—è¡¨
 "* --------------------------------------------------------------------------*/
 fun! s:InputF3MakeVar(project_name, source_dir)
     let f3make_list = []
 
-    let build_target = input("Ö¸¶¨±àÒëµÄTarget: ")
+    let build_target = input("æŒ‡å®šç¼–è¯‘çš„Target: ")
     call add(f3make_list, 'build_target = '. build_target)
     return f3make_list
 endfun
 
 fun! s:AddNewMyProject()
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    "ÏîÄ¿Ãû³Æ
-    let project_name = input("ĞÂÏîÄ¿Ãû³Æ: ", "", "file")
+    "é¡¹ç›®åç§°
+    let project_name = input("æ–°é¡¹ç›®åç§°: ", "", "file")
     if !len(project_name)
         return
     endif
     while s:IsProjectExist(project_name)
         echohl errormsg
-        let project_name = input("¸ÃÏîÄ¿ÒÑ´æÔÚ!\n". "ÇëÖØĞÂÊäÈëÏîÄ¿Ãû³Æ: ", "", "file")
+        let project_name = input("è¯¥é¡¹ç›®å·²å­˜åœ¨!\n". "è¯·é‡æ–°è¾“å…¥é¡¹ç›®åç§°: ", "", "file")
         if !len(project_name)
             return
         endif
@@ -326,7 +326,7 @@ fun! s:AddNewMyProject()
     if g:AllwaysUseSameDirToCreateFilenametags == 1
         let filenametags_dir = source_code_dir
     else
-        let choice = input("ÊÇ·ñÓÃÔ´ÂëÄ¿Â¼´´½¨filenametags? (Y/N)")
+        let choice = input("æ˜¯å¦ç”¨æºç ç›®å½•åˆ›å»ºfilenametags? (Y/N)")
         if (choice == 'y') || (choice == 'Y')
             let filenametags_dir = source_code_dir
         elseif (choice == 'n') || (choice == 'N')
@@ -337,7 +337,7 @@ fun! s:AddNewMyProject()
     endif
 
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    "ÊÇ·ñÓÃÄ¬ÈÏÃû³Æ´´½¨ÎÄ¼ş
+    "æ˜¯å¦ç”¨é»˜è®¤åç§°åˆ›å»ºæ–‡ä»¶
     if g:AllwaysUseDefaultTagsCscopeName == 1
         let tags = "tags"
         let cscope = "cscope.out"
@@ -386,34 +386,34 @@ fun! s:AddNewMyProject()
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     let f3make_list = []
     if g:EnableAddF3MakeVar == 1
-        let l:ans = input("Ìí¼Óf3makeÏà¹Ø²ÎÊı£¿[Y/N] ")
+        let l:ans = input("æ·»åŠ f3makeç›¸å…³å‚æ•°ï¼Ÿ[Y/N] ")
         if l:ans == 'y' || l:ans == 'Y'
             let f3make_list = s:InputF3MakeVar(project_name, source_code_dir[0])
         endif
     endif
 
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    "Êä³öµ½ÎÄ¼ş
+    "è¾“å‡ºåˆ°æ–‡ä»¶
     let item = ['', '[' . project_name . ']']
     let output = readfile(s:my_project_config_file) + item + source_list + filenametags_list + tags_cscope_filenametags_list + cache_list + f3make_list
     call writefile(output, s:my_project_config_file)
-    echo "³É¹¦Ìí¼ÓĞÂ¹¤³Ì£º" . project_name 
+    echo "æˆåŠŸæ·»åŠ æ–°å·¥ç¨‹ï¼š" . project_name 
     call StartMyProject()
-    "¶¨Î»µ½×îºóÒ»ĞĞ
+    "å®šä½åˆ°æœ€åä¸€è¡Œ
     normal! G
-    "¸üĞÂtags, cscope, filenametags
+    "æ›´æ–°tags, cscope, filenametags
     call s:UpdateProjectUnderCursor()
 endfun
 "}}}
 
-" ÒÆ³ı¹â±êÏÂµÄ¹¤³Ì {{{2
+" ç§»é™¤å…‰æ ‡ä¸‹çš„å·¥ç¨‹ {{{2
 "-----------------------------------------------------------------------------"
 fun! s:RemoveProjectUnderCursor()
     let prj_name = getline('.')
     if prj_name == ''
         return
     endif
-    let l:ans = input("È·¶¨ÒÆ³ıÏîÄ¿\"". prj_name. "\"£¿[Y/N] ")
+    let l:ans = input("ç¡®å®šç§»é™¤é¡¹ç›®\"". prj_name. "\"ï¼Ÿ[Y/N] ")
     if l:ans == 'y' || l:ans == 'Y'
         let prj_name = '['.prj_name.']'
         let file_content_list = readfile(s:my_project_config_file)
@@ -440,7 +440,7 @@ fun! s:RemoveProjectUnderCursor()
         let esc_filename_chars = ' *?[{`$%#"|!<>();&' . "'\t\n"
         let my_cur_prj_dir = escape(s:GetMyProjectConfigDir().'\'.cur_prj_name, esc_filename_chars)
         call s:DeleteDir(my_cur_prj_dir)
-        echo "É¾³ı³É¹¦£¡"
+        echo "åˆ é™¤æˆåŠŸï¼"
     endif
     call StartMyProject()
 endfun
@@ -475,7 +475,7 @@ endfun
 "-----------------------------------------------------------------------------"
 "}}}
 
-" È¡µÃ¹â±êÏÂµÄ¹¤³Ì {{{2
+" å–å¾—å…‰æ ‡ä¸‹çš„å·¥ç¨‹ {{{2
 "-----------------------------------------------------------------------------"
 fun! s:GetProjectUnderCursor()
     let prj_name = getline('.')
@@ -497,35 +497,37 @@ endfun
 "-----------------------------------------------------------------------------"
 "}}}
 
-" ¼ÓÔØ¹â±êÏÂµÄ¹¤³Ì {{{2
+" åŠ è½½å…‰æ ‡ä¸‹çš„å·¥ç¨‹ {{{2
 "-----------------------------------------------------------------------------"
 fun! s:LoadProjectUnderCursor()
     let l:cur_prj = s:GetProjectUnderCursor()
     if l:cur_prj == {}
-        echo "Ã»ÓĞ¹¤³Ì!"
+        echo "æ²¡æœ‰å·¥ç¨‹!"
         silent! close
         return
     endif
     if !empty(l:cur_prj)
         call s:SetCurrentProject(l:cur_prj)
         call s:SetTagsCscopeFilenametags()
+        let g:airline_section_b = GetProjectName()
+        exe ":AirlineRefresh"
     elseif
         call s:SetCurrentProject({})
-        echo "ÏîÄ¿²»´æÔÚ!"
+        echo "é¡¹ç›®ä¸å­˜åœ¨!"
     endif
     silent! close
 endfun
 "-----------------------------------------------------------------------------"
 "}}}
 
-" ÉèÖÃµ±Ç°¹¤³ÌµÄtags£¬cscope£¬filenametags {{{2
+" è®¾ç½®å½“å‰å·¥ç¨‹çš„tagsï¼Œcscopeï¼Œfilenametags {{{2
 "-----------------------------------------------------------------------------"
 fun! s:SetTagsCscopeFilenametags()
     let cur_prj = GetCurrentProjectDict()
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     if has_key(cur_prj, "name")
         let g:current_project_name = cur_prj['name']
-        " fufÌáÊ¾·û
+        " fufæç¤ºç¬¦
         let g:fuf_mytaggedfile_prompt = '>'.cur_prj['name'].'>'
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -549,14 +551,14 @@ fun! s:SetTagsCscopeFilenametags()
         endif
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    "¹©fufÊ¹ÓÃ
+    "ä¾›fufä½¿ç”¨
     if has_key(cur_prj, "cache")
         if filereadable(cur_prj["cache"])
             let g:project_cache = cur_prj["cache"]
         endif
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    "¹©MyGrepÊ¹ÓÃ
+    "ä¾›MyGrepä½¿ç”¨
     if has_key(cur_prj, "SourceCodeDir0")
         let g:project_root_dir = cur_prj["SourceCodeDir0"]
     endif
@@ -570,7 +572,7 @@ endfun
 "-----------------------------------------------------------------------------"
 "}}}
 
-" ¸üĞÂ¹â±êÏÂµÄ¹¤³Ì {{{2
+" æ›´æ–°å…‰æ ‡ä¸‹çš„å·¥ç¨‹ {{{2
 "-----------------------------------------------------------------------------"
 fun! s:UpdateProjectUnderCursor()
     let l:cur_prj = s:GetProjectUnderCursor()
@@ -589,21 +591,21 @@ fun! s:UpdateProjectUnderCursor()
             call add(l:fntags_dir_list, l:cur_prj[key])
         endif
     endfor
-    let l:ans = input("¸üĞÂËùÓĞµÄtags, cscope, filenametags, cache? [Y/N] ")
+    let l:ans = input("æ›´æ–°æ‰€æœ‰çš„tags, cscope, filenametags, cache? [Y/N] ")
     if (l:ans == 'n') || (l:ans == 'N')
-        let l:ans = input("¸üĞÂtags? [Y/N] ")
+        let l:ans = input("æ›´æ–°tags? [Y/N] ")
         if (l:ans == 'n') || (l:ans == 'N')
             let l:update_option['tags'] = 0
         endif
-        let l:ans = input("¸üĞÂcscope? [Y/N] ")
+        let l:ans = input("æ›´æ–°cscope? [Y/N] ")
         if (l:ans == 'n') || (l:ans == 'N')
             let l:update_option['cscope'] = 0
         endif
-        let l:ans = input("¸üĞÂfilenametags? [Y/N] ")
+        let l:ans = input("æ›´æ–°filenametags? [Y/N] ")
         if (l:ans == 'n') || (l:ans == 'N')
             let l:update_option['filenametags'] = 0
         endif
-        let l:ans = input("¸üĞÂcache? [Y/N] ")
+        let l:ans = input("æ›´æ–°cache? [Y/N] ")
         if (l:ans == 'n') || (l:ans == 'N')
             let l:update_option['cache'] = 0
         endif
@@ -626,7 +628,7 @@ endfun
 "-----------------------------------------------------------------------------"
 "}}}
 
-" Ë¢ĞÂ´°¿Ú {{{2
+" åˆ·æ–°çª—å£ {{{2
 "-----------------------------------------------------------------------------"
 fun! s:RefreshDisplayWindow()
     call s:InitMyProject()
@@ -635,7 +637,7 @@ endfun
 "-----------------------------------------------------------------------------"
 "}}}
 
-"ÏÔÊ¾¹¤³ÌÁĞ±í {{{2
+"æ˜¾ç¤ºå·¥ç¨‹åˆ—è¡¨ {{{2
 "-----------------------------------------------------------------------------"
 fun! s:DisplayMyProject(project_list)
     let s:MyProjectDetailedHelp = 0
@@ -686,7 +688,7 @@ fun! s:DisplayMyProject(project_list)
 endfun
 "}}}
 
-" Óï·¨¸ßÁÁ {{{2
+" è¯­æ³•é«˜äº® {{{2
 "-----------------------------------------------------------------------------"
 fun! s:MyProjectSyntax()
     syn match MyProjectList       /^[a-zA-Z0-9-_]\+$/
@@ -696,7 +698,7 @@ fun! s:MyProjectSyntax()
 endfun
 "}}}
 
-" ÏÔÊ¾°ïÖú {{{2
+" æ˜¾ç¤ºå¸®åŠ© {{{2
 fun! s:MyProjectToggleHelp()
     let s:MyProjectDetailedHelp = !s:MyProjectDetailedHelp
     setlocal modifiable
@@ -720,13 +722,13 @@ function! s:MyProjectCreateHelp()
     let header = []
 
     if s:MyProjectDetailedHelp == 1
-        call add(header, '" <F1> : ÇĞ»»°ïÖú')
-        call add(header, '" <»Ø³µ>: ¼ÓÔØ¹¤³Ì')
-        call add(header, '" a : Ôö¼ÓĞÂ¹¤³Ì')
-        call add(header, '" u : ¸üĞÂtags/cscope/filenametags/cache')
-        call add(header, '" d : É¾³ı¹¤³Ì')
-        call add(header, '" e : ±à¼­configÎÄ¼ş')
-        call add(header, '" <ESC> : ÍË³ö')
+        call add(header, '" <F1> : åˆ‡æ¢å¸®åŠ©')
+        call add(header, '" <å›è½¦>: åŠ è½½å·¥ç¨‹')
+        call add(header, '" a : å¢åŠ æ–°å·¥ç¨‹')
+        call add(header, '" u : æ›´æ–°tags/cscope/filenametags/cache')
+        call add(header, '" d : åˆ é™¤å·¥ç¨‹')
+        call add(header, '" e : ç¼–è¾‘configæ–‡ä»¶')
+        call add(header, '" <ESC> : é€€å‡º')
     else
         call add(header, '" Press <F1> for Help')
     endif
@@ -735,7 +737,7 @@ function! s:MyProjectCreateHelp()
 endfunction
 "}}}
 
-" ¿ì½İ¼ü {{{2
+" å¿«æ·é”® {{{2
 "-----------------------------------------------------------------------------"
 fun! s:MyProjectMapKeys()   
     nnoremap <buffer> <silent> <F1>          :call <SID>MyProjectToggleHelp()<cr>
@@ -749,7 +751,7 @@ fun! s:MyProjectMapKeys()
 endfun
 "}}}
 
-" Éú³Étags {{{2
+" ç”Ÿæˆtags {{{2
 "------------------------------------------------------------------------------"
 fun! UpdateMyProjectTags(src_dir_list, tags)
     let l:src_dir_list = a:src_dir_list
@@ -770,34 +772,34 @@ fun! UpdateMyProjectTags(src_dir_list, tags)
     endif
     if !filereadable(l:output_cscope)
         let starttime = reltime()  " start the clock
-        echo "Éú³ÉtagsÎÄ¼şÁĞ±íÖĞ..."
+        echo "ç”Ÿæˆtagsæ–‡ä»¶åˆ—è¡¨ä¸­..."
         let l:cscope_string = ''
         for l:index in range(len(l:src_dir_list))
-            "×ªµ½projectÄ¿Â¼
+            "è½¬åˆ°projectç›®å½•
             execute "cd " .  l:src_dir_list[l:index]
-            "µÃµ½ÃüÁîÊä³ö
+            "å¾—åˆ°å‘½ä»¤è¾“å‡º
             let l:cscope_string = l:cscope_string . system(l:cmd . " " . l:ext_filter)
         endfor
-        "·ÖĞĞ
+        "åˆ†è¡Œ
         let l:cscope_list = split(l:cscope_string, '\n')
-        "Ğ´ÈëÎÄ¼ş
+        "å†™å…¥æ–‡ä»¶
         call writefile(l:cscope_list, l:output_cscope)
         let elapsedtimestr = matchstr(reltimestr(reltime(starttime)),'\d\+\(\.\d\d\)\=')
-        echo "tagsÎÄ¼şÁĞ±íÒÑ´´½¨! ". '(time: '.elapsedtimestr.'s)'
+        echo "tagsæ–‡ä»¶åˆ—è¡¨å·²åˆ›å»º! ". '(time: '.elapsedtimestr.'s)'
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     execute "cd " . output_dir 
     let starttime = reltime()  " start the clock
-    echo "Éú³ÉtagsÖĞ..."
+    echo "ç”Ÿæˆtagsä¸­..."
     "call system("ctags -L cscope.files")
     call system("ctags -L cscope.files --c++-kinds=+p --fields=+iaS --extra=+q .")
     let elapsedtimestr = matchstr(reltimestr(reltime(starttime)),'\d\+\(\.\d\d\)\=')
-    echo "tagsÒÑ´´½¨! ". '(time: '.elapsedtimestr.'s)'
+    echo "tagså·²åˆ›å»º! ". '(time: '.elapsedtimestr.'s)'
 endfun
 "------------------------------------------------------------------------------"
 "}}}
 
-" Éú³Écscope {{{2
+" ç”Ÿæˆcscope {{{2
 "-----------------------------------------------------------------------------"
 fun! UpdateMyProjectCscope(src_dir_list, cscope)
     let l:src_dir_list = a:src_dir_list
@@ -810,36 +812,36 @@ fun! UpdateMyProjectCscope(src_dir_list, cscope)
     let l:output_cscope = l:output_dir.'\cscope.files'
     if !filereadable(l:output_cscope)
         let starttime = reltime()  " start the clock
-        echo "Éú³ÉcscopeÎÄ¼şÁĞ±íÖĞ..."
+        echo "ç”Ÿæˆcscopeæ–‡ä»¶åˆ—è¡¨ä¸­..."
         let l:cscope_string = ''
         for l:index in range(len(l:src_dir_list))
-            "×ªµ½projectÄ¿Â¼
+            "è½¬åˆ°projectç›®å½•
             execute "cd " .  l:src_dir_list[l:index]
-            "µÃµ½ÃüÁîÊä³ö
+            "å¾—åˆ°å‘½ä»¤è¾“å‡º
             let l:cscope_string = l:cscope_string . system(l:cmd . " " . l:ext_filter)
         endfor
-        "·ÖĞĞ
+        "åˆ†è¡Œ
         let l:cscope_list = split(l:cscope_string, '\n')
-        "Ğ´ÈëÎÄ¼ş
+        "å†™å…¥æ–‡ä»¶
         call writefile(l:cscope_list, l:output_cscope)
         let elapsedtimestr = matchstr(reltimestr(reltime(starttime)),'\d\+\(\.\d\d\)\=')
-        echo "cscopeÎÄ¼şÁĞ±íÒÑ´´½¨! ". '(time: '.elapsedtimestr.'s)'
+        echo "cscopeæ–‡ä»¶åˆ—è¡¨å·²åˆ›å»º! ". '(time: '.elapsedtimestr.'s)'
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     execute "cd " . output_dir 
     let starttime = reltime()  " start the clock
-    echo "Éú³ÉcscopeÖĞ..."
+    echo "ç”Ÿæˆcscopeä¸­..."
     let l:temp = system("cscope.exe -bk -i ".l:output_cscope)
     "call delete(l:output_cscope)
     let elapsedtimestr = matchstr(reltimestr(reltime(starttime)),'\d\+\(\.\d\d\)\=')
-    echo "cscopeÒÑ´´½¨! ". '(time: '.elapsedtimestr.'s)'
+    echo "cscopeå·²åˆ›å»º! ". '(time: '.elapsedtimestr.'s)'
 endfun
 "-----------------------------------------------------------------------------"
 "}}}
 
-" Éú³Éfilenametags {{{2
+" ç”Ÿæˆfilenametags {{{2
 "-----------------------------------------------------------------------------"
-"Éú³Éfilename_tag£¬ÓÃÓÚfuzzyfinderµÄtaggedfileÄ£Ê½¿ìËÙ´ò¿ªÎÄ¼ş
+"ç”Ÿæˆfilename_tagï¼Œç”¨äºfuzzyfinderçš„taggedfileæ¨¡å¼å¿«é€Ÿæ‰“å¼€æ–‡ä»¶
 function! UpdateMyProjectFilenametags(fntags_dir_list, filenametags)
     let starttime = reltime()  " start the clock
     let l:fntags_dir_list = a:fntags_dir_list
@@ -848,24 +850,24 @@ function! UpdateMyProjectFilenametags(fntags_dir_list, filenametags)
     let l:cmd = g:MyProjectFindProgram
     let l:ext_filter = g:MyProjectFileFilter
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    echo "Éú³ÉfilenametagsÖĞ..."
+    echo "ç”Ÿæˆfilenametagsä¸­..."
     if filereadable(l:output_filenametags)
         call delete(l:output_filenametags)
     endif
     let l:filenametags_string = ''
     for l:index in range(len(l:fntags_dir_list))
-        "×ªµ½projectÄ¿Â¼
+        "è½¬åˆ°projectç›®å½•
         execute "cd " .  l:fntags_dir_list[l:index]
-        "µÃµ½ÃüÁîÊä³ö
+        "å¾—åˆ°å‘½ä»¤è¾“å‡º
         let l:filenametags_string = l:filenametags_string . system(l:cmd . " " . l:ext_filter)
     endfor
 
-    "·ÖĞĞ
+    "åˆ†è¡Œ
     let l:filenametags_list = split(l:filenametags_string, '\n')
-    "ÅÅĞò
+    "æ’åº
     let l:filenametags_list = sort(l:filenametags_list)
 
-    "°´tag¸ñÊ½ÕûÀíºÃ
+    "æŒ‰tagæ ¼å¼æ•´ç†å¥½
     let l:item = ""
     let l:count = 0
     for l:item in l:filenametags_list
@@ -874,28 +876,28 @@ function! UpdateMyProjectFilenametags(fntags_dir_list, filenametags)
         let l:count = l:count + 1
     endfor
 
-    "¼ÓÉÏtagsÎÄ¼şÍ·
+    "åŠ ä¸Štagsæ–‡ä»¶å¤´
     let l:final_filenametags = ["!_TAG_FILE_SORTED   2   \/2=foldcase\/"]
     call extend(l:final_filenametags, l:filenametags_list)
-    "Ğ´ÈëÎÄ¼ş
+    "å†™å…¥æ–‡ä»¶
     call writefile(l:final_filenametags, l:output_filenametags)
     let elapsedtimestr = matchstr(reltimestr(reltime(starttime)),'\d\+\(\.\d\d\)\=')
-    echo "filenametagsÒÑ´´½¨! ". '(time: '.elapsedtimestr.'s)'
+    echo "filenametagså·²åˆ›å»º! ". '(time: '.elapsedtimestr.'s)'
 endfunction
 "-----------------------------------------------------------------------------"
 "}}}
 
-" Éú³Écache {{{2
+" ç”Ÿæˆcache {{{2
 "-----------------------------------------------------------------------------"
-"Éú³Écache£¬ÓÃÓÚfuzzyfinderµÄtaggedfileÄ£Ê½¿ìËÙ´ò¿ªÎÄ¼ş£¬ĞèÒªÏÈÉú³Éfilenametags
+"ç”Ÿæˆcacheï¼Œç”¨äºfuzzyfinderçš„taggedfileæ¨¡å¼å¿«é€Ÿæ‰“å¼€æ–‡ä»¶ï¼Œéœ€è¦å…ˆç”Ÿæˆfilenametags
 function! UpdateMyProjectCache(filenametags, cache_file)
     if !filereadable(a:filenametags)
         call delete(a:filenametags)
-        echo "ĞèÒªÏÈÉú³Éfilenametags"
+        echo "éœ€è¦å…ˆç”Ÿæˆfilenametags"
         return
     endif
     let starttime = reltime()  " start the clock
-    echo "Éú³ÉcacheÖĞ..."
+    echo "ç”Ÿæˆcacheä¸­..."
     let tags=[a:filenametags]
     let tags = sort(filter(map(tags, 'fnamemodify(v:val, '':p'')'), 'filereadable(v:val)'))
     let cacheName = a:cache_file
@@ -906,7 +908,7 @@ function! UpdateMyProjectCache(filenametags, cache_file)
     call fuf#mapToSetAbbrWithSnippedWordAsPath(items)
     call s:saveDataFile(cacheName, items)
     let elapsedtimestr = matchstr(reltimestr(reltime(starttime)),'\d\+\(\.\d\d\)\=')
-    echo "cacheÒÑ´´½¨! " . '(time: '.elapsedtimestr.'s)'
+    echo "cacheå·²åˆ›å»º! " . '(time: '.elapsedtimestr.'s)'
 endfunction
 
 function s:gettaggedfileList(tagfile)

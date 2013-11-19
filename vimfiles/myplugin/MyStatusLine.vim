@@ -38,7 +38,7 @@ fun! SetMyStatusLineHighlight()
         exec 'hi SL_Normal            gui=none guifg=#FFFFFF guibg='. background  
         exec 'hi SL_ProjectName       gui=none guifg=#68228B guibg='. background 
         exec 'hi SL_Flag           gui=none guifg=#8B1A1A guibg='. background 
-        exec 'hi SL_FileName          gui=none guifg=#acff83 guibg='. background 
+        exec 'hi SL_FileName          gui=none guifg=#acff84 guibg='. background 
         exec 'hi SL_AllBuf          gui=none guifg=#E5E5E5 guibg='. background
         exec 'hi SL_FileEnc              gui=none guifg=#63B8FF guibg='. background 
         exec 'hi SL_LineInfo              gui=none guifg=#FFD39B guibg='. background 

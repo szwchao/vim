@@ -1,5 +1,5 @@
 
-" ·ÀÖ¹ÖØĞÂÔØÈë½Å±¾{{{2
+" é˜²æ­¢é‡æ–°è½½å…¥è„šæœ¬{{{2
 "------------------------------------------------------------------------------"
 if exists('g:loaded_myglobalvariables')
    finish
@@ -13,17 +13,17 @@ let g:vimfiles_dir = $VIM . '\vimfiles'
 let g:vimruntime = $VIMRUNTIME
 let g:vim_tools_dir = g:vim_dir . '\Tools'
 
-" ×Ô¼ºĞ´µÄº¯ÊıËùÓÃµÄÈ«¾Ö±äÁ¿{{{2
+" è‡ªå·±å†™çš„å‡½æ•°æ‰€ç”¨çš„å…¨å±€å˜é‡{{{2
 "------------------------------------------------------------------------------"
-" Python½âÊÍÆ÷
+" Pythonè§£é‡Šå™¨
 let g:python_dir='C:\\Python27\\python.exe'
 
-" TotalCommanderÂ·¾¶
+" TotalCommanderè·¯å¾„
 let g:totalcommander_exe = 'd:\\Software\\TotalCMD\\TOTALCMD.EXE'
 
-" vimgrepËÑË÷µÄÎÄ¼şÀàĞÍ
+" vimgrepæœç´¢çš„æ–‡ä»¶ç±»å‹
 let g:ext_list = ['txt', 'c', 'h', 'cpp', 'py', 'vim', 'cnx', 'java', 'js', 'html', 'css', 'vimwiki', 'a', 'i', 'asm']
-" gnugrepËÑË÷µÄÎÄ¼şÀàĞÍ
+" gnugrepæœç´¢çš„æ–‡ä»¶ç±»å‹
 let g:mygrep_ext = ['c', 'h', 'py', 'txt', 'vim']
 
 let g:fe_es_exe = g:vim_tools_dir . '\Everything\es.exe'
@@ -31,7 +31,7 @@ let g:fe_et_exe = g:vim_tools_dir . '\Everything\Everything.exe'
 
 let g:git_bin = g:vim_tools_dir . '\git\cmd\git.exe'
 
-" vimwikiÓÃµÄä¯ÀÀÆ÷
+" vimwikiç”¨çš„æµè§ˆå™¨
 let g:vimwiki_browsers = [
             \  expand('~').'\Local Settings\Application Data\Google\Chrome\Application\chrome.exe',
             \  'd:\Software\ChromePortable\Chrome.exe',

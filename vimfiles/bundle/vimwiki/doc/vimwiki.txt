@@ -1604,9 +1604,9 @@ If you have 'enc=utf-8' and set up >
     let g:vimwiki_w32_dir_enc = 'cp1251'
 <
 then following the next link with <CR>: >
-    [[���ڧӧ֧�/�ާڧ�]]
+    [[привет/мир]]
 >
-would convert utf-8 '���ڧӧ֧�' to cp1251 and create directory with that name.
+would convert utf-8 'привет' to cp1251 and create directory with that name.
 
 Default: ''
 

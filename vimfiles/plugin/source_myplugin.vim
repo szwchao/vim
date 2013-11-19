@@ -10,7 +10,7 @@ let g:source_myplugin = 1
 if g:platform == 'win'
    let g:myplugin_dir = $VIM.'/vimfiles/myplugin/'
 elseif g:platform == 'linux'
-   let g:myplugin_dir = '~/.vim/myplugin/'
+   let g:myplugin_dir = expand('~/.vim/myplugin/')
 endif
 "}}}
 
@@ -28,8 +28,9 @@ fun! GetAllFilesInDir(dir, ...)
   if a:0 == 1
      let result = []
      for filename in files
-        let fileExtension = matchstr(substitute(filename,'^.*\\','','g'),'\.[^.]\{-}$')
-        if fileExtension == '.'.a:1
+        "let fileExtension = matchstr(substitute(filename,'^.*\\','','g'),'\.[^.]\{-}$')
+        let fileExtension = fnamemodify(filename, ":e")
+        if fileExtension == a:1
            call add(result, filename)
         endif
      endfor

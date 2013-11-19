@@ -30,3 +30,6 @@ unsigned
 void
 volatile
 while
+__FILE__
+__LINE__
+__FUNCTION__

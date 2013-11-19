@@ -1,4 +1,4 @@
-" ·ÀÖ¹ÖØĞÂÔØÈë½Å±¾{{{2
+" é˜²æ­¢é‡æ–°è½½å…¥è„šæœ¬{{{2
 "------------------------------------------------------------------------------"
 if exists('g:loaded_mygrep')
    finish
@@ -10,7 +10,7 @@ let g:loaded_mygrep = 1
 " vimgrep{{{2
 "------------------------------------------------------------------------------"
 func! MyVimGrep()
-   let l:word=input("ÇëÊäÈëÒª²éÕÒµÄÄÚÈİ: ", expand("<cword>"))
+   let l:word=input("è¯·è¾“å…¥è¦æŸ¥æ‰¾çš„å†…å®¹: ", expand("<cword>"))
    if l:word == ''
       echo 'No input'
       return
@@ -56,13 +56,13 @@ fun! s:InitGrepOptions()
    if !exists('s:GrepOptionsDict')
       let s:GrepOptionsDict = {}
       " format:{key: [description, value]}
-      let s:GrepOptionsDict["Recursive"] = ["\"r: µİ¹é²éÕÒÄ¿Â¼", "on"]
-      let s:GrepOptionsDict["IgnoreCase"] = ["\"i: ºöÂÔ´óĞ¡Ğ´", "on"]
-      let s:GrepOptionsDict["WholeWord"] = ["\"w: Õû´ÊËÑË÷", "on"]
-      let s:GrepOptionsDict["LineNumber"] = ["\"l: ÏÔÊ¾ĞĞºÅ", "on"]
-      let s:GrepOptionsDict["IncludeExt"] = [">c: ËÑË÷À©Õ¹Ãû", "*"]
-      let s:GrepOptionsDict["Directory"] = [">d: ²éÕÒÄ¿Â¼", exists("g:project_root_dir")?(g:project_root_dir):getcwd()]
-      let s:GrepOptionsDict["SearchMode"] = [">e: ËÑË÷Ä£Ê½", "All"]
+      let s:GrepOptionsDict["Recursive"] = ["\"r: é€’å½’æŸ¥æ‰¾ç›®å½•", "on"]
+      let s:GrepOptionsDict["IgnoreCase"] = ["\"i: å¿½ç•¥å¤§å°å†™", "on"]
+      let s:GrepOptionsDict["WholeWord"] = ["\"w: æ•´è¯æœç´¢", "on"]
+      let s:GrepOptionsDict["LineNumber"] = ["\"l: æ˜¾ç¤ºè¡Œå·", "on"]
+      let s:GrepOptionsDict["IncludeExt"] = [">c: æœç´¢æ‰©å±•å", "*"]
+      let s:GrepOptionsDict["Directory"] = [">d: æŸ¥æ‰¾ç›®å½•", exists("g:project_root_dir")?(g:project_root_dir):getcwd()]
+      let s:GrepOptionsDict["SearchMode"] = [">e: æœç´¢æ¨¡å¼", "All"]
    endif
 endfun
 "}}}
@@ -98,7 +98,7 @@ endfun
 " s:BuildGrepOptionsDisplayList {{{
 function! s:BuildGrepOptionsDisplayList()
    let optList = []
-   "ÕâÑùË³Ğò²»¶Ô
+   "è¿™æ ·é¡ºåºä¸å¯¹
    "for key in keys(s:GrepOptionsDict)
    "call add(optList, s:GetGrepOptionsValue(key, 0)." [".s:GetGrepOptionsValue(key, 1)."]")
    "endfor
@@ -283,7 +283,7 @@ endfun
 
 "s:ChangeIncludeExt: description {{{2
 fun! s:ChangeIncludeExt()
-   let include_ext = input("ÇëÊäÈëÒª²éÕÒµÄÎÄ¼şÀ©Õ¹Ãû£¨¿Õ¸ñÇø·Ö£©: ")
+   let include_ext = input("è¯·è¾“å…¥è¦æŸ¥æ‰¾çš„æ–‡ä»¶æ‰©å±•åï¼ˆç©ºæ ¼åŒºåˆ†ï¼‰: ")
    if len(include_ext) == 0
       return
    endif
@@ -312,7 +312,7 @@ endfun
 
 "s:BuildGrepCmd: {{{2
 fun! s:BuildGrepCmd()
-   " ÉèÖÃgrepprg
+   " è®¾ç½®grepprg
    let grepprg = "set grepprg=grep\\ -"
    if s:GetGrepOptionsValue("LineNumber", "value") == "On"
       let grepprg .= "n"
@@ -330,12 +330,12 @@ fun! s:BuildGrepCmd()
 
    let cmd = "silent! grep! "
 
-   " Ö¸¶¨Ä¿Â¼
+   " æŒ‡å®šç›®å½•
    let dir = s:GetGrepOptionsValue("Directory", "value")
    let dir = substitute(dir, "\\\\$", "", "")
 
-   " ÊäÈë²éÕÒÄÚÈİ
-   let word=input("ÇëÊäÈëÒª²éÕÒµÄÄÚÈİ: ", expand("<cword>"))
+   " è¾“å…¥æŸ¥æ‰¾å†…å®¹
+   let word=input("è¯·è¾“å…¥è¦æŸ¥æ‰¾çš„å†…å®¹: ", expand("<cword>"))
    if word == ''
       echo 'No input'
       return
