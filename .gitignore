@@ -1,5 +1,8 @@
 .svn
-Tools
+Tools/Everything
+Tools/Git
+Tools/GnuWin32
+Tools/MINGW
 vim73
 vim74
 vimfiles/vundle
