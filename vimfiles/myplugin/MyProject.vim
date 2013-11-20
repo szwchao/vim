@@ -509,8 +509,11 @@ fun! s:LoadProjectUnderCursor()
     if !empty(l:cur_prj)
         call s:SetCurrentProject(l:cur_prj)
         call s:SetTagsCscopeFilenametags()
-        let g:airline_section_b = GetProjectName()
-        exe ":AirlineRefresh"
+        if exists('g:loaded_airline')
+            let symbol = get(g:, 'airline#extensions#branch#symbol', g:airline_symbols.branch)
+            let g:airline_section_b = symbol . GetProjectName()
+            exe ":AirlineRefresh"
+        endif
     elseif
         call s:SetCurrentProject({})
         echo "项目不存在!"

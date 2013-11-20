@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 2013/11/19 22:00:31
+"         Modified: 2013/11/20 21:39:22
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -45,9 +45,7 @@ colorscheme colorful
 " 字体 {{{2
 "-------------------------------------------------------------------------------
 if g:platform == 'win'
-   "set guifont=YaHei\ Consolas\ Hybrid:h13:cANSI
-   "set guifont=Consolas\ for\ Powerline\ FixedD:h12
-   set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h13:cANSI
+   set guifont=YaHei\ Consolas\ Hybrid:h14:cANSI
 else
    set guifont=YaHei\ Consolas\ Hybrid\ 12
 endif
