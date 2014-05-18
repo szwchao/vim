@@ -32,6 +32,7 @@ func! MyVimGrep()
    endfor
    "echo l:word
    let cmd = "silent! vimgrep ".l:word
+   echo ' '
    echo cmd
    execute cmd
    exec "cw"
@@ -313,7 +314,8 @@ endfun
 "s:BuildGrepCmd: {{{2
 fun! s:BuildGrepCmd()
    " 设置grepprg
-   let grepprg = "set grepprg=grep\\ -"
+   "let grepprg = "set grepprg=grep\\ -"
+   let grepprg = "set grepprg=ag\\ --nogroup\\ --column\\ -"
    if s:GetGrepOptionsValue("LineNumber", "value") == "On"
       let grepprg .= "n"
    endif
@@ -352,8 +354,12 @@ endfun
 "s:DoGrepCmd: {{{2
 fun! s:DoGrepCmd()
    let cmd = s:BuildGrepCmd()
+   echo ' '
    echo cmd
+   let starttime = reltime()  " start the clock
    execute cmd
+   let elapsedtimestr = matchstr(reltimestr(reltime(starttime)),'\d\+\(\.\d\d\)\=')
+   echo '(time: '.elapsedtimestr.'s)'
    exec "cw"
 endfun
 "}}}

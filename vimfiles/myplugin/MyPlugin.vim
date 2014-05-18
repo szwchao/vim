@@ -181,7 +181,7 @@ endfun
 function! ToggleNuMode()
     if version >= 703
         if(&rnu == 1)
-            set nu
+            let &rnu = 0
         else
             set rnu
         endif
@@ -211,6 +211,64 @@ function! SaveCurrentFileToDesktop()
     endif
 endfunc 
 command! -nargs=0 SaveCurrentFileToDesktop :call SaveCurrentFileToDesktop()
+"------------------------------------------------------------------------------"
+"}}}
+
+" 重命名 {{{2
+"------------------------------------------------------------------------------"
+fun! Rename(name, bang)
+    let l:name    = a:name
+	let l:oldfile = expand('%:p')
+
+	if bufexists(fnamemodify(l:name, ':p'))
+		if (a:bang ==# '!')
+			silent exe bufnr(fnamemodify(l:name, ':p')) . 'bwipe!'
+		else
+			echohl ErrorMsg
+			echomsg 'A buffer with that name already exists (use ! to override).'
+			echohl None
+			return 0
+		endif
+	endif
+
+	let l:status = 1
+
+	let v:errmsg = ''
+	silent! exe 'saveas' . a:bang . ' ' . l:name
+
+	if v:errmsg =~# '^$\|^E329'
+		let l:lastbufnr = bufnr('$')
+
+		if expand('%:p') !=# l:oldfile && filewritable(expand('%:p'))
+			if fnamemodify(bufname(l:lastbufnr), ':p') ==# l:oldfile
+				silent exe l:lastbufnr . 'bwipe!'
+			else
+				echohl ErrorMsg
+				echomsg 'Could not wipe out the old buffer for some reason.'
+				echohl None
+				let l:status = 0
+			endif
+
+			if delete(l:oldfile) != 0
+				echohl ErrorMsg
+				echomsg 'Could not delete the old file: ' . l:oldfile
+				echohl None
+				let l:status = 0
+			endif
+		else
+			echohl ErrorMsg
+			echomsg 'Rename failed for some reason.'
+			echohl None
+			let l:status = 0
+		endif
+	else
+		echoerr v:errmsg
+		let l:status = 0
+	endif
+
+	return l:status
+endfun
+command! -nargs=* -complete=file -bang Rename call Rename(<q-args>, '<bang>')
 "------------------------------------------------------------------------------"
 "}}}
 
@@ -341,15 +399,96 @@ command! -nargs=* DisplayAllColors call DisplayAllColors()
 " 自动修改Modified后面的时间 {{{2
 "------------------------------------------------------------------------------"
 function! LastModified()
-  if &modified
-    let save_cursor = getpos(".")
-    let n = min([20, line("$")])
-    keepjumps exe '1,' . n . 's#^\(.\{,50}Modified: \).*#\1' .
-          \ strftime('%c') . '#e'
-    call histdel('search', -1)
-    call setpos('.', save_cursor)
-  endif
+    if &modified
+        let save_cursor = getpos(".")
+        let n = min([20, line("$")])
+        keepjumps exe '1,' . n . 's#^\(.\{,50}Modified: \).*#\1' .
+                    \ strftime('%c') . '#e'
+        call histdel('search', -1)
+        call setpos('.', save_cursor)
+    endif
 endfun
+"------------------------------------------------------------------------------"
+"}}}
 
+" {{{2 进制转换
+"------------------------------------------------------------------------------"
+function! ConvertDigital()
+    let word = expand("<cword>")
+python << EOF
+import vim, os, string
+
+def isDec(s):
+   if s.isdigit():
+      return True
+   else:
+      return False
+
+def isHex(s):
+    if not s.startswith('0x'):
+       return False
+    s = s.lstrip('0x')
+    hex_digits = set("0123456789abcdefABCDEF")
+    for char in s:
+        if not (char in hex_digits):
+            return False
+    return True
+
+def hex2dec(string_num):
+    """十六进制转十进制"""
+    return str(int(string_num.upper(), 16))
+
+def hex2bin(string_num):
+    """十六进制转二进制"""
+    b = bin(int(hex2dec(string_num.upper())))
+    b = b.lstrip('0b')
+    if len(b) <= 16:
+        b = b.zfill(16)
+        b = b[0:4] + ' ' + b[4:8] + ' ' + b[8:12] + ' ' + b[12:16]
+    else:
+        b = b.zfill(32)
+        b = b[0:4] + ' ' + b[4:8] + ' ' + b[8:12] + ' ' + b[12:16] + ' ' + b[16:20] + ' ' + b[20:24] + ' ' + b[24:28] + ' ' + b[28:32]
+    return b
+
+def dec2hex(string_num):
+    """十进制转十六进制"""
+    h = hex(int(string_num))
+    h = h.lstrip('0x')
+    h = h.upper()
+    if len(h) <= 4:
+       h = h.zfill(4)
+    else:
+       h = h.zfill(8)
+    return '0x' + h
+
+def dec2bin(string_num):
+    """十进制转二进制"""
+    b = bin(int(string_num))
+    b = b.lstrip('0b')
+    if len(b) <= 16:
+        b = b.zfill(16)
+        b = b[0:4] + ' ' + b[4:8] + ' ' + b[8:12] + ' ' + b[12:16]
+    else:
+        b = b.zfill(32)
+        b = b[0:4] + ' ' + b[4:8] + ' ' + b[8:12] + ' ' + b[12:16] + ' ' + b[16:20] + ' ' + b[20:24] + ' ' + b[24:28] + ' ' + b[28:32]
+    return b
+
+word = vim.eval("word")
+if isDec(word):
+    str1 = "十六进制: " + dec2hex(word)
+    str2 = "二进制: " + dec2bin(word)
+    output_str = str1 + "     " + str2
+elif isHex(word):
+    str1 = "十进制: " + hex2dec(word)
+    str2 = "二进制: " + hex2bin(word)
+    output_str = str1 + "     " + str2
+else:
+    output_str = "非数字!"
+print output_str
+EOF
+endfunc 
+command! -nargs=* ConvertDigital call ConvertDigital()
+"------------------------------------------------------------------------------"
+"}}}
 " vim:fdm=marker:fmr={{{,}}} foldlevel=1:
 "}}}

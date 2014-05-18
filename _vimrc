@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 2013/11/20 21:39:22
+"         Modified: 2014/5/17 22:38:53
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -11,13 +11,24 @@
 " 平台判断 {{{2
 "-------------------------------------------------------------------------------
 if (has("win32") || has("win95") || has("win64") || has("win16"))
-   let g:platform = 'win'
-   let g:slash = '\'
+    let g:platform = 'win'
+    let g:slash = '\'
 else
-   let g:platform = 'linux'
-   let g:slash = '/'
+    let g:platform = 'linux'
+    let g:slash = '/'
 endif
 
+if matchstr(expand("~"), "55602")
+    let g:computer_enviroment = "grundfos"
+elseif matchstr(expand("~"), "435736")
+    let g:computer_enviroment = "seagate"
+else
+    let g:computer_enviroment = "normal"
+endif
+let vim_data_path = expand("~/vim_data")
+if !isdirectory(vim_data_path)
+    call mkdir(vim_data_path)
+endif
 "-------------------------------------------------------------------------------
 " 设定文件编码类型，解决中文编码问题 {{{2
 "-------------------------------------------------------------------------------
@@ -38,16 +49,16 @@ set helplang=cn
 "-------------------------------------------------------------------------------
 " 配色方案 {{{2
 "-------------------------------------------------------------------------------
-colorscheme colorful
-"colorscheme bluechia
+"colorscheme colorful
+colorscheme bluechia
 
 "-------------------------------------------------------------------------------
 " 字体 {{{2
 "-------------------------------------------------------------------------------
 if g:platform == 'win'
-   set guifont=YaHei\ Consolas\ Hybrid:h14:cANSI
+    set guifont=YaHei\ Consolas\ Hybrid:h12:cANSI
 else
-   set guifont=YaHei\ Consolas\ Hybrid\ 12
+    set guifont=YaHei\ Consolas\ Hybrid\ 12
 endif
 
 "-------------------------------------------------------------------------------
@@ -57,11 +68,11 @@ call pathogen#infect()
 
 filetype off                   " required!
 if g:platform == 'win'
-   set rtp+=$VIM/vimfiles/vundle/vundle
-   call vundle#rc('$VIM/vimfiles/vundle/')
+    set rtp+=$VIM/vimfiles/vundle/vundle
+    call vundle#rc('$VIM/vimfiles/vundle/')
 else
-   set rtp+=~/.vim/vundle/vundle
-   call vundle#rc('~/.vim/vundle/')
+    set rtp+=~/.vim/vundle/vundle
+    call vundle#rc('~/.vim/vundle/')
 endif
 Bundle 'gmarik/vundle'
 
@@ -69,6 +80,9 @@ Bundle 'majutsushi/tagbar'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Shougo/neocomplete.vim'
+Bundle 'bling/vim-airline'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'a.vim'
 Bundle 'CRefVim'
 Bundle 'MatchTag'
 Bundle 'FencView.vim'
@@ -77,15 +91,16 @@ Bundle 'DoxygenToolkit.vim'
 Bundle 'matchit.zip'
 Bundle 'python_match.vim'
 Bundle 'QuickBuf'
-Bundle 'bling/vim-airline'
 
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
 "-------------------------------------------------------------------------------
 let mapleader = ","                       " 设置mapleader为,键
-source $VIMRUNTIME/mswin.vim              " 加载mswin.vim
-unmap <C-A>
-behave mswin
+if g:platform == 'win'
+    source $VIMRUNTIME/mswin.vim          " 加载mswin.vim
+    unmap <C-A>
+    behave mswin
+endif
 set nocompatible                          " 去掉关vi一致性模式，避免以前版本的一些bug和局限
 set shortmess=atI                         " 启动的时候不显示援助索马里儿童的提示
 set showcmd                               " 开启命令显示
@@ -119,19 +134,45 @@ filetype on                               " 自动检测文件类型
 filetype plugin on                        " 特定文件类型加载插件
 filetype indent on                        " 特定文件类型加载缩进
 
-let &backupdir=expand("~/vimbackup")
+set viminfo+=n~/vim_data/viminfo
+let &backupdir=expand("~/vim_data/vimbackup")
 if !isdirectory(&backupdir)
     call mkdir(&backupdir)
 endif
 set backup                                " 打开自动备份功能
 
 if has("persistent_undo")
-  "let &undodir=expand("$Vim/vimfiles/undodir")
-  let &undodir=expand("~/vimundo")
-  if !isdirectory(&undodir)
-    call mkdir(&undodir)
-  endif
-  set undofile
+    let &undodir=expand("~/vim_data/vimundo")
+    if !isdirectory(&undodir)
+        call mkdir(&undodir)
+    endif
+    set undofile
+endif
+
+if g:computer_enviroment == "grundfos"
+    " tab长度
+    autocmd FileType c,cpp,h set tabstop=2
+    autocmd FileType c,cpp,h set shiftwidth=2
+    autocmd FileType python set tabstop=4
+    autocmd FileType python set shiftwidth=4
+    " Alt+t用TotalCommander打开当前文件
+    "nmap <M-t> :!start <C-R>=$g:totalcommander_exe /o /t /l '%:p'
+    nmap <M-t> :!start "H:\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
+    let root_path = "H"
+elseif g:computer_enviroment == "seagate"
+    autocmd FileType c,cpp,h set tabstop=3
+    autocmd FileType c,cpp,h set shiftwidth=3
+    autocmd FileType python set tabstop=3
+    autocmd FileType python set shiftwidth=3
+    nmap <M-t> :!start "D:\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
+    let root_path = "E"
+else
+    autocmd FileType c,cpp,h set tabstop=4
+    autocmd FileType c,cpp,h set shiftwidth=4
+    autocmd FileType python set tabstop=4
+    autocmd FileType python set shiftwidth=4
+    nmap <M-t> :!start "D:\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
+    let root_path = "D"
 endif
 
 "-------------------------------------------------------------------------------
@@ -193,7 +234,7 @@ autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `
 autocmd FileType * setl fo-=cro
 " 指定全能补全所用的函数
 autocmd FileType c,cpp,h set omnifunc=ccomplete#Complete
-" 在quickfix窗口中按v预览
+" 在quickfix窗口中的快捷键
 autocmd FileType qf :call QuickfixMap()
 " 在wiki文件中的map
 autocmd FileType vimwiki :call WikiMap()
@@ -201,12 +242,7 @@ autocmd FileType vimwiki :call WikiMap()
 autocmd BufNewFile,BufRead *.txt    setf txt
 autocmd BufNewFile,BufRead *.cue    setf cue
 autocmd BufNewFile,BufRead *.lrc    setf lrc
-" c的tab长度
-autocmd FileType c,cpp,h set tabstop=3
-autocmd FileType c,cpp,h set shiftwidth=3
-" python的tab长度
-autocmd FileType python set tabstop=3
-autocmd FileType python set shiftwidth=3
+" python的折叠方式
 autocmd FileType python set foldmethod=indent
 " html和css文件的折叠方式
 autocmd FileType html,htmldjango,xml,css set foldmethod=indent
@@ -215,8 +251,8 @@ au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=mkd
 " 编程时超过80行提示
 "autocmd FileType c,cpp :match ErrorMsg /\%>80v.\+/
 " 设定字典补全文件
-autocmd FileType c set dictionary+=$VIM\vimfiles\dictionary\c_keywords.txt
-autocmd FileType python set dictionary+=$VIM\vimfiles\dictionary\python_keywords.txt
+autocmd FileType c set dictionary+=$VIM\vimfiles\dict\c_keywords.txt
+autocmd FileType python set dictionary+=$VIM\vimfiles\dict\python_keywords.txt
 
 "-------------------------------------------------------------------------------
 " 查找/替换相关的设置 {{{2
@@ -241,7 +277,7 @@ command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | d
 inoremap <expr> <CR>       pumvisible()?"\<C-Y>":"\<CR>"
 inoremap <expr> <C-J>      pumvisible()?"\<PageDown>\<C-N>\<C-P>":"\<C-X><C-O>"
 inoremap <expr> <C-K>      pumvisible()?"\<PageUp>\<C-P>\<C-N>":"\<C-K>"
-inoremap <expr> <C-U>      pumvisible()?"\<C-E>":"\<C-U>"
+"inoremap <expr> <C-U>      pumvisible()?"\<C-E>":"\<C-U>"
 
 "-------------------------------------------------------------------------------
 " 代码折叠 {{{2
@@ -277,18 +313,30 @@ nmap <C-D> :b #<CR>
 nmap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<cr><c-o>
 "gW 光标所在单词和上一个单词交换
 nmap <silent> gW "_yiw:s/\(\w\+\)\(\_W\+\)\(\%#\w\+\)/\3\2\1/<cr><c-o>
+"gp 删除光标所在单词并粘贴剪切板内容
+nmap <silent> gp "_diwP
 " Y复制到行末
 nmap Y y$
 " 分为两行
 nmap F i<CR><ESC>
+" 转换进制
+nmap H <ESC>:call ConvertDigital()<CR>
 
 "-------------------------------------------------------------------------------
 " <Leader>相关 {{{2
 "-------------------------------------------------------------------------------
-" <leader>rr重新载入vimrc
-nmap <silent> <leader>rr :source $VIM\\_vimrc<cr>
-" <leader>e编辑vimrc
-nmap <silent> <leader>e :e $VIM\\_vimrc<cr>
+if g:platform == 'win'
+    " <leader>rr重新载入vimrc
+    nmap <silent> <leader>rr :source $VIM\\_vimrc<cr>
+    " <leader>e编辑vimrc
+    nmap <silent> <leader>e :e $VIM\\_vimrc<cr>
+else
+    " <leader>rr重新载入vimrc
+    nmap <silent> <leader>rr :source ~/.vimrc<cr>
+    " <leader>e编辑vimrc
+    nmap <silent> <leader>e :e ~/.vimrc<cr>
+endif
+
 " 复制到系统剪贴板
 nmap <leader>y "*y
 nmap <leader>p "*p
@@ -302,7 +350,7 @@ nmap <leader>w <C-W>W
 " 用浏览器打开当前文件
 nmap <leader>f :silent !explorer %:p:h<CR>
 " 切换行号/相对行号
-nmap <leader>t :ToggleNuMode<CR>
+nmap <leader>l :ToggleNuMode<CR>
 " 切换补全函数
 nmap <leader>of :call ToggleOmnifunc()<CR>
 
@@ -334,13 +382,13 @@ nmap <F8> :Dox<CR>
 " F9切换qbuf
 let g:qb_hotkey = "<F9>"
 " F10将wiki转换为html
-map <F10> :Vimwiki2HTML<cr>
+map <F10> :Vimwiki2HTMLBrowse<cr>
 " Ctrl+F10将所有wiki转换为html
 map <C-F10> :VimwikiAll2HTML<cr>
 " F11全屏
 nmap <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
 " F12切换c/h文件(a.vim)
-"nmap <silent> <F12> :A<CR>
+nmap <silent> <F12> :A<CR>
 " Ctrl+F12生成tags
 nmap <silent> <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 
@@ -384,10 +432,6 @@ map <silent> <M-m> :if &guioptions =~# 'T' <Bar>
          \set guioptions+=m <Bar>
          \endif<CR>
 
-" Alt+t用TotalCommander打开当前文件
-"nmap <M-t> :!start <C-R>=$g:totalcommander_exe /o /t /l '%:p'
-nmap <M-t> :!start "d:\Software\TotalCMD\TOTALCMD.EXE" /o /t /l "%:p"<CR>
-
 " 缩放窗口
 map <kPlus> <C-W>+
 map <kMinus> <C-W>-
@@ -418,12 +462,12 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 " 按CTRL快速移动文本，非常方便
-nmap <C-Down> :<C-u>move.+1<CR>
-nmap <C-Up> :<C-u>move.-2<CR>
-imap <C-Down> <C-o>:<C-u>move.+1<CR>
-imap <C-Up> <C-o>:<C-u>move.-2<CR>
-vmap <C-Down> :move '>+1<CR>gv
-vmap <C-Up> :move '<-2<CR>gv
+"nmap <C-Down> :<C-u>move.+1<CR>
+"nmap <C-Up> :<C-u>move.-2<CR>
+"imap <C-Down> <C-o>:<C-u>move.+1<CR>
+"imap <C-Up> <C-o>:<C-u>move.-2<CR>
+"vmap <C-Down> :move '>+1<CR>gv
+"vmap <C-Up> :move '<-2<CR>gv
 
 " Alt+h向前切换buf，Alt+l向后切换buf
 nmap <M-h> :bp<CR>
@@ -448,7 +492,7 @@ vmap ' <Esc>:call VisualWrap("'", "'")<CR>
 "-------------------------------------------------------------------------------
 " 工程目录
 if g:platform == 'win'
-    let g:MyProjectConfigDir = 'D:\Workspace\MyProject'
+    let g:MyProjectConfigDir = root_path . ':\Workspace\MyProject'
 else
     let g:MyProjectConfigDir = expand('~/MyProject')
 endif
@@ -477,6 +521,7 @@ let g:fencview_autodetect = 0
 " MRU.vim {{{2
 "-------------------------------------------------------------------------------
 " 最大列表数目200
+let MRU_File = expand("~/vim_data/_vim_mru_files")
 let MRU_Max_Entries = 200
 
 "-------------------------------------------------------------------------------
@@ -487,16 +532,27 @@ map <silent> <unique> <Leader>ct <Plug>CRV_CRefVimInvoke
 "-------------------------------------------------------------------------------
 " neocomplete {{{2
 " ------------------------------------------------------------------------------
+let g:neocomplete#data_directory = '~/vim_data/.neocomplete'
 " 使neocomplete自动启动
 let g:neocomplete#enable_at_startup = 1
 " 使neocomplete自动选择第一个
 let g:neocomplete#enable_auto_select = 1
 " <C-u>取消选择
-inoremap <expr><C-u>  neocomplete#cancel_popup()
+imap <expr><M-y>  neocomplete#close_popup()
+imap <expr><M-u>  neocomplete#cancel_popup()
+
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+            \ 'default' : '',
+            \ 'c' : $VIM.'/dict/c.dict',
+            \ 'vim' : $VIM.'/dict/vim.dict'
+            \ }
+
 
 "-------------------------------------------------------------------------------
 " FuzzyFinder.vim {{{2
 "-------------------------------------------------------------------------------
+let g:fuf_dataDir = '~/vim_data/.vim-fuf-data'
 let g:fuf_keyPreview = '<M-x>'
 let g:fuf_previewHeight = 0
 let g:fuf_autoPreview = 0
@@ -517,6 +573,12 @@ nmap <M-k> :FufChangeList<CR>
 "-------------------------------------------------------------------------------
 let g:tagbar_sort = 0
 
+"-------------------------------------------------------------------------------
+" EasyMotion {{{2
+"-------------------------------------------------------------------------------
+let g:EasyMotion_leader_key = 'f'
+let g:EasyMotion_do_shade = 1
+hi link EasyMotionTarget Ignore
 "-------------------------------------------------------------------------------
 " snipMate.vim {{{2
 "-------------------------------------------------------------------------------
@@ -569,19 +631,27 @@ let g:vimwiki_CJK_length = 1
 let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,del,br,hr,div,code,ul,li,p,a,small'
 " 切换todo
 autocmd FileType vimwiki map <M-Enter> <Plug>VimwikiToggleListItem
+
+let seagate_wiki = {'path': root_path . ':/My/MyWiki/SeagateWiki/wiki_files/',
+            \ 'path_html': root_path . ':/My/MyWiki/SeagateWiki/',
+            \ 'template_path': root_path . ':/My/MyWiki/SeagateWiki/assets/template/',
+            \ 'template_default': 'template',
+            \ 'template_ext': '.html',
+            \ 'diary_link_count': 6}
+let grundfos_wiki = {'path': root_path . ':/My/MyWiki/GrundfosWiki/wiki_files/',
+            \ 'path_html': root_path . ':/My/MyWiki/GrundfosWiki/',
+            \ 'template_path': root_path. ':/My/MyWiki/GrundfosWiki/assets/template/',
+            \ 'template_default': 'template',
+            \ 'template_ext': '.html',
+            \ 'diary_link_count': 6}
+
 let wiki = {'path': $vim.'/vimfiles/vimwiki/wiki/',
             \ 'path_html': $vim.'/vimfiles/vimwiki/wiki/html/',
             \ 'template_path': $vim.'/vimfiles/vimwiki/template/',
             \ 'template_default': 'template',
             \ 'template_ext': '.html',
             \ 'diary_link_count': 6}
-let my_wiki = {'path': 'd:/My/MyWiki/wiki_files/',
-            \ 'path_html': 'd:/My/MyWiki/',
-            \ 'template_path': 'd:/My/MyWiki/assets/template/',
-            \ 'template_default': 'template',
-            \ 'template_ext': '.html',
-            \ 'diary_link_count': 6}
-let g:vimwiki_list = [my_wiki, wiki]
+let g:vimwiki_list = [grundfos_wiki, seagate_wiki, wiki]
 
 "-------------------------------------------------------------------------------
 " rainbow {{{2
@@ -609,8 +679,8 @@ let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 " smartbar只留文件名和扩展名
 let g:airline#extensions#tabline#fnamemod = ':t'
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '>'
+let g:airline#extensions#tabline#left_sep = ''
+let g:airline#extensions#tabline#left_alt_sep = ''
 " 更换主题
 let g:airline_theme='mytheme'
 let g:airline#extensions#bufferline#enabled = 1
@@ -623,13 +693,6 @@ if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
 
-let g:airline_left_sep = '⮀'
-let g:airline_left_alt_sep = '⮁'
-let g:airline_right_sep = '⮂'
-let g:airline_right_alt_sep = '⮃'
-let g:airline_symbols.branch = '⭠'
-let g:airline_symbols.readonly = '⭤'
-let g:airline_symbols.linenr = '⭡'
 " powerline symbols
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''

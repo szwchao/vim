@@ -196,6 +196,8 @@ syn keyword	cType		int long short char void
 
 " For seagate firmware source code
 syn keyword	cType		uint8 sint8 sint16 uint16 sint32 uint32 sint64 uint64 ulong byte
+" For Grundfos source code
+syn keyword	cType		UCHAR SCHAR CHAR UINT SINT ULONG SLONG FLOAT DOUBLE BIT
 
 syn keyword	cType		signed unsigned float double
 if !exists("c_no_ansi") || exists("c_ansi_typedefs")

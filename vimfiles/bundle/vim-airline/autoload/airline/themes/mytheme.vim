@@ -6,13 +6,13 @@
 if &bg == "dark"
     let s:N1 = [ '#141413' , '#CAE682' , 232 , 192 ] " mode
     "let s:N2 = [ '#141413' , '#4682B4' , 192 , 236 ] " info
-    let s:N2 = [ '#FF6A6A' , '#32322F' , 192 , 236 ] " info
+    let s:N2 = [ '#cfddea' , '#32322F' , 192 , 236 ] " info
     let s:N3 = [ '#CAE682' , '#4E4E4E' , 192 , 234 ] " statusline
     let s:N4 = [ '#86CD74' , 113 ]                   " mode modified
 else
     let s:N1 = [ '#141413' , '#CAE682' , 232 , 192 ] " mode
     "let s:N2 = [ '#141413' , '#4682B4' , 192 , 236 ] " info
-    let s:N2 = [ '#FF6A6A' , '#32322F' , 192 , 236 ] " info
+    let s:N2 = [ '#FFF5EE' , '#32322F' , 192 , 236 ] " info
     let s:N3 = [ '#CAE682' , '#404040' , 192 , 234 ] " statusline
     let s:N4 = [ '#86CD74' , 113 ]                   " mode modified
 endif

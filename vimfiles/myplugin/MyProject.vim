@@ -29,13 +29,13 @@ call s:Set('g:MyProjectConfigDir', 'E:\Workspace\MyProject')
 " 配置文件名
 call s:Set('g:MyProjectConfigFile', 'MyProjectFile')
 " 过滤文件类型
-call s:Set('g:MyProjectFileFilter', '*.h *.c *.py')
+call s:Set('g:MyProjectFileFilter', '*.h *.c *.cpp *.py')
 " 生成文件列表的命令
 call s:Set('g:MyProjectFindProgram', "dir /B /S /A-D /ON")
 " 窗口高度
 call s:Set('g:MyProjectWinHeight', "15")
 " seagate编译选项
-call s:Set('g:EnableAddF3MakeVar', '1')
+call s:Set('g:EnableAddF3MakeVar', '0')
 "}}}
 
 "调试{{{2
@@ -834,7 +834,8 @@ fun! UpdateMyProjectCscope(src_dir_list, cscope)
     execute "cd " . output_dir 
     let starttime = reltime()  " start the clock
     echo "生成cscope中..."
-    let l:temp = system("cscope.exe -bk -i ".l:output_cscope)
+    let l:temp = system("cscope.exe -bkq -i ".l:output_cscope)
+    call s:EchoError(l:temp)
     "call delete(l:output_cscope)
     let elapsedtimestr = matchstr(reltimestr(reltime(starttime)),'\d\+\(\.\d\d\)\=')
     echo "cscope已创建! ". '(time: '.elapsedtimestr.'s)'

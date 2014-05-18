@@ -12,7 +12,7 @@ endif
 "}}}
 
 if !has("python")
-    echo "ĞèÒªpythonÖ§³Ö"
+    echo "éœ€è¦pythonæ”¯æŒ"
     finish
 endif
 
@@ -27,24 +27,24 @@ fun! s:LoadCurrentProjectDictFromMyProject()
 endfun
 "}}}
 
-" F3Make: ±àÒë{{{2
+" F3Make: ç¼–è¯‘{{{2
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ±àÒë
-" @²Î    Êı£º   increment_build: ÊÇ·ñÔöÁ¿±àÒë
-" @·µ »Ø Öµ£º   ÎŞ
+" @å‡½æ•°è¯´æ˜ï¼š   ç¼–è¯‘
+" @å‚    æ•°ï¼š   increment_build: æ˜¯å¦å¢é‡ç¼–è¯‘
+" @è¿” å› å€¼ï¼š   æ— 
 "* --------------------------------------------------------------------------*/
 fun! F3make(increment_build)
     let cur_prj_dict = s:LoadCurrentProjectDictFromMyProject()
     if has_key(cur_prj_dict, "name")
         let l:cur_prj_name = cur_prj_dict['name']
     else
-        echo "ÇëÏÈÖ¸¶¨¹¤³Ì"
+        echo "è¯·å…ˆæŒ‡å®šå·¥ç¨‹"
         return
     endif
     if has_key(cur_prj_dict, "SourceCodeDir0")
         let l:cur_prj_path = cur_prj_dict['SourceCodeDir0']
     else
-        echo "Ã»ÓĞ¹¤³ÌÄ¿Â¼"
+        echo "æ²¡æœ‰å·¥ç¨‹ç›®å½•"
         return
     endif
     let l:build_target = ""
@@ -58,33 +58,33 @@ fun! F3make(increment_build)
 
     let s:f3make_cmd = Py_find_f3make(l:cur_prj_path)
     if s:f3make_cmd == ""
-        echo "ÕÒ²»µ½f3make.bat"
+        echo "æ‰¾ä¸åˆ°f3make.bat"
     endif
 
     let cmd = s:f3make_cmd . " " . l:build_target
     let s = localtime()
     let l:result=system(cmd)
     let e = localtime() - s
-    echo "ºÄÊ±£º" . e . "s"
+    echo "è€—æ—¶ï¼š" . e . "s"
 
     if matchstr(l:result, '-------------- Passed Build ---------------') != ""
-        echo '±àÒë³É¹¦, ÏÖÔÚ¿ªÊ¼½âÑ¹...'
+        echo 'ç¼–è¯‘æˆåŠŸ, ç°åœ¨å¼€å§‹è§£å‹...'
         call Py_find_package_and_extract(l:result, l:cur_prj_name, l:build_target)
         call s:Show_F3Make_Result(l:result, 'close')
     else
         echohl errormsg
-        echo '±àÒëÊ§°Ü'
+        echo 'ç¼–è¯‘å¤±è´¥'
         echohl normal
         call s:Show_F3Make_Result(l:result, 'open')
     endif
 endfun
 "}}}
 
-" Py_find_f3make: ÓÃpythonÕÒµ½f3make.bat {{{2
+" Py_find_f3make: ç”¨pythonæ‰¾åˆ°f3make.bat {{{2
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ÓÃpythonÕÒµ½f3make.bat
-" @²Î    Êı£º   path: ¹¤³ÌÄ¿Â¼
-" @·µ »Ø Öµ£º   f3make.batÎÄ¼şÂ·¾¶
+" @å‡½æ•°è¯´æ˜ï¼š   ç”¨pythonæ‰¾åˆ°f3make.bat
+" @å‚    æ•°ï¼š   path: å·¥ç¨‹ç›®å½•
+" @è¿” å› å€¼ï¼š   f3make.batæ–‡ä»¶è·¯å¾„
 "* --------------------------------------------------------------------------*/
 fun! Py_find_f3make(path)
     let l:f3make = ""
@@ -101,13 +101,13 @@ EOF
 endfun
 "}}}
 
-" Py_find_package_and_extract: ÓÃPythonÕÒµ½±àÒëÉú³ÉµÄÑ¹Ëõ°ü£¬²¢½âÑ¹µ½Ö¸¶¨Ä¿Â¼{{{2
+" Py_find_package_and_extract: ç”¨Pythonæ‰¾åˆ°ç¼–è¯‘ç”Ÿæˆçš„å‹ç¼©åŒ…ï¼Œå¹¶è§£å‹åˆ°æŒ‡å®šç›®å½•{{{2
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ÓÃPythonÕÒµ½±àÒëÉú³ÉµÄÑ¹Ëõ°ü£¬²¢½âÑ¹µ½Ö¸¶¨Ä¿Â¼
-" @²Î    Êı£º   result: ±àÒëÍêµÃµ½µÄ½á¹û
-" @²Î    Êı£º   prj_name: ¹¤³ÌÃû×Ö
-" @²Î    Êı£º   build_target: ±àÒëÃüÁî
-" @·µ »Ø Öµ£º   ÎŞ
+" @å‡½æ•°è¯´æ˜ï¼š   ç”¨Pythonæ‰¾åˆ°ç¼–è¯‘ç”Ÿæˆçš„å‹ç¼©åŒ…ï¼Œå¹¶è§£å‹åˆ°æŒ‡å®šç›®å½•
+" @å‚    æ•°ï¼š   result: ç¼–è¯‘å®Œå¾—åˆ°çš„ç»“æœ
+" @å‚    æ•°ï¼š   prj_name: å·¥ç¨‹åå­—
+" @å‚    æ•°ï¼š   build_target: ç¼–è¯‘å‘½ä»¤
+" @è¿” å› å€¼ï¼š   æ— 
 "* --------------------------------------------------------------------------*/
 fun! Py_find_package_and_extract(result, prj_name, build_target)
 python << EOF
@@ -126,15 +126,15 @@ if os.path.isdir(tmp_dir) != True:
 files_in_zip = zipfile.ZipFile(zip_file, 'r')
 for file in files_in_zip.namelist():
    #ST_DLFILES_SD.00000000.00.00.LSGEN200.STF0.00000000.00435736.zip
-   # Ñ¹Ëõ°üÄÚ»¹ÓĞzip
+   # å‹ç¼©åŒ…å†…è¿˜æœ‰zip
    m = re.match('.*zip', file)
    if m is not None and file.startswith('ST_DLFILES'):
-      #ÏÈ½âÑ¹³öST_DLFILESµ½ÁÙÊ±ÎÄ¼ş¼Ğ
+      #å…ˆè§£å‹å‡ºST_DLFILESåˆ°ä¸´æ—¶æ–‡ä»¶å¤¹
       files_in_zip.extract(file, tmp_dir)
       dl_zip_file = os.path.join(tmp_dir, file)
       files_in_dl_zip = zipfile.ZipFile(dl_zip_file, 'r')
       for sub_file in files_in_dl_zip.namelist():
-         #ÔÙ´ÓÑ¹Ëõ°üÄÚÆ¥Åä³öCFWºÍOVL
+         #å†ä»å‹ç¼©åŒ…å†…åŒ¹é…å‡ºCFWå’ŒOVL
          m = re.match('.+CFW.LOD$|.+S_OVL.LOD$|.+TPM.LOD$', sub_file)
          if m is not None:
             files_in_dl_zip.extract(sub_file, target_dir)
@@ -146,13 +146,13 @@ EOF
 endfun
 "}}}
 
-" Py_f3make: ÓÃPythonµ÷ÓÃÏµÍ³ÃüÁî±àÒë {{{2
+" Py_f3make: ç”¨Pythonè°ƒç”¨ç³»ç»Ÿå‘½ä»¤ç¼–è¯‘ {{{2
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ÓÃPythonµ÷ÓÃÏµÍ³ÃüÁî±àÒë
-"               TODO: ÊµÔÚÃ»·¨´¦ÀíÒıºÅË«ÒıºÅÊä³öµ½vimµÄÎÊÌâ£¬ÆúÓÃ
-" @²Î    Êı£º   f3make_cmd: f3make.bat
-" @²Î    Êı£º   target: ±àÒëÃüÁî
-" @·µ »Ø Öµ£º   ±àÒëÊä³öµÄ½á¹û
+" @å‡½æ•°è¯´æ˜ï¼š   ç”¨Pythonè°ƒç”¨ç³»ç»Ÿå‘½ä»¤ç¼–è¯‘
+"               TODO: å®åœ¨æ²¡æ³•å¤„ç†å¼•å·åŒå¼•å·è¾“å‡ºåˆ°vimçš„é—®é¢˜ï¼Œå¼ƒç”¨
+" @å‚    æ•°ï¼š   f3make_cmd: f3make.bat
+" @å‚    æ•°ï¼š   target: ç¼–è¯‘å‘½ä»¤
+" @è¿” å› å€¼ï¼š   ç¼–è¯‘è¾“å‡ºçš„ç»“æœ
 "* --------------------------------------------------------------------------*/
 fun! Py_f3make(f3make_cmd, target)
 python << EOF
@@ -169,10 +169,10 @@ EOF
 endfun
 "}}}
 
-" ToggleF3MakeResultWindow: ÇĞ»»½á¹ûÏÔÊ¾´°¿Ú {{{
+" ToggleF3MakeResultWindow: åˆ‡æ¢ç»“æœæ˜¾ç¤ºçª—å£ {{{
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ÇĞ»»½á¹ûÏÔÊ¾´°¿Ú
-" @·µ »Ø Öµ£º   ÎŞ
+" @å‡½æ•°è¯´æ˜ï¼š   åˆ‡æ¢ç»“æœæ˜¾ç¤ºçª—å£
+" @è¿” å› å€¼ï¼š   æ— 
 "* --------------------------------------------------------------------------*/
 fun! ToggleF3MakeResultWindow()
     let bname = '__F3Make_Result__'
@@ -190,7 +190,7 @@ fun! ToggleF3MakeResultWindow()
 
     let bufnum = bufnr(bname)
     if bufnum == -1
-        echoh Error | echo "Ã»ÓĞF3make±àÒë½á¹û!" | echoh None
+        echoh Error | echo "æ²¡æœ‰F3makeç¼–è¯‘ç»“æœ!" | echoh None
         let wcmd = bname
     else
         let wcmd = '+buffer' . bufnum
@@ -199,12 +199,12 @@ fun! ToggleF3MakeResultWindow()
 endfun
 "}}}
 
-" s:Show_F3Make_Result: ÏÔÊ¾½á¹û {{{
+" s:Show_F3Make_Result: æ˜¾ç¤ºç»“æœ {{{
 "* --------------------------------------------------------------------------*/
-" @º¯ÊıËµÃ÷£º   ÏÔÊ¾½á¹û
-" @²Î    Êı£º   result: ½á¹û
-" @²Î    Êı£º   open_close_option: ´ò¿ª»¹ÊÇ¹Ø±Õ´°¿Ú
-" @·µ »Ø Öµ£º   
+" @å‡½æ•°è¯´æ˜ï¼š   æ˜¾ç¤ºç»“æœ
+" @å‚    æ•°ï¼š   result: ç»“æœ
+" @å‚    æ•°ï¼š   open_close_option: æ‰“å¼€è¿˜æ˜¯å…³é—­çª—å£
+" @è¿” å› å€¼ï¼š   
 "* --------------------------------------------------------------------------*/
 fun! s:Show_F3Make_Result(result, open_close_option)
     let bname = '__F3Make_Result__'
@@ -288,30 +288,30 @@ fun! s:Open_Error_File()
         return
     endif
     if s:f3make_cmd == ""
-        echo "ÕÒ²»µ½s:f3make_cmd"
+        echo "æ‰¾ä¸åˆ°s:f3make_cmd"
         return
     endif
-    " ÏÈÍ¨¹ıf3make.bat¶¨Î»µ½¹¤³ÌÄ¿Â¼
+    " å…ˆé€šè¿‡f3make.batå®šä½åˆ°å·¥ç¨‹ç›®å½•
     let source_dir = substitute(s:f3make_cmd, 'F1_Dev\\source\\f3make.bat', '', 'g')
-    " ½«¹¤³ÌÄ¿Â¼µÄ\×ª³É/
+    " å°†å·¥ç¨‹ç›®å½•çš„\è½¬æˆ/
     let project_dir = substitute(source_dir, '\\', '/', 'g')
-    " ÓÃ¹¤³ÌÄ¿Â¼Ãû´úÌæ..\..\
+    " ç”¨å·¥ç¨‹ç›®å½•åä»£æ›¿..\..\
     let error_file = substitute(line, '"\.\.\\\.\.\\', project_dir, 'g')
-    " ×ª»»/Îª\
+    " è½¬æ¢/ä¸º\
     let error_file = substitute(error_file, '/', "\\", 'g')
-    " È¥µôºóÃæµÄ²¿·Ö
+    " å»æ‰åé¢çš„éƒ¨åˆ†
     let error_file = substitute(error_file, '".*$', "", 'g')
 
     "let esc_fname_chars = ' *?[{`$%#"|!<>();&' . "'\t\n"
     "let esc_fname = escape(error_file, esc_fname_chars)
     if !filereadable(error_file)
-        echo "ÎÄ¼ş²»´æÔÚ"
+        echo "æ–‡ä»¶ä¸å­˜åœ¨"
         return
     endif
     
-    " ÏÈ°ÑĞĞºÅÇ°ÃæµÄÄÚÈİÈ¥µô
+    " å…ˆæŠŠè¡Œå·å‰é¢çš„å†…å®¹å»æ‰
     let line_num = substitute(line, '^".*", line ', '', 'g')
-    " ÔÙ°ÑºóÃæµÄÈ¥µô
+    " å†æŠŠåé¢çš„å»æ‰
     let line_num = substitute(line_num, '\(\d\+\):.*$', '\1', 'g')
 
     let winnum = bufwinnr('^' . error_file . '$')
