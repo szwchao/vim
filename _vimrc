@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 2014/5/17 22:38:53
+"         Modified: 2014/5/21 9:20:22
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -18,7 +18,7 @@ else
     let g:slash = '/'
 endif
 
-if matchstr(expand("~"), "55602")
+if isdirectory("c:/local/55602")
     let g:computer_enviroment = "grundfos"
 elseif matchstr(expand("~"), "435736")
     let g:computer_enviroment = "seagate"
@@ -134,7 +134,7 @@ filetype on                               " 自动检测文件类型
 filetype plugin on                        " 特定文件类型加载插件
 filetype indent on                        " 特定文件类型加载缩进
 
-set viminfo+=n~/vim_data/viminfo
+"set viminfo+=n~/vim_data/viminfo
 let &backupdir=expand("~/vim_data/vimbackup")
 if !isdirectory(&backupdir)
     call mkdir(&backupdir)
