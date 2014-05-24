@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 2014/5/21 9:20:22
+"         Modified: 2014/5/24 8:32:22
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -33,7 +33,7 @@ endif
 " 设定文件编码类型，解决中文编码问题 {{{2
 "-------------------------------------------------------------------------------
 set encoding=utf-8
-set fileencodings=utf-8,chinese,latin-1
+set fileencodings=utf-8,chinese,utf-16le,latin-1
 if has("win32")
     set fileencoding=chinese
 else
