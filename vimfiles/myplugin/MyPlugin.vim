@@ -198,6 +198,8 @@ function! SaveCurrentFileToDesktop()
     let filename = expand("%")
     if g:platform == 'win'
         let save_name = $HOME . '\Desktop\' . filename
+    elseif g:platform == 'mac'
+        let save_name = $HOME . '/Desktop/' . filename
     else
         let save_name = $HOME . '/桌面/' . filename
     endif

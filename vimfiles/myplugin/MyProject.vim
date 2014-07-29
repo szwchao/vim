@@ -28,10 +28,17 @@ call s:Set('g:EnableMultiSourceCodeDir', '0')
 call s:Set('g:MyProjectConfigDir', 'E:\Workspace\MyProject')
 " 配置文件名
 call s:Set('g:MyProjectConfigFile', 'MyProjectFile')
-" 过滤文件类型
-call s:Set('g:MyProjectFileFilter', '*.h *.c *.cpp *.py')
-" 生成文件列表的命令
-call s:Set('g:MyProjectFindProgram', "dir /B /S /A-D /ON")
+if g:platform == 'win'
+    " 过滤文件类型
+    call s:Set('g:MyProjectFileFilter', '*.h *.c *.cpp *.py')
+    " 生成文件列表的命令
+    call s:Set('g:MyProjectFindProgram', "dir /B /S /A-D /ON")
+else
+    " 过滤文件类型
+    call s:Set('g:MyProjectFileFilter', ' -name "*.h" -o -name "*.c" -o -name "*.cpp"')
+    " 生成文件列表的命令
+    call s:Set('g:MyProjectFindProgram', 'find ')
+endif
 " 窗口高度
 call s:Set('g:MyProjectWinHeight', "15")
 " seagate编译选项
@@ -100,7 +107,7 @@ endfun
 " @返 回 值：   1 - 成功， 0 - 失败
 "* --------------------------------------------------------------------------*/
 fun! s:SetMyProjectConfigFile()
-    let l:filename = expand(s:GetMyProjectConfigDir() .'\'. g:MyProjectConfigFile)
+    let l:filename = expand(s:GetMyProjectConfigDir() .g:slash. g:MyProjectConfigFile)
     if filereadable(l:filename)
         let s:my_project_config_file = l:filename
         return 1
@@ -267,7 +274,7 @@ fun! s:InputSourceCodeDir(source_type)
         if dir !~ '\S'
             break
         endif
-        while !isdirectory(dir)
+        while !isdirectory(expand(dir))
             echohl errormsg
             let dir = input("必须是已存在的目录!\n" . l:str. " Directory: ", "", "dir")
             if dir !~ '\S'
@@ -275,7 +282,7 @@ fun! s:InputSourceCodeDir(source_type)
             endif
         endwhile
         if dir != ''
-            call add(source_dir, dir)
+            call add(source_dir, expand(dir))
         endif
         echohl normal
         if g:EnableMultiSourceCodeDir == 1
@@ -350,11 +357,11 @@ fun! s:AddNewMyProject()
         let cache = input("input cache file name(Default:cache)")
     endif
     let esc_filename_chars = ' *?[{`$%#"|!<>();&' . "'\t\n"
-    let this_project_dir = escape(s:GetMyProjectConfigDir().'\'.project_name, esc_filename_chars)
-    let tags = this_project_dir.'\'.tags
-    let cscope = this_project_dir.'\'.cscope
-    let filenametags = this_project_dir.'\'.filenametags
-    let cache = this_project_dir.'\'.cache
+    let this_project_dir = escape(s:GetMyProjectConfigDir().g:slash.project_name, esc_filename_chars)
+    let tags = this_project_dir.g:slash.tags
+    let cscope = this_project_dir.g:slash.cscope
+    let filenametags = this_project_dir.g:slash.filenametags
+    let cache = this_project_dir.g:slash.cache
 
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     let source_list = []
@@ -371,7 +378,7 @@ fun! s:AddNewMyProject()
     endfor
 
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    call mkdir(s:GetMyProjectConfigDir().'\'.project_name, 'p')
+    call mkdir(s:GetMyProjectConfigDir().g:slash.project_name, 'p')
 
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     let tags_cscope_filenametags_list = []
@@ -438,7 +445,7 @@ fun! s:RemoveProjectUnderCursor()
             let cur_prj_name = l:cur_prj['name']
         endif
         let esc_filename_chars = ' *?[{`$%#"|!<>();&' . "'\t\n"
-        let my_cur_prj_dir = escape(s:GetMyProjectConfigDir().'\'.cur_prj_name, esc_filename_chars)
+        let my_cur_prj_dir = escape(s:GetMyProjectConfigDir().g:slash.cur_prj_name, esc_filename_chars)
         call s:DeleteDir(my_cur_prj_dir)
         echo "删除成功！"
     endif
@@ -446,12 +453,6 @@ fun! s:RemoveProjectUnderCursor()
 endfun
 
 fun! s:DeleteDir(name)
-    if g:platform == 'win'
-        let delName = tolower(a:name)
-    else
-        let recPath = g:VEConf.recyclePath
-        let delName = a:name
-    endif
     if isdirectory(a:name)
         if g:platform == 'win'
             return s:DoSystemCmd(" rmdir /S /Q \"" . escape(a:name,'%#'). "\"")
@@ -487,7 +488,7 @@ fun! s:GetProjectUnderCursor()
         let l:cur_prj = prj_dict[prj_name]
         call extend(l:cur_prj, {'name':prj_name})
         let esc_filename_chars = ' *?[{`$%#"|!<>();&' . "'\t\n"
-        let prj_dir = escape(s:GetMyProjectConfigDir().'\'.prj_name, esc_filename_chars)
+        let prj_dir = escape(s:GetMyProjectConfigDir().g:slash.prj_name, esc_filename_chars)
         call extend(l:cur_prj, {'MyPrjDir':prj_dir})
         return l:cur_prj
     elseif
@@ -570,7 +571,7 @@ fun! s:SetTagsCscopeFilenametags()
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     "MRU
-    let g:MRU_File = s:GetMyProjectConfigDir() . '\' . cur_prj['name'] . '\mru'
+    let g:MRU_File = s:GetMyProjectConfigDir() . g:slash . cur_prj['name'] . g:slash. 'mru'
 endfun
 "-----------------------------------------------------------------------------"
 "}}}
@@ -769,7 +770,7 @@ fun! UpdateMyProjectTags(src_dir_list, tags)
     endif
 
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    let l:output_cscope = l:output_dir.'\cscope.files'
+    let l:output_cscope = l:output_dir.g:slash.'cscope.files'
     if filereadable(l:output_cscope)
         call delete(l:output_cscope)
     endif
@@ -778,10 +779,15 @@ fun! UpdateMyProjectTags(src_dir_list, tags)
         echo "生成tags文件列表中..."
         let l:cscope_string = ''
         for l:index in range(len(l:src_dir_list))
-            "转到project目录
-            execute "cd " .  l:src_dir_list[l:index]
-            "得到命令输出
-            let l:cscope_string = l:cscope_string . system(l:cmd . " " . l:ext_filter)
+            if g:platform == 'win'
+                "转到project目录
+                execute "cd " .  l:src_dir_list[l:index]
+                "得到命令输出
+                let l:cscope_string = l:cscope_string . system(l:cmd . " " . l:ext_filter)
+            else
+                "得到命令输出
+                let l:cscope_string = l:cscope_string . system(l:cmd . l:src_dir_list[l:index] . " " . l:ext_filter)
+            endif
         endfor
         "分行
         let l:cscope_list = split(l:cscope_string, '\n')
@@ -791,7 +797,7 @@ fun! UpdateMyProjectTags(src_dir_list, tags)
         echo "tags文件列表已创建! ". '(time: '.elapsedtimestr.'s)'
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    execute "cd " . output_dir 
+    execute "cd " . l:output_dir 
     let starttime = reltime()  " start the clock
     echo "生成tags中..."
     "call system("ctags -L cscope.files")
@@ -812,7 +818,7 @@ fun! UpdateMyProjectCscope(src_dir_list, cscope)
     let l:cmd = g:MyProjectFindProgram
     let l:ext_filter = g:MyProjectFileFilter
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    let l:output_cscope = l:output_dir.'\cscope.files'
+    let l:output_cscope = l:output_dir.g:slash.'cscope.files'
     if !filereadable(l:output_cscope)
         let starttime = reltime()  " start the clock
         echo "生成cscope文件列表中..."
@@ -821,7 +827,11 @@ fun! UpdateMyProjectCscope(src_dir_list, cscope)
             "转到project目录
             execute "cd " .  l:src_dir_list[l:index]
             "得到命令输出
-            let l:cscope_string = l:cscope_string . system(l:cmd . " " . l:ext_filter)
+            if g:platform == 'win'
+                let l:cscope_string = l:cscope_string . system(l:cmd . " " . l:ext_filter)
+            else
+                let l:cscope_string = l:cscope_string . system(l:cmd . l:src_dir_list[l:index] . " " . l:ext_filter)
+            endif
         endfor
         "分行
         let l:cscope_list = split(l:cscope_string, '\n')
@@ -834,7 +844,8 @@ fun! UpdateMyProjectCscope(src_dir_list, cscope)
     execute "cd " . output_dir 
     let starttime = reltime()  " start the clock
     echo "生成cscope中..."
-    let l:temp = system("cscope.exe -bkq -i ".l:output_cscope)
+    "let l:temp = system("cscope.exe -bkq -i ".l:output_cscope)
+    let l:temp = system("cscope -bkq -i ".l:output_cscope)
     call s:EchoError(l:temp)
     "call delete(l:output_cscope)
     let elapsedtimestr = matchstr(reltimestr(reltime(starttime)),'\d\+\(\.\d\d\)\=')
@@ -863,7 +874,11 @@ function! UpdateMyProjectFilenametags(fntags_dir_list, filenametags)
         "转到project目录
         execute "cd " .  l:fntags_dir_list[l:index]
         "得到命令输出
-        let l:filenametags_string = l:filenametags_string . system(l:cmd . " " . l:ext_filter)
+        if g:platform == 'win'
+            let l:filenametags_string = l:filenametags_string . system(l:cmd . " " . l:ext_filter)
+        else
+            let l:filenametags_string = l:filenametags_string . system(l:cmd . l:fntags_dir_list[l:index] . " " . l:ext_filter)
+        endif
     endfor
 
     "分行

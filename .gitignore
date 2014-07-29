@@ -1,9 +1,7 @@
 .svn
 tools/Everything
 tools/Git
-tools/GnuWin32
 tools/MINGW
-vim73
 vim74
 vimfiles/vundle
 vimfiles/backup
