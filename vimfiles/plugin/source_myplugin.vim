@@ -9,7 +9,7 @@ let g:source_myplugin = 1
 " 自己插件所在目录
 if g:platform == 'win'
    let g:myplugin_dir = $VIM.'/vimfiles/myplugin/'
-elseif g:platform == 'linux'
+elseif g:platform == 'linux' || g:platform == 'mac'
    let g:myplugin_dir = expand('~/.vim/myplugin/')
 endif
 "}}}

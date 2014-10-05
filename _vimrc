@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 2014/5/24 8:32:22
+"         Modified: 2014/6/22 9:22:38
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -13,6 +13,9 @@
 if (has("win32") || has("win95") || has("win64") || has("win16"))
     let g:platform = 'win'
     let g:slash = '\'
+elseif (has("mac"))
+    let g:platform = 'mac'
+    let g:slash = '/'
 else
     let g:platform = 'linux'
     let g:slash = '/'
@@ -44,6 +47,7 @@ language messages zh_CN.utf-8
 "set encoding=utf-8
 "let &termencoding=&encoding
 "set fileencodings=ucs-bom,utf-8,gbk,cp936
+set langmenu=zh_CN.UTF-8
 set helplang=cn
 
 "-------------------------------------------------------------------------------
@@ -57,6 +61,8 @@ colorscheme bluechia
 "-------------------------------------------------------------------------------
 if g:platform == 'win'
     set guifont=YaHei\ Consolas\ Hybrid:h12:cANSI
+elseif g:platform == 'mac'
+    set guifont=YaHei\ Consolas\ Hybrid:h18
 else
     set guifont=YaHei\ Consolas\ Hybrid\ 12
 endif
@@ -80,6 +86,8 @@ Bundle 'majutsushi/tagbar'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Shougo/neocomplete.vim'
+Bundle 'Shougo/neosnippet.vim'
+Bundle 'Shougo/neosnippet-snippets'
 Bundle 'bling/vim-airline'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'a.vim'
@@ -701,6 +709,19 @@ let g:airline_right_alt_sep = ''
 let g:airline_symbols.branch = ' '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ' '
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
 "}}}1
 
 " vim:fdm=marker:fmr={{{,}}}
