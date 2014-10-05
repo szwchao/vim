@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 2014/6/22 9:22:38
+"         Modified: 29-07-2014 10:41:44
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -53,8 +53,8 @@ set helplang=cn
 "-------------------------------------------------------------------------------
 " 配色方案 {{{2
 "-------------------------------------------------------------------------------
-"colorscheme colorful
-colorscheme bluechia
+colorscheme colorful
+"colorscheme bluechia
 
 "-------------------------------------------------------------------------------
 " 字体 {{{2
@@ -108,6 +108,12 @@ if g:platform == 'win'
     source $VIMRUNTIME/mswin.vim          " 加载mswin.vim
     unmap <C-A>
     behave mswin
+    set fileformat=dos                    " 文件格式为dos，否则记事本打开有黑框
+elseif g:platform = 'mac'
+    set macmeta
+    set fileformat=unix
+else
+    set fileformat=unix
 endif
 set nocompatible                          " 去掉关vi一致性模式，避免以前版本的一些bug和局限
 set shortmess=atI                         " 启动的时候不显示援助索马里儿童的提示
@@ -135,7 +141,6 @@ set hidden                                " 没有保存的缓冲区可以自动
 set scrolloff=3                           " 光标离窗口上下边界的3行时会引起窗口滚动
 set noswapfile                            " 禁用swf交换文件
 "set iskeyword+=-                         " 形如a-b的作为整词
-set fileformat=dos                        " 文件格式为dos，否则记事本打开有黑框
 
 syntax on                                 " 打开语法高亮
 filetype on                               " 自动检测文件类型
@@ -232,8 +237,10 @@ set laststatus=2                          " 显示状态栏 (默认值为 1, 无
 autocmd BufWritePre * call LastModified()
 " 彻底关闭警告声
 autocmd VimEnter * set vb t_vb=
-" Windows下启动时最大化窗口
-autocmd GUIEnter * simalt ~x
+if g:platform == 'win'
+    " Windows下启动时最大化窗口
+    autocmd GUIEnter * simalt ~x
+endif
 " 让打开文件时光标自动到上次退出该文件时的光标所在位置
 autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif
 " 缓冲区写入文件的时候自动检查文件类型
@@ -329,6 +336,8 @@ nmap Y y$
 nmap F i<CR><ESC>
 " 转换进制
 nmap H <ESC>:call ConvertDigital()<CR>
+" 打开/关闭quickfix窗口
+nmap s :ToggleQuickfixWindow<CR>
 
 "-------------------------------------------------------------------------------
 " <Leader>相关 {{{2
@@ -556,6 +565,17 @@ let g:neocomplete#sources#dictionary#dictionaries = {
             \ 'vim' : $VIM.'/dict/vim.dict'
             \ }
 
+"-------------------------------------------------------------------------------
+" neosnippet {{{2
+" ------------------------------------------------------------------------------
+let g:neocomplete#data_directory = '~/vim_data/.neosnippet'
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
 
 "-------------------------------------------------------------------------------
 " FuzzyFinder.vim {{{2
@@ -710,18 +730,7 @@ let g:airline_symbols.branch = ' '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ' '
 
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
 
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
 "}}}1
 
 " vim:fdm=marker:fmr={{{,}}}
