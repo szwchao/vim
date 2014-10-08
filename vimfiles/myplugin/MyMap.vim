@@ -17,7 +17,7 @@ function! QFixToggle(forced)
         cclose
     else
         " 确保quickfix窗口在底部
-        execute "botright cw"
+        execute "botright copen"
     endif
 endfunction
 

@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 29-07-2014 10:41:44
+"         Modified: 08-10-2014 9:58:52
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -99,6 +99,9 @@ Bundle 'DoxygenToolkit.vim'
 Bundle 'matchit.zip'
 Bundle 'python_match.vim'
 Bundle 'QuickBuf'
+Bundle 'Raimondi/delimitMate'
+Bundle 'junegunn/vim-easy-align'
+Bundle 'Yggdroot/indentLine'
 
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
@@ -562,6 +565,7 @@ imap <expr><M-u>  neocomplete#cancel_popup()
 let g:neocomplete#sources#dictionary#dictionaries = {
             \ 'default' : '',
             \ 'c' : $VIM.'/dict/c.dict',
+            \ 'cpp' : $VIM.'/dict/cpp.dict',
             \ 'vim' : $VIM.'/dict/vim.dict'
             \ }
 
@@ -570,12 +574,8 @@ let g:neocomplete#sources#dictionary#dictionaries = {
 " ------------------------------------------------------------------------------
 let g:neocomplete#data_directory = '~/vim_data/.neosnippet'
 " SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
 "-------------------------------------------------------------------------------
 " FuzzyFinder.vim {{{2
@@ -730,7 +730,7 @@ let g:airline_symbols.branch = ' '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ' '
 
-
+vmap <Enter> <Plug>(EasyAlign)
 "}}}1
 
 " vim:fdm=marker:fmr={{{,}}}

@@ -66,11 +66,7 @@ endfun
 " @返 回 值：   字符串
 "* --------------------------------------------------------------------------*/
 fun! GetProjectName()
-    if g:current_project_name == ''
-        return g:current_project_name
-    else
-        return g:current_project_name
-    endif
+    return g:current_project_name
 endfun
 "}}}
 
@@ -841,7 +837,7 @@ fun! UpdateMyProjectCscope(src_dir_list, cscope)
         echo "cscope文件列表已创建! ". '(time: '.elapsedtimestr.'s)'
     endif
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    execute "cd " . output_dir 
+    execute "cd " . output_dir
     let starttime = reltime()  " start the clock
     echo "生成cscope中..."
     "let l:temp = system("cscope.exe -bkq -i ".l:output_cscope)
