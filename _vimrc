@@ -13,7 +13,7 @@
 if (has("win32") || has("win95") || has("win64") || has("win16"))
     let g:platform = 'win'
     let g:slash = '\'
-elseif (has("gui_macvim"))
+elseif (has("mac"))
     let g:platform = 'mac'
     let g:slash = '/'
 else
