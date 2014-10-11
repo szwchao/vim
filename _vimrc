@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 08-10-2014 9:58:52
+"         Modified: 11-10-2014 16:55:40
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -101,7 +101,7 @@ Bundle 'python_match.vim'
 Bundle 'QuickBuf'
 Bundle 'Raimondi/delimitMate'
 Bundle 'junegunn/vim-easy-align'
-Bundle 'Yggdroot/indentLine'
+"Bundle 'Yggdroot/indentLine'
 
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
@@ -378,7 +378,8 @@ nmap <leader>of :call ToggleOmnifunc()<CR>
 " Fx相关 {{{2
 "-------------------------------------------------------------------------------
 " F1加载项目
-nmap <F1> :call StartMyProject()<CR>
+nmap <C-F1> :call StartMyProject()<CR>
+nmap <F1> :call StartVCProject()<CR>
 " F2跳转书签
 nmap <F2> <Plug>Vm_goto_next_sign
 " F3查找
@@ -604,7 +605,7 @@ let g:tagbar_sort = 0
 "-------------------------------------------------------------------------------
 " EasyMotion {{{2
 "-------------------------------------------------------------------------------
-let g:EasyMotion_leader_key = 'f'
+let g:EasyMotion_leader_key = ';'
 let g:EasyMotion_do_shade = 1
 hi link EasyMotionTarget Ignore
 "-------------------------------------------------------------------------------
@@ -730,7 +731,10 @@ let g:airline_symbols.branch = ' '
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ' '
 
+"-------------------------------------------------------------------------------
+" EasyAlign {{{2
+" ------------------------------------------------------------------------------
 vmap <Enter> <Plug>(EasyAlign)
 "}}}1
 
-" vim:fdm=marker:fmr={{{,}}}
+" vim:fdm=marker:fmr={{{,}}} foldlevel=1:
