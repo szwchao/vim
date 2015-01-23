@@ -1,7 +1,9 @@
 .svn
+*.pyc
 tools/Everything
 tools/Git
 tools/MINGW
+tools/Graphviz
 vim74
 vimfiles/vundle
 vimfiles/backup

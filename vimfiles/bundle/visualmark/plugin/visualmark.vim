@@ -20,7 +20,7 @@ endif
 if &bg == "dark"
  highlight SignColor ctermfg=white ctermbg=blue guifg=white guibg=#2f4f4f
 else
- highlight SignColor ctermbg=white ctermfg=blue guibg=grey guifg=RoyalBlue3
+ highlight SignColor ctermbg=white ctermfg=blue guibg=#FFE4C4 guifg=RoyalBlue3
 endif
 
 " ---------------------------------------------------------------------

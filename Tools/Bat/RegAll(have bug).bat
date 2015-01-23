@@ -16,7 +16,7 @@ IF EXIST %cd%\vim74\gvim.exe (
             SET path_="%cd%\vim74"
             REM TODO 怎么得到原来的PATH??
             ECHO "设置PATH：%path_%"
-            %systemroot%\system32\setx.exe PATH "%path%;d:\Vim\tools\MINGW\bin\;d:\Vim\tools\GnuWin32\bin\;d:\Vim\vim74\;C:\Python25\;d:\Vim\tools\Git\cmd;d:\Vim\tools\exe;d:\vim\tools\ag"
+            %systemroot%\system32\setx.exe PATH "%path%;c:\Vim\tools\MINGW\bin\;c:\Vim\tools\GnuWin32\bin\;c:\Vim\vim74\;C:\Python27\;c:\Vim\tools\Git\cmd;c:\Vim\tools\exe;c:\vim\tools\ag"
             REM SETX PATH "%path_%"
             ECHO vim环境变量设置成功
             ) ELSE (

@@ -133,6 +133,9 @@ highlight Ignore       guifg=#ef008c
 
 hi Underlined   guibg=#FF6EB4  guifg=black      gui=underline
 
+" 左侧的标志条
+hi SignColumn   guibg=white
+
 " 函数高亮
 "hi cFunction        gui=BOLD guifg=Blue
 hi Function        gui=BOLD guifg=Blue

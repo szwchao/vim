@@ -35,7 +35,7 @@ endif
 " 配置列表
 "call s:Set('g:VCProjectConfigFile', 'VCProjects')
 let g:vcprojects = [
-            \{'NFC': 'c:\local\55602\workspace\55602_Elephant_V00.02.00\ctrleTAP_BUILD\eTAP_Build\bbElephant\Nfc\Dev\_Test_\NfcService_UnitTest\NfcService_UnitTest.vcproj'},
+            \{'NFC': 'c:\local\workspace\55602_Elephant_V00.04.00\ctrleTAP_BUILD\eTAP_Build\bbElephant\Nfc\Dev\_Test_\NfcService_UnitTest\NfcService_UnitTest.vcproj'},
             \]
 " 窗口高度
 call s:Set('g:VCProjectWinHeight', "15")

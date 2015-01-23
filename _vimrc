@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 11-10-2014 16:55:40
+"         Modified: 23-01-2015 16:27:10
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -21,14 +21,17 @@ else
     let g:slash = '/'
 endif
 
-if isdirectory("c:/local/55602")
+if isdirectory("c:/Users/55602")
     let g:computer_enviroment = "grundfos"
+    let temp_dir = "c:/local/temp/"
 elseif matchstr(expand("~"), "435736")
     let g:computer_enviroment = "seagate"
+    let temp_dir = expand("~")
 else
     let g:computer_enviroment = "normal"
+    let temp_dir = expand("~")
 endif
-let vim_data_path = expand("~/vim_data")
+let vim_data_path = expand(temp_dir . "vim_data")
 if !isdirectory(vim_data_path)
     call mkdir(vim_data_path)
 endif
@@ -36,7 +39,7 @@ endif
 " 设定文件编码类型，解决中文编码问题 {{{2
 "-------------------------------------------------------------------------------
 set encoding=utf-8
-set fileencodings=utf-8,chinese,utf-16le,latin-1
+set fileencodings=utf-8,chinese,latin1,utf-16le
 if has("win32")
     set fileencoding=chinese
 else
@@ -75,34 +78,41 @@ call pathogen#infect()
 filetype off                   " required!
 if g:platform == 'win'
     set rtp+=$VIM/vimfiles/vundle/vundle
-    call vundle#rc('$VIM/vimfiles/vundle/')
+    call vundle#begin('$VIM/vimfiles/vundle/')
 else
     set rtp+=~/.vim/vundle/vundle
-    call vundle#rc('~/.vim/vundle/')
+    call vundle#begin('~/.vim/vundle/')
 endif
-Bundle 'gmarik/vundle'
+Plugin 'szwchao/vimwiki'
+Plugin 'gmarik/vundle'
+Plugin 'majutsushi/tagbar'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
+Plugin 'Shougo/neocomplete.vim'
+Plugin 'Shougo/neosnippet.vim'
+Plugin 'Shougo/neosnippet-snippets'
+Plugin 'bling/vim-airline'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'mattn/calendar-vim'
+Plugin 'a.vim'
+Plugin 'CRefVim'
+Plugin 'MatchTag'
+Plugin 'mru.vim'
+Plugin 'colorizer'
+Plugin 'DoxygenToolkit.vim'
+Plugin 'matchit.zip'
+Plugin 'python_match.vim'
+Plugin 'QuickBuf'
+Plugin 'Raimondi/delimitMate'
+Plugin 'junegunn/vim-easy-align'
+Plugin 'godlygeek/tabular'
+Plugin 'airblade/vim-gitgutter'
+"Plugin 'klen/python-mode'
+Plugin 'isnowfy/python-vim-instant-markdown'
+"Plugin 'aklt/plantuml-syntax'   "move to bundle
+Plugin 'fs111/pydoc.vim'
 
-Bundle 'majutsushi/tagbar'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'scrooloose/nerdtree'
-Bundle 'Shougo/neocomplete.vim'
-Bundle 'Shougo/neosnippet.vim'
-Bundle 'Shougo/neosnippet-snippets'
-Bundle 'bling/vim-airline'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'a.vim'
-Bundle 'CRefVim'
-Bundle 'MatchTag'
-Bundle 'FencView.vim'
-Bundle 'colorizer'
-Bundle 'DoxygenToolkit.vim'
-Bundle 'matchit.zip'
-Bundle 'python_match.vim'
-Bundle 'QuickBuf'
-Bundle 'Raimondi/delimitMate'
-Bundle 'junegunn/vim-easy-align'
-"Bundle 'Yggdroot/indentLine'
-
+call vundle#end()            " required
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
 "-------------------------------------------------------------------------------
@@ -151,14 +161,14 @@ filetype plugin on                        " 特定文件类型加载插件
 filetype indent on                        " 特定文件类型加载缩进
 
 "set viminfo+=n~/vim_data/viminfo
-let &backupdir=expand("~/vim_data/vimbackup")
+let &backupdir=expand(temp_dir . "vim_data/vimbackup")
 if !isdirectory(&backupdir)
     call mkdir(&backupdir)
 endif
 set backup                                " 打开自动备份功能
 
 if has("persistent_undo")
-    let &undodir=expand("~/vim_data/vimundo")
+    let &undodir=expand(temp_dir . "vim_data/vimundo")
     if !isdirectory(&undodir)
         call mkdir(&undodir)
     endif
@@ -173,22 +183,22 @@ if g:computer_enviroment == "grundfos"
     autocmd FileType python set shiftwidth=4
     " Alt+t用TotalCommander打开当前文件
     "nmap <M-t> :!start <C-R>=$g:totalcommander_exe /o /t /l '%:p'
-    nmap <M-t> :!start "H:\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
-    let root_path = "H"
+    nmap <M-t> :!start "c:\local\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
+    let root_path = "c:/local"
 elseif g:computer_enviroment == "seagate"
     autocmd FileType c,cpp,h set tabstop=3
     autocmd FileType c,cpp,h set shiftwidth=3
     autocmd FileType python set tabstop=3
     autocmd FileType python set shiftwidth=3
     nmap <M-t> :!start "D:\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
-    let root_path = "E"
+    let root_path = "E:"
 else
     autocmd FileType c,cpp,h set tabstop=4
     autocmd FileType c,cpp,h set shiftwidth=4
     autocmd FileType python set tabstop=4
     autocmd FileType python set shiftwidth=4
     nmap <M-t> :!start "D:\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
-    let root_path = "D"
+    let root_path = "D:"
 endif
 
 "-------------------------------------------------------------------------------
@@ -378,8 +388,8 @@ nmap <leader>of :call ToggleOmnifunc()<CR>
 " Fx相关 {{{2
 "-------------------------------------------------------------------------------
 " F1加载项目
-nmap <C-F1> :call StartMyProject()<CR>
-nmap <F1> :call StartVCProject()<CR>
+nmap <F1> :call StartMyProject()<CR>
+nmap <C-F1> :call StartVCProject()<CR>
 " F2跳转书签
 nmap <F2> <Plug>Vm_goto_next_sign
 " F3查找
@@ -403,7 +413,7 @@ nmap <F8> :Dox<CR>
 " F9切换qbuf
 let g:qb_hotkey = "<F9>"
 " F10将wiki转换为html
-map <F10> :Vimwiki2HTMLBrowse<cr>
+map <F10> :Wiki2Html<cr>
 " Ctrl+F10将所有wiki转换为html
 map <C-F10> :VimwikiAll2HTML<cr>
 " F11全屏
@@ -513,10 +523,20 @@ vmap ' <Esc>:call VisualWrap("'", "'")<CR>
 "-------------------------------------------------------------------------------
 " 工程目录
 if g:platform == 'win'
-    let g:MyProjectConfigDir = root_path . ':\Workspace\MyProject'
+    let g:MyProjectConfigDir = root_path . '/Workspace/MyProject'
 else
     let g:MyProjectConfigDir = expand('~/MyProject')
 endif
+
+"-------------------------------------------------------------------------------
+" Calendar {{{2
+" ------------------------------------------------------------------------------
+let g:calendar_mruler = '一月,二月,三月,四月,五月,六月,七月,八月,九月,十月,十一月,十二月'
+let g:calendar_wruler = '日 一 二 三 四 五 六'
+let g:calendar_navi_label = '上月,今天,下月'
+let g:calendar_monday = 1
+let g:calendar_weeknm = 1 " WK01
+let g:calendar_datetime = 'title'
 
 "-------------------------------------------------------------------------------
 " startify {{{2
@@ -542,7 +562,7 @@ let g:fencview_autodetect = 0
 " MRU.vim {{{2
 "-------------------------------------------------------------------------------
 " 最大列表数目200
-let MRU_File = expand("~/vim_data/_vim_mru_files")
+let MRU_File = expand(temp_dir . "vim_data/_vim_mru_files")
 let MRU_Max_Entries = 200
 
 "-------------------------------------------------------------------------------
@@ -553,7 +573,7 @@ map <silent> <unique> <Leader>ct <Plug>CRV_CRefVimInvoke
 "-------------------------------------------------------------------------------
 " neocomplete {{{2
 " ------------------------------------------------------------------------------
-let g:neocomplete#data_directory = '~/vim_data/.neocomplete'
+let g:neocomplete#data_directory = expand(temp_dir . 'vim_data/.neocomplete')
 " 使neocomplete自动启动
 let g:neocomplete#enable_at_startup = 1
 " 使neocomplete自动选择第一个
@@ -573,7 +593,7 @@ let g:neocomplete#sources#dictionary#dictionaries = {
 "-------------------------------------------------------------------------------
 " neosnippet {{{2
 " ------------------------------------------------------------------------------
-let g:neocomplete#data_directory = '~/vim_data/.neosnippet'
+let g:neocomplete#data_directory = expand(temp_dir . 'vim_data/.neosnippet')
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
@@ -581,7 +601,7 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expan
 "-------------------------------------------------------------------------------
 " FuzzyFinder.vim {{{2
 "-------------------------------------------------------------------------------
-let g:fuf_dataDir = '~/vim_data/.vim-fuf-data'
+let g:fuf_dataDir = expand(temp_dir . 'vim_data/.vim-fuf-data')
 let g:fuf_keyPreview = '<M-x>'
 let g:fuf_previewHeight = 0
 let g:fuf_autoPreview = 0
@@ -601,6 +621,8 @@ nmap <M-k> :FufChangeList<CR>
 " TagBar {{{2
 "-------------------------------------------------------------------------------
 let g:tagbar_sort = 0
+let g:tagbar_show_visibility = 1
+let g:tagbar_show_linenumbers = 1
 
 "-------------------------------------------------------------------------------
 " EasyMotion {{{2
@@ -661,15 +683,16 @@ let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,del,br,hr,div,code,ul,li,p,a,
 " 切换todo
 autocmd FileType vimwiki map <M-Enter> <Plug>VimwikiToggleListItem
 
-let seagate_wiki = {'path': root_path . ':/My/MyWiki/SeagateWiki/wiki_files/',
-            \ 'path_html': root_path . ':/My/MyWiki/SeagateWiki/',
-            \ 'template_path': root_path . ':/My/MyWiki/SeagateWiki/assets/template/',
+let seagate_wiki = {'path': root_path . '/My/MyWiki/SeagateWiki/wiki_files/',
+            \ 'path_html': root_path . '/My/MyWiki/SeagateWiki/',
+            \ 'template_path': root_path . '/My/MyWiki/SeagateWiki/assets/template/',
             \ 'template_default': 'template',
             \ 'template_ext': '.html',
             \ 'diary_link_count': 6}
-let grundfos_wiki = {'path': root_path . ':/My/MyWiki/GrundfosWiki/wiki_files/',
-            \ 'path_html': root_path . ':/My/MyWiki/GrundfosWiki/',
-            \ 'template_path': root_path. ':/My/MyWiki/GrundfosWiki/assets/template/',
+let grundfos_wiki = {'path': root_path . '/My/MyWiki/GrundfosWiki/wiki_files/',
+            \ 'path_html': root_path . '/My/MyWiki/GrundfosWiki/',
+            \ 'syntax': 'markdown', 'ext': '.md',
+            \ 'template_path': root_path. '/My/MyWiki/GrundfosWiki/assets/template/',
             \ 'template_default': 'template',
             \ 'template_ext': '.html',
             \ 'diary_link_count': 6}
@@ -732,9 +755,19 @@ let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ' '
 
 "-------------------------------------------------------------------------------
-" EasyAlign {{{2
+" Tabular {{{2
 " ------------------------------------------------------------------------------
-vmap <Enter> <Plug>(EasyAlign)
+vmap <Enter> :Tab /
+
+"-------------------------------------------------------------------------------
+" plantuml {{{2
+" ------------------------------------------------------------------------------
+let g:plantuml_executable_script = $VIM. '/tools/plantuml/plantuml.jar'
+
+"-------------------------------------------------------------------------------
+" pydoc {{{2
+" ------------------------------------------------------------------------------
+let g:pydoc_cmd = 'python -m pydoc'
 "}}}1
 
 " vim:fdm=marker:fmr={{{,}}} foldlevel=1:
