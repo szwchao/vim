@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 23-01-2015 16:27:10
+"         Modified: 2015/1/24 10:37:14
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -26,10 +26,10 @@ if isdirectory("c:/Users/55602")
     let temp_dir = "c:/local/temp/"
 elseif matchstr(expand("~"), "435736")
     let g:computer_enviroment = "seagate"
-    let temp_dir = expand("~")
+    let temp_dir = expand("~") . "//"
 else
     let g:computer_enviroment = "normal"
-    let temp_dir = expand("~")
+    let temp_dir = expand("~") . "//"
 endif
 let vim_data_path = expand(temp_dir . "vim_data")
 if !isdirectory(vim_data_path)
