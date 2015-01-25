@@ -26,10 +26,10 @@ if isdirectory("c:/Users/55602")
     let temp_dir = "c:/local/temp/"
 elseif matchstr(expand("~"), "435736")
     let g:computer_enviroment = "seagate"
-    let temp_dir = expand("~")
+    let temp_dir = expand("~") . "//"
 else
     let g:computer_enviroment = "normal"
-    let temp_dir = expand("~")
+    let temp_dir = expand("~") . "//"
 endif
 let vim_data_path = expand(temp_dir . "vim_data")
 if !isdirectory(vim_data_path)
