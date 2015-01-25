@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 23-01-2015 16:27:10
+"         Modified: 24-01-2015 22:18:31
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -415,7 +415,7 @@ let g:qb_hotkey = "<F9>"
 " F10将wiki转换为html
 map <F10> :Wiki2Html<cr>
 " Ctrl+F10将所有wiki转换为html
-map <C-F10> :VimwikiAll2HTML<cr>
+map <C-F10> :WikiAll2Html<cr>
 " F11全屏
 nmap <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
 " F12切换c/h文件(a.vim)
