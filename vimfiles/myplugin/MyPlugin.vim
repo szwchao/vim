@@ -9,116 +9,6 @@ let g:loaded_myplugin = 1
 "------------------------------------------------------------------------------"
 "}}}
 
-" 编译、运行、调试 {{{2
-"------------------------------------------------------------------------------"
-"定义CompileRun函数，用来调用进行编译和运行
-func! CompileRun()
-    if exists('g:current_project_name')
-        if !empty(g:current_project_name)
-            echo "开始编译工程（增量）：" . g:current_project_name
-            call F3make(1)
-            return
-        endif
-    endif
-    if (&filetype != 'c') && (&filetype != 'cpp') && (&filetype != 'python')
-        echo '只能编译c,cpp,python文件!'
-        return
-    endif
-    exec "w"
-    if &filetype == 'c'
-        if g:platform == 'win'
-            set makeprg=gcc\ -o\ %<.exe\ %
-            exec "silent make"
-            set makeprg=make
-            exec "!%<.exe"
-        elseif g:platform == 'linux'
-            set makeprg=gcc\ -o\ %<\ %
-            exec "silent make"
-            set makeprg=make
-            exec "!./%<"
-        endif
-    elseif &filetype == 'cpp'
-        if g:platform == 'win'
-            set makeprg=g++\ -o\ %<.exe\ %
-            exec "silent make"
-            set makeprg=make
-            exec "!%<.exe"
-        elseif g:platform == 'linux'
-            set makeprg=g++\ -o\ %<\ %
-            set makeprg=make
-            exec "silent make"
-            exec "!./%<"
-        endif
-    elseif &filetype == 'python'
-        if g:platform == 'win'
-            if exists('g:python_dir')
-                exec "!".g:python_dir." %"
-            elseif
-                echo "plz set g:python_dir first in your vimrc file"
-            endif
-        elseif g:platform == 'linux'
-            exec "!python %<"
-        endif
-    endif
-    exe ":cw"
-endfunc
-"结束定义CompileRun
-
-"定义Debug函数，用来调试程序
-func! Debug()
-    if exists('g:current_project_name')
-        if !empty(g:current_project_name)
-            echo "开始编译工程（全新）：" . g:current_project_name
-            call F3make(0)
-            return
-        endif
-    endif
-    exec "w"
-    "C程序
-    if &filetype == 'c'
-        exec "!gcc % -g -o %<.exe"
-        exec "!gdb %<.exe"
-        "C++程序
-    elseif &filetype == 'cpp'
-        exec "!g++ % -g -o %<.exe"
-        exec "!gdb %<.exe"
-        "Java程序
-    elseif &filetype == 'java'
-        exec "!javac %"
-        exec "!jdb %<"
-    endif
-endfunc
-"结束定义Debug
-"------------------------------------------------------------------------------"
-"}}}
-
-" 获取当前光标下的函数名{{{2
-"------------------------------------------------------------------------------"
-function! GetFunctionName()
-    " search backwards for our magic regex that works most of the time
-    let flags = "bn"
-    let fNum = search('^\w\+\s\+\w\+.*\n*\s*[(){:].*[,)]*\s*$', flags)
-    " if we're in a python file, search backwards for the most recent def: or
-    " class: declaration
-    if match(expand("%:t"), ".py") != -1
-        let dNum = search('^\s\+def\s*.*:\s*$', flags)
-        let cNum = search('^\s*class\s.*:\s*$', flags)
-        if dNum > cNum
-            let fNum = dNum
-        else
-            let fNum = cNum
-        endif
-    endif
-
-    "paste the matching line into a variable to display
-    let tempstring = getline(fNum)
-
-    "return the line that we found to be the function name
-    return tempstring
-endfun
-"------------------------------------------------------------------------------"
-"}}}
-
 " 更换主题{{{2
 "------------------------------------------------------------------------------"
 func! ToggleColorScheme(...)
@@ -198,6 +88,9 @@ function! SaveCurrentFileToDesktop()
     let filename = expand("%")
     if g:platform == 'win'
         let save_name = $HOME . '\Desktop\' . filename
+        if exists('g:computer_enviroment')
+            if g:computer_enviroment == "grundfos"
+                let save_name = 'c:/users/55602/Desktop/' . filename
     elseif g:platform == 'mac'
         let save_name = $HOME . '/Desktop/' . filename
     else
@@ -274,26 +167,47 @@ command! -nargs=* -complete=file -bang Rename call Rename(<q-args>, '<bang>')
 "------------------------------------------------------------------------------"
 "}}}
 
-" 切换补全函数 {{{2
-"------------------------------------------------------------------------------"
-fun! ToggleOmnifunc()
-    if &omnifunc == ''
-        return
-    elseif &omnifunc == 'ccomplete#Complete'
-        set omnifunc=omni#cpp#complete#Main
-    elseif &omnifunc == 'omni#cpp#complete#Main'
-        set omnifunc=ccomplete#Complete
-    endif
-endfun
-"------------------------------------------------------------------------------"
-"}}}
-
 " 插入日期时间 {{{2
 "------------------------------------------------------------------------------"
 fun! InsertDateTime()
     silent! execute "normal a".strftime("%c")."\<ESC>"
 endfun
 "------------------------------------------------------------------------------"
+"}}}
+
+" 自定义命令{{{2
+" custom_cmd定义了自定义的一些命令，供fuzzyfinder的MyCMD模式使用
+" 格式:  描述, 命令, 立即执行?(1 是, 0 否)
+"------------------------------------------------------------------------------"
+"------------------------------------------------------------------------------"
+function! GetAllCommands()
+   let custom_cmd = 
+   \[
+       \ ['文件另存到桌面', ':call SaveCurrentFileToDesktop()', 1],
+       \ ['复制文件名', ':let @+=expand("%:t")', 1],
+       \ ['复制文件名(包括路径)', ':let @+=expand("%:p")', 1],
+       \ ['删除行尾空格', ':%s/\s\+$//g', 1],
+       \ ['删除回车符^M', ':%s/\r//g', 1],
+       \ ['插入日期和时间', ':call InsertDateTime()', 1],
+       \ ['自动检测编码', ':FencAutoDetect', 1],
+       \ ['单词首字母大写', ':%s/\w*/\u&/g', 0],
+       \ ['宏定义替换为大写', ':g/^\s*#define/s/\s\+\zs.\+\ze\s\+.\+$/\U&/g', 0],
+       \ ['大写所有句子的第一个字母', ':%s/[.!?]\_s\+\a/\U&\E/g', 0],
+       \ ['显示所有匹配<p>行', ':g/<p>/z#.5|echo "=========="', 0],
+       \ ['插入行号', ':g/^/exec "s/^/".strpart(line(".")."    ", 0, 4)', 0],
+       \ ['压缩多行空行为一行', ':%s/\(\s*\n\)\+/\r/', 0],
+       \ ['删除所有的空行', ':g/^\s*$/d', 0],
+       \ ['删除所有的匹配<p>行', ':g/<p>/d', 0],
+       \ ['拷贝所有的匹配<p>行到文件末尾', ':g/<p>/t$', 0],
+       \ ['拷贝所有的匹配<p>行到寄存器a', '0"ay0:g/<p>/y A', 0],
+       \ ['删除重复行', ':%s/^\(.*\)\n\1/\1$/', 0],
+       \ ['替换1->2', ':%s/\<1\>/2/g', 0],
+       \ ['查找3行空行', '/^\n\{3}', 1],
+       \ ['', '', 0],
+       \ ['', '', 0]
+  \]
+   return
+endfunction 
 "}}}
 
 " 显示rgb.txt里所有颜色 {{{2

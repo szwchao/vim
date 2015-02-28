@@ -32,10 +32,14 @@ hi CursorIM	guifg=#3a553a	guibg=#d2ff00
 hi Directory	guifg=#4682B4 gui=bold
 
 " Diff
-hi DiffAdd	guifg=#d2ff00	guibg=#3a553a	gui=none
-hi DiffChange	guifg=#d2ff00	guibg=#3a553a	gui=none
-hi DiffDelete	guifg=#99bdff	guibg=#99bdff	gui=none
-hi DiffText	guifg=#d2ff00	guibg=#448844	gui=bold
+"hi DiffAdd	guifg=#d2ff00	guibg=#3a553a	gui=none
+"hi DiffChange	guifg=#d2ff00	guibg=#3a553a	gui=none
+"hi DiffDelete	guifg=#99bdff	guibg=#99bdff	gui=none
+"hi DiffText	guifg=#d2ff00	guibg=#448844	gui=bold
+hi DiffAdd	guifg=#D2EBBE	guibg=#437019	gui=none
+hi DiffChange	guifg=#FFF5EE	guibg=#2B5B77   gui=none
+hi DiffDelete	guifg=#40000A	guibg=#70000A	gui=none
+hi DiffText	guifg=#000000	guibg=#8FBFDC	gui=bold
 
 " 命令行上的错误信息
 hi ErrorMsg	guifg=#eb7aa0	guibg=black

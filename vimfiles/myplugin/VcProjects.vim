@@ -28,14 +28,14 @@ call s:Set('g:VCUseDefaultTagsCscopeName', '1')
 " 工程目录名
 "call s:Set('g:MyProjectConfigDir', $HOME.'\MyProject')
 if g:computer_enviroment == 'grundfos'
-    call s:Set('g:VCProjectConfigDir', 'H:\workspace\MyProject')
+    call s:Set('g:VCProjectConfigDir', 'c:\local\workspace\MyProject')
 else
     call s:Set('g:VCProjectConfigDir', 'D:\workspace\MyProject')
 endif
 " 配置列表
 "call s:Set('g:VCProjectConfigFile', 'VCProjects')
 let g:vcprojects = [
-            \{'NFC': 'c:\local\workspace\55602_Elephant_V00.04.00\ctrleTAP_BUILD\eTAP_Build\bbElephant\Nfc\Dev\_Test_\NfcService_UnitTest\NfcService_UnitTest.vcproj'},
+            \{'NFC': 'c:\local\workspace\55602_Elephant_V00.06.00\ctrleTAP_BUILD\eTAP_Build\bbElephant\Nfc\Dev\_Test_\NfcService_UnitTest\NfcService.sln'},
             \]
 " 窗口高度
 call s:Set('g:VCProjectWinHeight', "15")

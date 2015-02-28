@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 24-01-2015 22:18:31
+"         Modified: 28-02-2015 4:33:15 PM
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -77,14 +77,15 @@ call pathogen#infect()
 
 filetype off                   " required!
 if g:platform == 'win'
-    set rtp+=$VIM/vimfiles/vundle/vundle
+    set rtp+=$VIM/vimfiles/vundle/vundle.vim
     call vundle#begin('$VIM/vimfiles/vundle/')
 else
-    set rtp+=~/.vim/vundle/vundle
+    set rtp+=~/.vim/vundle/vundle.vim
     call vundle#begin('~/.vim/vundle/')
 endif
+Plugin 'gmarik/Vundle.vim'
 Plugin 'szwchao/vimwiki'
-Plugin 'gmarik/vundle'
+Plugin 'szwchao/jedi-vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
@@ -102,15 +103,17 @@ Plugin 'colorizer'
 Plugin 'DoxygenToolkit.vim'
 Plugin 'matchit.zip'
 Plugin 'python_match.vim'
-Plugin 'QuickBuf'
+Plugin 'OmniCppComplete'
 Plugin 'Raimondi/delimitMate'
-Plugin 'junegunn/vim-easy-align'
 Plugin 'godlygeek/tabular'
-Plugin 'airblade/vim-gitgutter'
-"Plugin 'klen/python-mode'
-Plugin 'isnowfy/python-vim-instant-markdown'
-"Plugin 'aklt/plantuml-syntax'   "move to bundle
-Plugin 'fs111/pydoc.vim'
+Plugin 'wannesm/wmgraphviz.vim'
+Plugin 'dyng/ctrlsf.vim'
+"Plugin 'kien/ctrlp.vim'
+Plugin 'ianva/vim-youdao-translater'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'Yggdroot/indentLine'
+Plugin 'tpope/vim-surround'
+Plugin 'hynek/vim-python-pep8-indent'
 
 call vundle#end()            " required
 "-------------------------------------------------------------------------------
@@ -236,10 +239,6 @@ set cursorcolumn                          " 增加鼠标垂直线
 set ruler                                 " 在编辑过程中，在右下角显示光标位置的状态行
 set cmdheight=1                           " 设定命令行的行数为 1
 set laststatus=2                          " 显示状态栏 (默认值为 1, 无法显示状态栏)
-"au BufEnter,BufNew,BufRead,BufNewFile * call SetMyStatusLine()
-" 标题栏显示函数名
-"set updatetime=500
-"autocmd CursorHold * if ((&filetype == 'c') || (&filetype == 'python')) | let &titlestring='%f%m (%F)%<%='.GetFunctionName() | endif
 
 "-------------------------------------------------------------------------------
 " 自动命令 {{{2
@@ -260,8 +259,6 @@ autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `
 "autocmd BufWritePost * filet detect
 " 取消换行时自动添加注释符
 autocmd FileType * setl fo-=cro
-" 指定全能补全所用的函数
-autocmd FileType c,cpp,h set omnifunc=ccomplete#Complete
 " 在quickfix窗口中的快捷键
 autocmd FileType qf :call QuickfixMap()
 " 在wiki文件中的map
@@ -278,9 +275,8 @@ autocmd FileType html,htmldjango,xml,css set foldmethod=indent
 au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=mkd
 " 编程时超过80行提示
 "autocmd FileType c,cpp :match ErrorMsg /\%>80v.\+/
-" 设定字典补全文件
-autocmd FileType c set dictionary+=$VIM\vimfiles\dict\c_keywords.txt
-autocmd FileType python set dictionary+=$VIM\vimfiles\dict\python_keywords.txt
+" 关闭python的补全预览窗口
+autocmd FileType python setlocal completeopt-=preview
 
 "-------------------------------------------------------------------------------
 " 查找/替换相关的设置 {{{2
@@ -292,6 +288,8 @@ set incsearch                          " 输入搜索命令时，显示目前输
 "-------------------------------------------------------------------------------
 " 比较文件 {{{2
 "-------------------------------------------------------------------------------
+" 显示填充行，以垂直方式打开
+set diffopt=filler,vertical
 " 使用 ":DiffOrig" 查看更改后的文件与源文件不同之处。
 command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 
@@ -357,12 +355,12 @@ nmap s :ToggleQuickfixWindow<CR>
 "-------------------------------------------------------------------------------
 if g:platform == 'win'
     " <leader>rr重新载入vimrc
-    nmap <silent> <leader>rr :source $VIM\\_vimrc<cr>
+    "nmap <silent> <leader>rr :source $VIM\\_vimrc<cr>
     " <leader>e编辑vimrc
     nmap <silent> <leader>e :e $VIM\\_vimrc<cr>
 else
     " <leader>rr重新载入vimrc
-    nmap <silent> <leader>rr :source ~/.vimrc<cr>
+    "nmap <silent> <leader>rr :source ~/.vimrc<cr>
     " <leader>e编辑vimrc
     nmap <silent> <leader>e :e ~/.vimrc<cr>
 endif
@@ -381,8 +379,6 @@ nmap <leader>w <C-W>W
 nmap <leader>f :silent !explorer %:p:h<CR>
 " 切换行号/相对行号
 nmap <leader>l :ToggleNuMode<CR>
-" 切换补全函数
-nmap <leader>of :call ToggleOmnifunc()<CR>
 
 "-------------------------------------------------------------------------------
 " Fx相关 {{{2
@@ -410,8 +406,7 @@ nmap <F6> :FE<CR>
 nmap <F7> <ESC>:ToggleColorScheme<CR>
 " F8为函数添加注释(DoxygenToolkit.vim)
 nmap <F8> :Dox<CR>
-" F9切换qbuf
-let g:qb_hotkey = "<F9>"
+autocmd FileType python nmap <F8> :PD<CR>
 " F10将wiki转换为html
 map <F10> :Wiki2Html<cr>
 " Ctrl+F10将所有wiki转换为html
@@ -443,14 +438,6 @@ nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
 " 6或i: 查找包含本文件的文件
 nmap <C-\>i :cs find i <C-R>=expand("%")<CR><CR>
 
-nmap <C-_>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
-nmap <C-_>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
-nmap <C-_>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
-nmap <C-_>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
-nmap <C-_>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
-nmap <C-_>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-nmap <C-_>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
-
 "-------------------------------------------------------------------------------
 " 其它 {{{2
 "-------------------------------------------------------------------------------
@@ -464,10 +451,6 @@ map <silent> <M-m> :if &guioptions =~# 'T' <Bar>
          \endif<CR>
 
 " 缩放窗口
-map <kPlus> <C-W>+
-map <kMinus> <C-W>-
-map <kDivide> <C-W><
-map <kMultiply> <C-W>>
 nmap <C-PageUp> <C-W>+
 nmap <C-PageDown> <C-W>-
 
@@ -475,8 +458,6 @@ nmap <C-PageDown> <C-W>-
 nmap <S-LEFT> <ESC>:NERDTreeToggle<CR>
 " Shift+RIGHT打开Tlist
 nmap <S-RIGHT> <ESC>:TagbarToggle<CR>
-" Shift+DOWN打开SrcExplToggle
-nmap <S-DOWN> <ESC>:SrcExplToggle<CR>
 " Shift+UP打开Calendar
 nmap <S-UP> <ESC>:Calendar<CR>
 
@@ -491,14 +472,6 @@ map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
-
-" 按CTRL快速移动文本，非常方便
-"nmap <C-Down> :<C-u>move.+1<CR>
-"nmap <C-Up> :<C-u>move.-2<CR>
-"imap <C-Down> <C-o>:<C-u>move.+1<CR>
-"imap <C-Up> <C-o>:<C-u>move.-2<CR>
-"vmap <C-Down> :move '>+1<CR>gv
-"vmap <C-Up> :move '<-2<CR>gv
 
 " Alt+h向前切换buf，Alt+l向后切换buf
 nmap <M-h> :bp<CR>
@@ -582,6 +555,8 @@ let g:neocomplete#enable_auto_select = 1
 imap <expr><M-y>  neocomplete#close_popup()
 imap <expr><M-u>  neocomplete#cancel_popup()
 
+let g:neocomplete#sources#omni#functions = {'python': 'jedi#completions', 'dot': 'GraphvizComplete'}
+
 " Define dictionary.
 let g:neocomplete#sources#dictionary#dictionaries = {
             \ 'default' : '',
@@ -589,6 +564,18 @@ let g:neocomplete#sources#dictionary#dictionaries = {
             \ 'cpp' : $VIM.'/dict/cpp.dict',
             \ 'vim' : $VIM.'/dict/vim.dict'
             \ }
+
+" jedi-vim配置
+autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#completions_enabled = 0
+let g:jedi#auto_vim_configuration = 0
+
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
+
+let g:jedi#completions_command = "<C-N>"
 
 "-------------------------------------------------------------------------------
 " neosnippet {{{2
@@ -631,10 +618,16 @@ let g:EasyMotion_leader_key = ';'
 let g:EasyMotion_do_shade = 1
 hi link EasyMotionTarget Ignore
 "-------------------------------------------------------------------------------
-" snipMate.vim {{{2
-"-------------------------------------------------------------------------------
-" Alt+a显示所有代码段缩写
-imap <M-a> <C-r><Tab>
+" OmniCppComplete {{{2
+" ------------------------------------------------------------------------------
+let OmniCpp_NamespaceSearch = 1
+let OmniCpp_GlobalScopeSearch = 1
+let OmniCpp_ShowAccess = 1
+let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
+let OmniCpp_MayCompleteDot = 1 " autocomplete after .
+let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
+let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
+let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
 
 "-------------------------------------------------------------------------------
 " NERD_commenter {{{2
@@ -653,9 +646,9 @@ let g:DoxygenToolkit_compactDoc = "yes"
 "let g:DoxygenToolkit_commentType = "C++"
 let g:doxygenToolkit_briefTag_funcName="yes"
 
-let g:DoxygenToolkit_briefTag_pre="@函数说明：   "
-let g:DoxygenToolkit_paramTag_pre="@参    数：   "
-let g:DoxygenToolkit_returnTag="@返 回 值：   "
+"let g:DoxygenToolkit_briefTag_pre="@函数说明：   "
+"let g:DoxygenToolkit_paramTag_pre="@参    数：   "
+"let g:DoxygenToolkit_returnTag="@返 回 值：   "
 let g:DoxygenToolkit_blockHeader="--------------------------------------------------------------------------"
 let g:DoxygenToolkit_blockFooter="--------------------------------------------------------------------------"
 let g:DoxygenToolkit_authorName="wchao"
@@ -665,17 +658,12 @@ let g:DoxygenToolkit_authorName="wchao"
 " ------------------------------------------------------------------------------
 " 设置编码
 let g:vimwiki_w32_dir_enc = 'utf-8'
-" 不需要驼峰式词组作为wiki词条
-let g:vimwiki_camel_case = 0
 " 使用鼠标
 let g:vimwiki_use_mouse = 1
-let g:vimwiki_file_exts = 'c, cpp, wav, txt, h, hpp, zip, sh, awk, ps, pdf'
 " 高亮标题颜色
 let g:vimwiki_hl_headers = 1
 " 是否开启按语法折叠  会让文件比较慢
 "let g:vimwiki_folding = 1
-" 启用折叠子列表项
-let g:vimwiki_fold_lists = 1
 " 是否在计算字串长度时用特别考虑中文字符
 let g:vimwiki_CJK_length = 1
 " 设置在wiki内使用的html标识
@@ -689,21 +677,14 @@ let seagate_wiki = {'path': root_path . '/My/MyWiki/SeagateWiki/wiki_files/',
             \ 'template_default': 'template',
             \ 'template_ext': '.html',
             \ 'diary_link_count': 6}
-let grundfos_wiki = {'path': root_path . '/My/MyWiki/GrundfosWiki/wiki_files/',
-            \ 'path_html': root_path . '/My/MyWiki/GrundfosWiki/',
+let wiki = {'path': root_path . '/My/Wiki/wiki_files/',
+            \ 'path_html': root_path . '/My/Wiki/',
             \ 'syntax': 'markdown', 'ext': '.md',
-            \ 'template_path': root_path. '/My/MyWiki/GrundfosWiki/assets/template/',
+            \ 'template_path': root_path. '/My/Wiki/assets/template/',
             \ 'template_default': 'template',
-            \ 'template_ext': '.html',
-            \ 'diary_link_count': 6}
+            \ 'template_ext': '.html',}
 
-let wiki = {'path': $vim.'/vimfiles/vimwiki/wiki/',
-            \ 'path_html': $vim.'/vimfiles/vimwiki/wiki/html/',
-            \ 'template_path': $vim.'/vimfiles/vimwiki/template/',
-            \ 'template_default': 'template',
-            \ 'template_ext': '.html',
-            \ 'diary_link_count': 6}
-let g:vimwiki_list = [grundfos_wiki, seagate_wiki, wiki]
+let g:vimwiki_list = [wiki]
 
 "-------------------------------------------------------------------------------
 " rainbow {{{2
@@ -765,9 +746,35 @@ vmap <Enter> :Tab /
 let g:plantuml_executable_script = $VIM. '/tools/plantuml/plantuml.jar'
 
 "-------------------------------------------------------------------------------
-" pydoc {{{2
+" WMGraphviz_dot {{{2
 " ------------------------------------------------------------------------------
-let g:pydoc_cmd = 'python -m pydoc'
+let g:WMGraphviz_dot = $VIM . "/tools/Graphviz/bin/dot.exe"
+
+" vim-multiple-cursors {{{2
+" ------------------------------------------------------------------------------
+" Default mapping
+let g:multi_cursor_next_key='<C-n>'
+let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_skip_key='<C-m>'
+let g:multi_cursor_quit_key='<Esc>'
+" Called once right before you start selecting multiple cursors
+function! Multiple_cursors_before()
+  if exists(':NeoCompleteLock')==2
+    exe 'NeoCompleteLock'
+  endif
+endfunction
+
+" Called once only when the multiple selection is canceled (default <Esc>)
+function! Multiple_cursors_after()
+  if exists(':NeoCompleteUnlock')==2
+    exe 'NeoCompleteUnlock'
+  endif
+endfunction
+
+" indentLine {{{2
+" ------------------------------------------------------------------------------
+let g:indentLine_fileTypeExclude = ['txt', 'vimwiki', 'mkd', 'sh']
+
 "}}}1
 
 " vim:fdm=marker:fmr={{{,}}} foldlevel=1:

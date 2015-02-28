@@ -29,10 +29,14 @@ hi! link VertSplit StatusLineNC
 hi WildMenu gui=BOLD guifg=White guibg=DarkSalmon
 
 " Diff {{{1
-hi DiffText   gui=NONE guifg=#f83010 guibg=#ffeae0
-hi DiffChange gui=NONE guifg=#006800 guibg=#d0ffd0
-hi DiffDelete gui=NONE guifg=#2020ff guibg=#c8f2ea
-hi! link DiffAdd DiffDelete
+"hi DiffText   gui=NONE guifg=#f83010 guibg=#ffeae0
+"hi DiffChange gui=NONE guifg=#006800 guibg=#d0ffd0
+"hi DiffDelete gui=NONE guifg=#2020ff guibg=#c8f2ea
+"hi! link DiffAdd DiffDelete
+hi DiffAdd         guifg=#003300 guibg=#B5EEB5 gui=none
+hi DiffChange                    guibg=#E6E6FA gui=none
+hi DiffText        guifg=#C71585 guibg=#87B0FF gui=none
+hi DiffDelete      guifg=#DDCCCC guibg=#FFDDDD gui=none
 
 " Cursor {{{1
 hi Cursor       gui=none guifg=White guibg=DarkBlue
@@ -40,7 +44,7 @@ hi Cursor       gui=none guifg=White guibg=DarkBlue
 hi CursorIM     gui=NONE guifg=#f8f8f8 guibg=#8000ff
 
 " Fold {{{1
-hi Folded gui=NONE guibg=#B5EEB5 guifg=black
+hi Folded gui=NONE guibg=#FFF8DC guifg=black
 "hi FoldColumn gui=NONE guibg=#9FD29F guifg=black
 hi! link FoldColumn Folded
 
