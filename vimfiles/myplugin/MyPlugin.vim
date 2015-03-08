@@ -11,7 +11,7 @@ let g:loaded_myplugin = 1
 
 " 更换主题{{{2
 "------------------------------------------------------------------------------"
-func! ToggleColorScheme(...)
+function! ToggleColorScheme(...)
     if a:0 == 0
         "取得所有配色
         if g:platform == 'win'
@@ -48,12 +48,7 @@ func! ToggleColorScheme(...)
         highlight SignColor ctermbg=white ctermfg=blue guibg=DarkOrange1 guifg=black
     endif
 
-    " 重新高亮匹配括号
-    if exists('g:loaded_rain_bow')
-        cal rainbow#clear()
-        cal rainbow#activate()
-    endif
-endfunc
+endfunction
 command! -nargs=0 ToggleColorScheme :call ToggleColorScheme() | silent! echo g:colors_name
 
 fun! AutoChangeColorScheme()
@@ -76,7 +71,7 @@ function! ToggleNuMode()
             set rnu
         endif
     end
-endfunc 
+endfunction
 command! -nargs=0 ToggleNuMode :call ToggleNuMode()
 "------------------------------------------------------------------------------"
 "}}}
@@ -98,13 +93,13 @@ function! SaveCurrentFileToDesktop()
     endif
     if filereadable(save_name)
         let l:inputkey = input("File Exist! Overwrite? (Y/N) ")
-        if l:inputkey == 'y' || l:inputkey == 'Y' || l:inputkey ==# "" 
+        if l:inputkey == 'y' || l:inputkey == 'Y' || l:inputkey ==# ""
             exe ":w! ". save_name
         endif
     else
         exe ":w ". save_name
     endif
-endfunc 
+endfunction
 command! -nargs=0 SaveCurrentFileToDesktop :call SaveCurrentFileToDesktop()
 "------------------------------------------------------------------------------"
 "}}}
@@ -179,9 +174,8 @@ endfun
 " custom_cmd定义了自定义的一些命令，供fuzzyfinder的MyCMD模式使用
 " 格式:  描述, 命令, 立即执行?(1 是, 0 否)
 "------------------------------------------------------------------------------"
-"------------------------------------------------------------------------------"
 function! GetAllCommands()
-   let custom_cmd = 
+   let custom_cmd =
    \[
        \ ['文件另存到桌面', ':call SaveCurrentFileToDesktop()', 1],
        \ ['复制文件名', ':let @+=expand("%:t")', 1],
@@ -206,8 +200,9 @@ function! GetAllCommands()
        \ ['', '', 0],
        \ ['', '', 0]
   \]
-   return
-endfunction 
+   return custom_cmd
+endfunction
+"------------------------------------------------------------------------------"
 "}}}
 
 " 显示rgb.txt里所有颜色 {{{2
@@ -402,8 +397,56 @@ else:
     output_str = "非数字!"
 print output_str
 EOF
-endfunc 
+endfunction
 command! -nargs=* ConvertDigital call ConvertDigital()
+"------------------------------------------------------------------------------"
+"}}}
+
+" {{{2 有道翻译
+"------------------------------------------------------------------------------"
+function! Translate(word)
+    if a:word == ''
+        let word = expand("<cword>")
+    else
+        let word = a:word
+    endif
+python << EOF
+# -*- coding: utf-8 -*-
+import vim,requests,collections,xml.etree.ElementTree as ET
+WARN_NOT_FIND = " 找不到该单词的释义"
+ERROR_QUERY = " 有道翻译查询出错!"
+def get_word_info(word):
+    if not word:
+        return ''
+    r = requests.get("http://dict.youdao.com" + "/fsearch?q=" + word)
+    if r.status_code == 200:
+        doc = ET.fromstring(r.content)
+        info = collections.defaultdict(list)
+        if not len(doc.findall(".//content")):
+            return WARN_NOT_FIND.decode('utf-8')
+        for el in doc.findall(".//"):
+            if el.tag in ('return-phrase','phonetic-symbol'):
+                if el.text:
+                    info[el.tag].append(el.text.encode("utf-8"))
+            elif el.tag in ('content','value'):
+                info[el.tag].append(el.text.encode("utf-8"))
+        for k,v in info.items():
+            info[k] = ' | '.join(v) if k == "content" else ' '.join(v)
+        tpl = ' %(return-phrase)s'
+        if info["phonetic-symbol"]:
+            tpl = tpl + ' [%(phonetic-symbol)s]'
+        tpl = tpl +' %(content)s' 
+        return tpl % info
+    else:
+        return  ERROR_QUERY.decode('utf-8')
+
+word = vim.eval('word').decode('utf-8')
+info = get_word_info(word)
+vim.command('echo "'+ info +'"')
+EOF
+endfunction
+"command! -nargs=* YD call Translate(expand("<cword>"))
+command! -nargs=* YD call Translate(<q-args>)
 "------------------------------------------------------------------------------"
 "}}}
 " vim:fdm=marker:fmr={{{,}}} foldlevel=1:

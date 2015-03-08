@@ -1,9 +1,9 @@
 " File: FindEverything.vim
 " Author: szwchao (szwchao@gmail.com)
 " Description: Everything is a great search engine in windows.
-"              It can locates files and folders by filename instantly.
-"              This script provide a interface with everything command-line
-"              tools(es.exe).
+"              It can locate files and folders by filename instantly.
+"              This script provide an interface with everything command-line
+"              tool(es.exe).
 " Usage: 1. Download Everything gui and command-line(es.exe) tools
 "           from the website: http://www.voidtools.com
 "        2. Start everything.exe and keep it running on background.

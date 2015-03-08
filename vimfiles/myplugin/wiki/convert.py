@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 import sys, os, re
-import jinja2
+#import jinja2
 from mako.template import Template
 import markdown
 from wikilink import WikiLinkExtension

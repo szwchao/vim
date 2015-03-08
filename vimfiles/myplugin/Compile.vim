@@ -49,20 +49,20 @@ func! CompileRun()
         endif
     elseif &filetype == 'python'
         if g:platform == 'win'
-            if exists('g:python_dir')
-                "exec "!".g:python_dir." %"
-                let cmd = g:python_dir.' '.shellescape(expand("%:p"))
+            if exists('g:python_exe')
+                "exec "!".g:python_exe." %"
+                let cmd = g:python_exe.' '.shellescape(expand("%:p"))
                 let l:result=system(cmd)
                 call s:Show_Compile_Result(l:result, 'open')
             elseif
-                echo "plz set g:python_dir first in your vimrc file"
+                echo "please set g:python_exe first in your vimrc file"
             endif
         elseif g:platform == 'linux'
             exec "!python %<"
         endif
     elseif &filetype == 'dot'
         if g:platform == 'win'
-            if exists('g:python_dir')
+            if exists('g:python_exe')
                 exec "!".g:dot_bin." -Tpng -o %<.png % && start %<.png"
             elseif
                 echo "pls set g:dot_bin first in your vimrc file"

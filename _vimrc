@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 28-02-2015 4:33:15 PM
+"         Modified: 08-03-2015 4:53:48 PM
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -85,35 +85,42 @@ else
 endif
 Plugin 'gmarik/Vundle.vim'
 Plugin 'szwchao/vimwiki'
-Plugin 'szwchao/jedi-vim'
+Plugin 'bling/vim-airline'
 Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'Shougo/neosnippet-snippets'
-Plugin 'bling/vim-airline'
+Plugin 'Shougo/unite.vim'
+Plugin 'Shougo/neomru.vim'
+Plugin 'Shougo/unite-outline'
+Plugin 'kien/ctrlp.vim'
+Plugin 'tacahiroy/ctrlp-funky'
+Plugin 'JazzCore/ctrlp-cmatcher'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'mattn/calendar-vim'
+Plugin 'mattn/webapi-vim'
+Plugin 'mattn/gist-vim'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'hynek/vim-python-pep8-indent'
+Plugin 'gregsexton/MatchTag'
+Plugin 'wannesm/wmgraphviz.vim'
+Plugin 'aklt/plantuml-syntax'
+Plugin 'mbbill/fencview'
+Plugin 'Raimondi/delimitMate'
+Plugin 'tpope/vim-surround'
+Plugin 'lilydjwg/colorizer'
+Bundle 'luochen1990/rainbow'
+Plugin 'godlygeek/tabular'
 Plugin 'a.vim'
 Plugin 'CRefVim'
-Plugin 'MatchTag'
 Plugin 'mru.vim'
-Plugin 'colorizer'
 Plugin 'DoxygenToolkit.vim'
 Plugin 'matchit.zip'
 Plugin 'python_match.vim'
 Plugin 'OmniCppComplete'
-Plugin 'Raimondi/delimitMate'
-Plugin 'godlygeek/tabular'
-Plugin 'wannesm/wmgraphviz.vim'
-Plugin 'dyng/ctrlsf.vim'
-"Plugin 'kien/ctrlp.vim'
-Plugin 'ianva/vim-youdao-translater'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'Yggdroot/indentLine'
-Plugin 'tpope/vim-surround'
-Plugin 'hynek/vim-python-pep8-indent'
+Plugin 'VisIncr'
 
 call vundle#end()            " required
 "-------------------------------------------------------------------------------
@@ -348,7 +355,7 @@ nmap F i<CR><ESC>
 " 转换进制
 nmap H <ESC>:call ConvertDigital()<CR>
 " 打开/关闭quickfix窗口
-nmap s :ToggleQuickfixWindow<CR>
+nmap S :ToggleQuickfixWindow<CR>
 
 "-------------------------------------------------------------------------------
 " <Leader>相关 {{{2
@@ -714,13 +721,28 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#left_sep = ''
 let g:airline#extensions#tabline#left_alt_sep = ''
+" 不包含在tabline里的文件
+let g:airline#extensions#tabline#excludes = ['__doc__']
+" 打开buffer的index
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+" 切换buffer快捷键
+nmap <M-1> <Plug>AirlineSelectTab1
+nmap <M-2> <Plug>AirlineSelectTab2
+nmap <M-3> <Plug>AirlineSelectTab3
+nmap <M-4> <Plug>AirlineSelectTab4
+nmap <M-5> <Plug>AirlineSelectTab5
+nmap <M-6> <Plug>AirlineSelectTab6
+nmap <M-7> <Plug>AirlineSelectTab7
+nmap <M-8> <Plug>AirlineSelectTab8
+nmap <M-9> <Plug>AirlineSelectTab9
+
 " 更换主题
 let g:airline_theme='mytheme'
-let g:airline#extensions#bufferline#enabled = 1
 " 关闭tagbar，防止每次都调用ctags
 let g:airline#extensions#tagbar#enabled = 0
 " 语法检查
 let g:airline#extensions#syntastic#enabled = 1
+" 增强字体
 let g:airline_powerline_fonts = 1
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
@@ -743,37 +765,43 @@ vmap <Enter> :Tab /
 "-------------------------------------------------------------------------------
 " plantuml {{{2
 " ------------------------------------------------------------------------------
-let g:plantuml_executable_script = $VIM. '/tools/plantuml/plantuml.jar'
+let g:plantuml_executable_script = $VIM. '/tools/plantuml/plantuml.jar -charset utf-8 '
 
 "-------------------------------------------------------------------------------
 " WMGraphviz_dot {{{2
 " ------------------------------------------------------------------------------
 let g:WMGraphviz_dot = $VIM . "/tools/Graphviz/bin/dot.exe"
 
-" vim-multiple-cursors {{{2
+" ctrlp {{{2
 " ------------------------------------------------------------------------------
-" Default mapping
-let g:multi_cursor_next_key='<C-n>'
-let g:multi_cursor_prev_key='<C-p>'
-let g:multi_cursor_skip_key='<C-m>'
-let g:multi_cursor_quit_key='<Esc>'
-" Called once right before you start selecting multiple cursors
-function! Multiple_cursors_before()
-  if exists(':NeoCompleteLock')==2
-    exe 'NeoCompleteLock'
-  endif
-endfunction
+" 修改该选项为1，设置默认为按文件名搜索（否则为全路径）。在提示符面板内可以使用 <c-d> 来切换。
+let g:ctrlp_by_filename = 1
+" 改变匹配窗口的位置，结果的排列顺序，最小和最大高度:
+let g:ctrlp_match_window = 'bottom,order:ttb'
+" 使用该选项来设置自定义的根目录标记作为对默认标记(.hg, .svn, .bzr, and _darcs)的补充。自定义的标记具有优先权:
+let g:ctrlp_root_markers = ['.git', 'view.dat']
+" 扩展
+"let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
+let g:ctrlp_max_files=0
 
-" Called once only when the multiple selection is canceled (default <Esc>)
-function! Multiple_cursors_after()
-  if exists(':NeoCompleteUnlock')==2
-    exe 'NeoCompleteUnlock'
-  endif
-endfunction
+let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 
-" indentLine {{{2
+let g:ctrlp_funky_syntax_highlight = 1
+
+let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
+
+" Unite {{{2
 " ------------------------------------------------------------------------------
-let g:indentLine_fileTypeExclude = ['txt', 'vimwiki', 'mkd', 'sh']
+let g:unite_source_history_yank_enable = 1
+nnoremap <leader>f :Unite -start-insert file<CR>
+nnoremap <leader>o :<C-u>Unite -buffer-name=outline outline<cr>
+" Custom mappings for the unite buffer
+autocmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+  " Enable navigation with control-j and control-k in insert mode
+  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+endfunction
 
 "}}}1
 
