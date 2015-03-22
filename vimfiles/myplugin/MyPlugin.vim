@@ -86,6 +86,8 @@ function! SaveCurrentFileToDesktop()
         if exists('g:computer_enviroment')
             if g:computer_enviroment == "grundfos"
                 let save_name = 'c:/users/55602/Desktop/' . filename
+            endif
+        endif
     elseif g:platform == 'mac'
         let save_name = $HOME . '/Desktop/' . filename
     else

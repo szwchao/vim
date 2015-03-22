@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 08-03-2015 4:53:48 PM
+"         Modified: 22-03-2015 4:52:33 PM
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -121,6 +121,7 @@ Plugin 'matchit.zip'
 Plugin 'python_match.vim'
 Plugin 'OmniCppComplete'
 Plugin 'VisIncr'
+Plugin 'ccase.vim'
 
 call vundle#end()            " required
 "-------------------------------------------------------------------------------
@@ -490,7 +491,7 @@ nmap <M-o> :tabn<CR>
 vmap ( <Esc>:call VisualWrap('(', ')')<CR>
 vmap [ <Esc>:call VisualWrap('[', ']')<CR>
 vmap { <Esc>:call VisualWrap('{', '}')<CR>
-vmap < <Esc>:call VisualWrap('<', '>')<CR>
+"vmap < <Esc>:call VisualWrap('<', '>')<CR>
 vmap " <Esc>:call VisualWrap('"', '"')<CR>
 vmap ' <Esc>:call VisualWrap("'", "'")<CR>
 
@@ -659,9 +660,10 @@ let g:doxygenToolkit_briefTag_funcName="yes"
 let g:DoxygenToolkit_blockHeader="--------------------------------------------------------------------------"
 let g:DoxygenToolkit_blockFooter="--------------------------------------------------------------------------"
 let g:DoxygenToolkit_authorName="wchao"
+let g:doxygen_enhanced_color = 1
 
 "-------------------------------------------------------------------------------
-" VimWiki (vimwiki.vim) {{{2
+" VimWiki {{{2
 " ------------------------------------------------------------------------------
 " 设置编码
 let g:vimwiki_w32_dir_enc = 'utf-8'
@@ -677,6 +679,8 @@ let g:vimwiki_CJK_length = 1
 let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,del,br,hr,div,code,ul,li,p,a,small'
 " 切换todo
 autocmd FileType vimwiki map <M-Enter> <Plug>VimwikiToggleListItem
+
+let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown', '.wiki': 'vimwiki'}
 
 let seagate_wiki = {'path': root_path . '/My/MyWiki/SeagateWiki/wiki_files/',
             \ 'path_html': root_path . '/My/MyWiki/SeagateWiki/',
@@ -698,17 +702,6 @@ let g:vimwiki_list = [wiki]
 " ------------------------------------------------------------------------------
 let g:rainbow_active = 1
 let g:rainbow_operators = 1
-
-"-------------------------------------------------------------------------------
-" buftabs {{{2
-" ------------------------------------------------------------------------------
-let g:buftabs_only_basename=1
-let g:buftabs_in_statusline=1
-
-"-------------------------------------------------------------------------------
-" SrcExpl {{{2
-" ------------------------------------------------------------------------------
-let g:SrcExpl_isUpdateTags = 0
 
 "-------------------------------------------------------------------------------
 " Vim-Airline {{{2
@@ -777,18 +770,23 @@ let g:WMGraphviz_dot = $VIM . "/tools/Graphviz/bin/dot.exe"
 " 修改该选项为1，设置默认为按文件名搜索（否则为全路径）。在提示符面板内可以使用 <c-d> 来切换。
 let g:ctrlp_by_filename = 1
 " 改变匹配窗口的位置，结果的排列顺序，最小和最大高度:
-let g:ctrlp_match_window = 'bottom,order:ttb'
+let g:ctrlp_match_window = 'bottom,order:ttb,results:50'
 " 使用该选项来设置自定义的根目录标记作为对默认标记(.hg, .svn, .bzr, and _darcs)的补充。自定义的标记具有优先权:
 let g:ctrlp_root_markers = ['.git', 'view.dat']
 " 扩展
 "let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
+" 扫描文件的最大数量，设置为0时不进行限制
 let g:ctrlp_max_files=0
+" 在CtrlP中隐藏的文件和目录
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+    \ 'file': '\v\.(exe|so|dll|bin|hex|doc|docx|ppt|pptx|xls|xlsx|mdb)$',
+    \ }
 
+" 为CtrlP设置一个额外的模糊匹配函数
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 
 let g:ctrlp_funky_syntax_highlight = 1
-
-let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
 
 " Unite {{{2
 " ------------------------------------------------------------------------------
