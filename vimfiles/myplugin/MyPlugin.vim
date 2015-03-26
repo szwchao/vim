@@ -30,7 +30,6 @@ function! ToggleColorScheme(...)
         let i = (i+1) % len(colors)
         "加载配色方案
         exe 'colorscheme ' . get(colors, i)
-        "call SetMyStatusLine()
     elseif a:0 == 1
         let color = a:1
         "加载配色方案

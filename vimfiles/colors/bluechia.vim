@@ -47,8 +47,8 @@ hi ErrorMsg	guifg=#eb7aa0	guibg=black
 hi VertSplit	guifg=#DCDCDC	guibg=black
 
 " 折叠
-hi Folded	guifg=#b265a4	guibg=black
-" hi Folded	guifg=#fdfe00	guibg=black
+"hi Folded	guifg=#b265a4	guibg=black
+hi Folded       guibg=#1e2132 guifg=#686f9a
 " 用于关闭的折叠的行
 "hi Folded	guifg=#ff6902	guibg=black
 hi FoldColumn	guifg=#557755	guibg=#102010
