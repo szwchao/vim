@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 22-03-2015 4:52:33 PM
+"         Modified: 01-04-2015 4:59:58 PM
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -121,7 +121,8 @@ Plugin 'matchit.zip'
 Plugin 'python_match.vim'
 Plugin 'OmniCppComplete'
 Plugin 'VisIncr'
-Plugin 'ccase.vim'
+Plugin 'gcmt/wildfire.vim'
+Plugin 'nvie/vim-rst-tables'
 
 call vundle#end()            " required
 "-------------------------------------------------------------------------------
@@ -568,9 +569,9 @@ let g:neocomplete#sources#omni#functions = {'python': 'jedi#completions', 'dot':
 " Define dictionary.
 let g:neocomplete#sources#dictionary#dictionaries = {
             \ 'default' : '',
-            \ 'c' : $VIM.'/dict/c.dict',
-            \ 'cpp' : $VIM.'/dict/cpp.dict',
-            \ 'vim' : $VIM.'/dict/vim.dict'
+            \ 'c' : $VIM.'/vimfiles/dict/c.dict',
+            \ 'cpp' : $VIM.'/viiles/dict/cpp.dict',
+            \ 'vim' : $VIM.'/viiles/dict/vim.dict'
             \ }
 
 " jedi-vim配置
@@ -584,6 +585,17 @@ endif
 let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
 
 let g:jedi#completions_command = "<C-N>"
+
+" 处于文本模式的文件类型
+let g:neocomplete#text_mode_filetypes = {'markdown' : 1, 'gitcommit' : 1, 'text' : 1, 'vimwiki' : 1,}
+
+call neocomplete#custom#source('buffer', 'mark', '[缓冲区]')
+call neocomplete#custom#source('dictionary', 'mark', '[字典]')
+call neocomplete#custom#source('file', 'mark', '[文件]')
+call neocomplete#custom#source('member', 'mark', '[成员]')
+call neocomplete#custom#source('omni', 'mark', '[OMNI]')
+call neocomplete#custom#source('syntax', 'mark', '[语法]')
+
 
 "-------------------------------------------------------------------------------
 " neosnippet {{{2
@@ -775,12 +787,13 @@ let g:ctrlp_match_window = 'bottom,order:ttb,results:50'
 let g:ctrlp_root_markers = ['.git', 'view.dat']
 " 扩展
 "let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
+let g:ctrlp_extensions = ['funky']
 " 扫描文件的最大数量，设置为0时不进行限制
 let g:ctrlp_max_files=0
 " 在CtrlP中隐藏的文件和目录
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-    \ 'file': '\v\.(exe|so|dll|bin|hex|doc|docx|ppt|pptx|xls|xlsx|mdb)$',
+    \ 'file': '\v\.(exe|so|dll|bin|hex|doc|docx|ppt|pptx|xls|xlsx|mdb|lib|o|ncb|pyc)$',
     \ }
 
 " 为CtrlP设置一个额外的模糊匹配函数

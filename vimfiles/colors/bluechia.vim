@@ -13,7 +13,8 @@ let g:colors_name = 'bluechia'
 
 " Default colors
 "hi Normal	guifg=#FFF5EE	guibg=#242424
-hi Normal	guifg=#FFF5EE	guibg=#002b36
+"hi Normal	guifg=#FFF5EE	guibg=#002b36
+hi Normal	guifg=#FFF5EE	guibg=#073643
 
 "hi NonText	guifg=#92add3	guibg=#071925	gui=none
 hi NonText      ctermfg=5  guifg=#333333 gui=underline
