@@ -568,6 +568,10 @@ fun! s:SetTagsCscopeFilenametags()
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     "MRU
     let g:MRU_File = s:GetMyProjectConfigDir() . g:slash . cur_prj['name'] . g:slash. 'mru'
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    "Ctrlp
+    exe "nmap <C-p> :<C-u>CtrlP " . cur_prj["SourceCodeDir0"] . "<CR>"
+    
 endfun
 "-----------------------------------------------------------------------------"
 "}}}

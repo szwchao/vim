@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 01-04-2015 4:59:58 PM
+"         Modified: 02-04-2015 11:37:31 AM
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -216,9 +216,7 @@ endif
 "-------------------------------------------------------------------------------
 " 编程相关的设置 {{{2
 "-------------------------------------------------------------------------------
-set completeopt=longest,menu,preview      " 关掉智能补全时的预览窗口
-                                          " 自动补全(ctrl-p)时的一些选项：
-                                          " 多于一项时显示菜单，最长选择，显示当前选择的额外信息
+set completeopt=longest,menu              " 关掉智能补全时的预览窗口
 set showmatch                             " 设置匹配模式，类似当输入一个左括号时会匹配相应的那个右括号
 set matchtime=0                           " 配对括号的显示时间
 set smartindent                           " 智能对齐方式
@@ -640,13 +638,23 @@ hi link EasyMotionTarget Ignore
 "-------------------------------------------------------------------------------
 " OmniCppComplete {{{2
 " ------------------------------------------------------------------------------
+" 命名空间查找控制。0 : 禁止查找命名空间, 1 : 查找当前文件缓冲区内的命名空间(缺省), 2 : 查找当前文件缓冲区和包含文件中的命名空间
 let OmniCpp_NamespaceSearch = 1
+" 全局查找控制。0:禁止；1:允许(缺省)
 let OmniCpp_GlobalScopeSearch = 1
+" 是否显示访问控制信息('+', '-', '#')。0/1, 缺省为1(显示)
 let OmniCpp_ShowAccess = 1
-let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-let OmniCpp_MayCompleteDot = 1 " autocomplete after .
-let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
-let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
+" 是否是补全提示缩略信息中显示函数原型。0：不显示，1：显示（缺省）
+let OmniCpp_ShowPrototypeInAbbr = 1
+" 在'.'号后是否自动给出提示信息。0/1, 缺省为1
+let OmniCpp_MayCompleteDot = 1
+" 在'->'号后是否自动给出提示信息。0/1, 缺省为1
+let OmniCpp_MayCompleteArrow = 1
+" 在'::'号后是否自动给出提示信息。0/1, 缺省为1
+let OmniCpp_MayCompleteScope = 1
+" 是否自动选择第一个匹配项。0 : 不选择第一项(缺省) 1 : 选择第一项并插入到光标位置 2 : 选择第一项但不插入光标位置
+let OmniCpp_SelectFirstItem = 2
+" 默认命名空间列表，项目间使用','隔开。
 let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
 
 "-------------------------------------------------------------------------------
@@ -789,11 +797,11 @@ let g:ctrlp_root_markers = ['.git', 'view.dat']
 "let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
 let g:ctrlp_extensions = ['funky']
 " 扫描文件的最大数量，设置为0时不进行限制
-let g:ctrlp_max_files=0
+let g:ctrlp_max_files = 0
 " 在CtrlP中隐藏的文件和目录
 let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-    \ 'file': '\v\.(exe|so|dll|bin|hex|doc|docx|ppt|pptx|xls|xlsx|mdb|lib|o|ncb|pyc)$',
+    \ 'dir':  '\v[\/]\.(git|hg|svn)$|debug$|release$|objs$',
+    \ 'file': '\v\.(exe|so|dat|dll|bin|hex|doc|docx|ppt|pptx|xls|xlsx|mdb|lib|o|ncb|pyc|obj|msi|resources|jpg|bmp|png|temp|tmp)$',
     \ }
 
 " 为CtrlP设置一个额外的模糊匹配函数

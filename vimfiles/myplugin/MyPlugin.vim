@@ -181,6 +181,7 @@ function! GetAllCommands()
        \ ['文件另存到桌面', ':call SaveCurrentFileToDesktop()', 1],
        \ ['复制文件名', ':let @+=expand("%:t")', 1],
        \ ['复制文件名(包括路径)', ':let @+=expand("%:p")', 1],
+       \ ['设置cpp的tag', ':set tags+=' . $VIM . '/tools/tags/cpp', 1],
        \ ['删除行尾空格', ':%s/\s\+$//g', 1],
        \ ['删除回车符^M', ':%s/\r//g', 1],
        \ ['插入日期和时间', ':call InsertDateTime()', 1],
@@ -198,7 +199,6 @@ function! GetAllCommands()
        \ ['删除重复行', ':%s/^\(.*\)\n\1/\1$/', 0],
        \ ['替换1->2', ':%s/\<1\>/2/g', 0],
        \ ['查找3行空行', '/^\n\{3}', 1],
-       \ ['', '', 0],
        \ ['', '', 0]
   \]
    return custom_cmd

@@ -12,15 +12,20 @@ let s:scriptfolder = expand('<sfile>:p:h')
 let s:source = {
 	\ 'name': 'spell',
 	\ 'kind': 'keyword',
-	\ 'mark': '[SC]',
-	\ 'rank': 10,
+	\ 'mark': '[词典]',
+	\ 'rank': 1,
 	\ 'matchers': ['matcher_head'],
 	\ 'max_candidates': 20,
-	\ 'is_volatile': 1
+	\ 'is_volatile': 1,
+    \ 'hooks' : {},
 	\ }
 
 function! neocomplete#sources#english#define() "{{{
     return s:source
+endfunction"}}}
+
+function! s:source.hooks.on_init(context) "{{{
+    let s:lines = readfile(s:scriptfolder . '/english.txt')
 endfunction"}}}
 
 function! s:source.gather_candidates(context) "{{{
@@ -36,8 +41,7 @@ endfunction"}}}
 
 function! neocomplete#sources#english#vim_get_candidates(context) "{{{
     let suggestions = []
-    let lines = readfile(s:scriptfolder . '/english.txt')
-    for line in lines
+    for line in s:lines
         if matchstr(line, '^'.a:context.complete_str) != ''
             let record = split(line, '\t\t\t')
             let candidate = {
@@ -58,7 +62,6 @@ endfunction"}}}
 function! neocomplete#sources#english#grep_get_candidates(context) "{{{
     let suggestions = []
     let newWords = system('grep "^'. a:context.complete_str . '" ' . s:scriptfolder . '/english.dict')
-
     let wordList = split(newWords, "\n")
     "定义单词最大长度，用于补空格，使格式整齐
     let max_len_word = 20
@@ -85,23 +88,6 @@ function! neocomplete#sources#english#grep_get_candidates(context) "{{{
         call add(suggestions, candidate)
     endfor
     return suggestions
-endfunction"}}}
-
-"Not work
-function! neocomplete#sources#english#py_get_candidates(context) "{{{
-python << EOF
-import vim, os, re
-result = []
-fname = vim.eval('s:scriptfolder') + '/english.txt'
-start_str = vim.eval('a:context.complete_str')
-vim.command('let g:words = "' + fname + '"')
-with open(fname, 'r') as f:
-    for line in f:
-        if line.startswith(start_str):
-            result.append(line)
-vim.command('let newWords = ' + result)
-vim.command('let g:words = "abc"')
-EOF
 endfunction"}}}
 
 " vim: foldmethod=marker
