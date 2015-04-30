@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 02-04-2015 11:37:31 AM
+"         Modified: 30-04-2015 10:46:58 AM
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -98,6 +98,7 @@ Plugin 'Shougo/unite-outline'
 Plugin 'kien/ctrlp.vim'
 Plugin 'tacahiroy/ctrlp-funky'
 Plugin 'JazzCore/ctrlp-cmatcher'
+Plugin 'naquad/ctrlp-digraphs.vim'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'mattn/calendar-vim'
 Plugin 'mattn/webapi-vim'
@@ -121,8 +122,9 @@ Plugin 'matchit.zip'
 Plugin 'python_match.vim'
 Plugin 'OmniCppComplete'
 Plugin 'VisIncr'
-Plugin 'gcmt/wildfire.vim'
+Plugin 'DrawIt'
 Plugin 'nvie/vim-rst-tables'
+
 
 call vundle#end()            " required
 "-------------------------------------------------------------------------------
