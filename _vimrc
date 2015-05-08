@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 30-04-2015 10:46:58 AM
+"         Modified: 06-05-2015 4:50:18 PM
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -92,14 +92,10 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'Shougo/neosnippet-snippets'
-Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/neomru.vim'
-Plugin 'Shougo/unite-outline'
 Plugin 'kien/ctrlp.vim'
 Plugin 'tacahiroy/ctrlp-funky'
 Plugin 'JazzCore/ctrlp-cmatcher'
 Plugin 'naquad/ctrlp-digraphs.vim'
-Plugin 'Lokaltog/vim-easymotion'
 Plugin 'mattn/calendar-vim'
 Plugin 'mattn/webapi-vim'
 Plugin 'mattn/gist-vim'
@@ -122,9 +118,8 @@ Plugin 'matchit.zip'
 Plugin 'python_match.vim'
 Plugin 'OmniCppComplete'
 Plugin 'VisIncr'
-Plugin 'DrawIt'
 Plugin 'nvie/vim-rst-tables'
-
+Plugin 'tpope/vim-fugitive'
 
 call vundle#end()            " required
 "-------------------------------------------------------------------------------
@@ -632,12 +627,6 @@ let g:tagbar_show_visibility = 1
 let g:tagbar_show_linenumbers = 1
 
 "-------------------------------------------------------------------------------
-" EasyMotion {{{2
-"-------------------------------------------------------------------------------
-let g:EasyMotion_leader_key = ';'
-let g:EasyMotion_do_shade = 1
-hi link EasyMotionTarget Ignore
-"-------------------------------------------------------------------------------
 " OmniCppComplete {{{2
 " ------------------------------------------------------------------------------
 " 命名空间查找控制。0 : 禁止查找命名空间, 1 : 查找当前文件缓冲区内的命名空间(缺省), 2 : 查找当前文件缓冲区和包含文件中的命名空间
@@ -810,19 +799,6 @@ let g:ctrlp_custom_ignore = {
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 
 let g:ctrlp_funky_syntax_highlight = 1
-
-" Unite {{{2
-" ------------------------------------------------------------------------------
-let g:unite_source_history_yank_enable = 1
-nnoremap <leader>f :Unite -start-insert file<CR>
-nnoremap <leader>o :<C-u>Unite -buffer-name=outline outline<cr>
-" Custom mappings for the unite buffer
-autocmd FileType unite call s:unite_settings()
-function! s:unite_settings()
-  " Enable navigation with control-j and control-k in insert mode
-  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
-  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
-endfunction
 
 "}}}1
 
