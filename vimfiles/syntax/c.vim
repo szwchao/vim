@@ -195,9 +195,9 @@ endif
 syn keyword	cType		int long short char void
 
 " For seagate firmware source code
-syn keyword	cType		uint8 sint8 sint16 uint16 sint32 uint32 sint64 uint64 ulong byte
+syn keyword	cType		uint8 sint8 sint16 uint16 sint32 uint32 sint64 uint64 ulong byte PRIVATE boolean
 " For Grundfos source code
-syn keyword	cType		UCHAR SCHAR CHAR UINT SINT ULONG SLONG FLOAT DOUBLE BIT
+syn keyword	cType		UCHAR SCHAR CHAR UINT SINT ULONG SLONG FLOAT DOUBLE BIT U8 U16 U32 I8 I16 I32
 
 syn keyword	cType		signed unsigned float double
 if !exists("c_no_ansi") || exists("c_ansi_typedefs")
@@ -397,6 +397,11 @@ hi def link cTodo		Todo
 hi def link cCppSkip		cCppOut
 hi def link cCppOut2		cCppOut
 hi def link cCppOut		Comment
+hi def link cMathOperator	Operator	
+hi def link cPointerOperator	Operator	
+hi def link cLogicalOperator	Operator	
+hi def link cBinaryOperator	Operator	
+hi def link MyMacro     	Macro	
 
 let b:current_syntax = "c"
 

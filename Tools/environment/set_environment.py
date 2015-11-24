@@ -45,17 +45,9 @@ class Win32Environment:
             value, _ = winreg.QueryValueEx(key, name)
         except WindowsError:
             value = ''
+            self.setenv(name, value)
+            print "set new null environment variable: %s!" % name
         return value
-
-    def _setenv(self, name, value):
-        # Note: for 'system' scope, you must run this as Administrator
-        key = winreg.OpenKey(self.root, self.subkey, 0, winreg.KEY_ALL_ACCESS)
-        winreg.SetValueEx(key, name, 0, winreg.REG_EXPAND_SZ, value)
-        winreg.CloseKey(key)
-        # For some strange reason, calling SendMessage from the current process
-        # doesn't propagate environment changes at all.
-        # TODO: handle CalledProcessError (for assert)
-        check_call('''\ "%s" -c "import win32api, win32con; assert win32api.SendMessage(win32con.HWND_BROADCAST, win32con.WM_SETTINGCHANGE, 0, 'Environment')"''' % sys.executable)
 
     def setenv(self, name, value):
         setx = r"c:/windows/System32/setx.exe"
@@ -68,12 +60,15 @@ class Win32Environment:
     def build_new_env(self, name, new_env):
         """构造新的环境变量字符串"""
         old_env = self.getenv(name)
-        #最后不已;结尾要补上;
-        if old_env[-1] != ";":
-            old_env = old_env + ";"
-        print "Old environment variable...\n%s" %(old_env)
-        #全部转换成小写并按;分割
-        old_env_list = old_env.lower().split(";")
+        if old_env != "":
+            #最后不已;结尾要补上;
+            if old_env[-1] != ";":
+                old_env = old_env + ";"
+            print "Old environment variable...\n%s" %(old_env)
+            #全部转换成小写并按;分割
+            old_env_list = old_env.lower().split(";")
+        else:
+            old_env_list = []
         append_str = ""
         for p in new_env:
             if p[-1] == ";":

@@ -10,91 +10,139 @@ endif
 let g:colors_name = "colorful"
 
 " Normal {{{1
-"hi Normal guifg=DarkBlue guibg=WhiteSmoke
-hi Normal guifg=Black guibg=GhostWhite
+hi Normal      gui=NONE        guifg=Black      guibg=GhostWhite
 
 " Search {{{1
-hi Search term=reverse cterm=UNDERLINE ctermfg=Black ctermbg=brown gui=NONE guifg=DarkBlue guibg=#FFE270
-hi IncSearch cterm=UNDERLINE ctermfg=Black ctermbg=brown gui=UNDERLINE guifg=White guibg=NavyBlue
+hi Search      gui=NONE        guifg=DarkBlue   guibg=#FFE270
+hi IncSearch   gui=UNDERLINE   guifg=White      guibg=NavyBlue
 
 " Messages {{{1
-hi ErrorMsg gui=BOLD guifg=#EB1513 guibg=NONE
-hi! link WarningMsg ErrorMsg
-hi ModeMsg gui=BOLD guifg=#0070ff guibg=NONE
-hi MoreMsg guibg=NONE guifg=seagreen
-hi! link Question MoreMsg
+hi ErrorMsg    gui=BOLD        guifg=#EB1513    guibg=NONE
+hi ModeMsg     gui=BOLD        guifg=#0070ff    guibg=NONE
+hi MoreMsg                     guifg=seagreen   guibg=NONE
 
-" Split area {{{1
-hi! link VertSplit StatusLineNC
-hi WildMenu gui=BOLD guifg=White guibg=DarkSalmon
+hi! link WarningMsg   ErrorMsg
+hi! link Question     MoreMsg
+
+" 'wildmenu' 补全的当前匹配，如command命令在状态栏的补全
+hi WildMenu    gui=BOLD        guifg=White      guibg=#E9967A
+
+hi! link VertSplit    StatusLineNC
 
 " Diff {{{1
-"hi DiffText   gui=NONE guifg=#f83010 guibg=#ffeae0
-"hi DiffChange gui=NONE guifg=#006800 guibg=#d0ffd0
-"hi DiffDelete gui=NONE guifg=#2020ff guibg=#c8f2ea
-"hi! link DiffAdd DiffDelete
-hi DiffAdd         guifg=#003300 guibg=#B5EEB5 gui=none
-hi DiffChange                    guibg=#E6E6FA gui=none
-hi DiffText        guifg=#C71585 guibg=#87B0FF gui=none
-hi DiffDelete      guifg=#DDCCCC guibg=#FFDDDD gui=none
+hi DiffAdd     gui=none        guifg=#003300    guibg=#B5EEB5
+hi DiffChange  gui=none                         guibg=#E6E6FA
+hi DiffText    gui=none        guifg=#C71585    guibg=#87B0FF
+hi DiffDelete  gui=none        guifg=#DDCCCC    guibg=#FFDDDD
 
-" Cursor {{{1
-hi Cursor       gui=none guifg=White guibg=DarkBlue
-"hi lCursor      gui=NONE guifg=#f8f8f8 guibg=#8000ff
-hi CursorIM     gui=NONE guifg=#f8f8f8 guibg=#8000ff
+" Cursor   {{{1
+" normal模式光标颜色
+hi Cursor      gui=none        guifg=White      guibg=DarkBlue
+" 插入模式光标颜色
+hi CursorIM    gui=NONE        guifg=#F8F8F8    guibg=#8000ff
 
 " Fold {{{1
-hi Folded gui=NONE guibg=#FFF8DC guifg=black
-"hi FoldColumn gui=NONE guibg=#9FD29F guifg=black
-hi! link FoldColumn Folded
+hi Folded      gui=NONE        guifg=black      guibg=#FFF8DC 
+" 在左侧有个状态条用'|'指示折叠，需set foldcolumn=x （x>0）时生效
+hi FoldColumn  gui=NONE        guifg=black      guibg=#FFF8DC 
+" 左侧的标志条
+hi SignColumn   guibg=black
 
 " Other {{{1
-hi Directory    gui=NONE guifg=NavyBlue guibg=#FFE9E3
-hi BrowseDirectory gui=NONE guifg=Blue2 guibg=#FFE9E3
-hi BrowseCurDirectory gui=NONE guifg=Red4 guibg=#FFE9E3
-hi BrowseFile gui=NONE guifg=NavyBlue guibg=#E3EFFF
-hi BrowseSuffixes gui=none guifg=Gray50 guibg=bg
-hi LineNr       gui=NONE guifg=#8080a0 guibg=#FDF5E6
-hi NonText      gui=BOLD guifg=#333333 guibg=White
-"hi SpecialKey   gui=NONE guifg=#A35B00 guibg=NONE
-hi Title        gui=BOLD guifg=#1014AD guibg=NONE
-hi Visual term=reverse ctermfg=yellow ctermbg=black gui=NONE guifg=Black guibg=#D6E3F8
-hi VisualNOS term=reverse ctermfg=yellow ctermbg=black gui=UNDERLINE guifg=Black guibg=#BDDFFF
+hi Directory    gui=NONE       guifg=NavyBlue   guibg=#FFE9E3
+hi LineNr       gui=none       guifg=#6495ED    guibg=#FDF5E6
+hi NonText      gui=BOLD       guifg=#333333    guibg=White
+" :map 列出的 Meta 和特殊键，也包括文本里不可显示字符的显示和'listchars'。
+hi SpecialKey   gui=NONE       guifg=#A35B00    guibg=NONE
+" :set all、:autocmd 等输出的标题
+hi Title        gui=BOLD       guifg=#1014AD    guibg=NONE
+" 可视模式的选择区
+hi Visual       gui=BOLD                        guibg=#D6E3F8
 
 " Syntax group {{{1
-hi Comment term=BOLD ctermfg=darkgray guifg=SteelBlue guibg=#F0F6FF
-hi Type term=UNDERLINE ctermfg=red gui=NONE guifg=#B91F49 guibg=#FFE3E5
-hi Error term=REVERSE ctermfg=15 ctermbg=9 guibg=Red guifg=White
-hi Identifier term=UNDERLINE ctermfg=Blue guifg=Blue
-hi Number   term=UNDERLINE ctermfg=red gui=NONE guifg=#00C226 guibg=#DBF8E3
-hi PreProc term=UNDERLINE ctermfg=darkblue guifg=#BA8C00 guibg=#FFF5CF
-hi Special term=BOLD ctermfg=darkmagenta guifg=red2
-hi Statement term=BOLD ctermfg=DarkRed gui=NONE guifg=#F06F00 guibg=#FCECE0
-hi Conditional term=BOLD ctermfg=DarkRed gui=NONE guifg=#F06F00 guibg=#FCECEE
-hi Tag term=BOLD ctermfg=DarkGreen guifg=DarkGreen
-hi Todo term=STANDOUT ctermbg=Yellow ctermfg=blue gui=BOLD guifg=DarkBlue guibg=Red
-hi Constant term=BOLD ctermfg=Blue gui=NONE guifg=Red4 guibg=#FEE6FF
-hi! link String	Constant
-hi! link Character	Constant
-hi! link Boolean	Constant
-hi! link Float		Number
-hi! link Function	Identifier
-hi! link Repeat	Statement
-hi! link Label		Statement
-hi! link Operator	Statement
-hi! link Keyword	Statement
-hi! link Exception	Statement
-hi! link Include	PreProc
-hi! link Define	PreProc
-hi! link Macro		PreProc
-hi! link PreCondit	PreProc
-hi! link StorageClass	Type
-hi! link Structure	Type
-hi! link Typedef	Type
-hi! link SpecialChar	Special
-hi! link Delimiter	Special
+" Comment	v 任何注释
+hi Comment                     guifg=SteelBlue  guibg=#F0F6FF
+
+" Constant	v 任何常数
+hi Constant     gui=NONE        guifg=#8B0000       guibg=#FEE6FF
+"String		v 字符串常数: "这是字符串"
+hi! link String       Constant
+"Character	v 字符常数: 'c'、'\n'
+hi! link Character    Constant
+"Number		v 数值常数: 234、0xff
+hi Number      gui=NONE        guifg=#00C226    guibg=#DBF8E3
+"Boolean	v 布尔型常数: TRUE、false
+hi! link Boolean      Constant
+"Float		v 浮点常数: 2.3e10
+hi! link Float        Number
+
+"*Identifier	v 任何变量名
+hi Identifier                  guifg=Blue
+"Function	v 函数名 (也包括: 类的方法名)
+hi Function    gui=BOLD        guifg=#3A9CFF
+
+"*Statement	v 任何语句
+hi Statement   gui=NONE        guifg=#F06F00    guibg=#FCECE0
+"Conditional	v if、then、else、endif、switch 等
+hi Conditional gui=NONE        guifg=#F06F00    guibg=#FCECE0
+"Repeat		v for、do、while 等
+hi! link Repeat       Statement
+"Label		v case、default 等
+hi! link Label        Statement
+"Operator	v "sizeof"、"+"、"*" 等，再加上自定义的操作符，如"==", "->"等
+hi Operator    gui=NONE        guifg=#FF0080
+"Keyword	v 其它关键字
+hi! link Keyword      Statement
+"Exception	v try、catch、throw
+hi! link Exception    Statement
+
+"*PreProc	v 通用预处理命令
+hi PreProc                     guifg=#BA8C00    guibg=#FFF5CF
+"Include	v 预处理命令 #include
+hi! link Include      PreProc
+"Define		v 预处理命令 #define
+hi! link Define       PreProc
+"Macro		v 同 Define
+"hi! link Macro        PreProc
+hi Macro                       guifg=#9A32CD
+"PreCondit	v 预处理命令 #if、#else、#endif 等
+hi! link PreCondit    PreProc
+
+"*Type		v int、long、char 等
+hi Type        gui=NONE        guifg=#B91F49    guibg=#FFE3E5
+"StorageClass	v static、register、volatile 等
+hi! link StorageClass Type
+"Structure	v struct、union、enum 等
+hi! link Structure    Type
+"Typedef	v typedef 定义
+hi! link Typedef      Type
+
+"*Special	v 任何特殊符号
+hi Special                     guifg=#EE0000
+"SpecialChar	v 常数中的特殊字符
+hi! link SpecialChar  Special
+"Tag		v 可以使用 CTRL-] 的项目
+hi Tag                         guifg=DarkGreen
+"Delimiter	v 需要注意的字符
+hi! link Delimiter    Special
+"SpecialComment	v 注释里的特殊部分
 hi! link SpecialComment Special
-hi! link Debug		Special
+"Debug		v 调试语句
+hi! link Debug        Special
+
+"*Underlined	v 需要突出的文本，HTML 链接
+hi Underlined   guibg=#FF6EB4  guifg=black      gui=underline
+
+"*Ignore		v 留空，被隐藏  |hl-Ignore|
+" help ** & ||
+hi Ignore       guifg=#ef008c
+
+"*Error		v 有错的构造
+hi Error                       guifg=White      guibg=Red
+
+"*Todo		v 需要特殊注意的部分；主要是关键字 TODO FIXME 和 XXX
+hi Todo        gui=BOLD        guifg=DarkBlue   guibg=Red
+
 
 " HTML {{{1
 hi htmlLink                 gui=UNDERLINE guifg=#0000ff guibg=NONE
@@ -107,50 +155,43 @@ hi htmlUnderline            gui=UNDERLINE
 hi htmlUnderlineItalic      gui=UNDERLINE,ITALIC
 
 " Tabs {{{1
-highlight TabLine     term=underline cterm=underline ctermfg=0 ctermbg=7 gui=underline guibg=LightGrey
-highlight TabLineFill term=reverse cterm=reverse gui=reverse
-highlight TabLineSel  term=bold cterm=bold gui=bold
+hi TabLine     gui=underline guibg=LightGrey
+hi TabLineFill gui=reverse
+hi TabLineSel  gui=bold
 
 " Spell Checker {{{1
-if v:version >= 700
-    highlight SpellBad    term=reverse   ctermbg=12 gui=undercurl guisp=Red
-    highlight SpellCap    term=reverse   ctermbg=9  gui=undercurl guisp=Blue
-    highlight SpellRare   term=reverse   ctermbg=13 gui=undercurl guisp=Magenta
-    highlight SpellLocale term=underline ctermbg=11 gui=undercurl guisp=DarkCyan
-endif 
+hi SpellBad    gui=undercurl guisp=Red
+hi SpellCap    gui=undercurl guisp=Blue
+hi SpellRare   gui=undercurl guisp=Magenta
+hi SpellLocale gui=undercurl guisp=DarkCyan
 
 " Completion {{{1
-highlight Pmenu      ctermbg=13  guifg=Black   guibg=#BDDFFF
-highlight PmenuSel   ctermbg=7   guifg=Black   guibg=Orange
-highlight PmenuSbar  ctermbg=7   guifg=#CCCCCC guibg=#CCCCCC
-highlight PmenuThumb cterm=reverse  gui=reverse guifg=Black   guibg=#AAAAAA
+hi Pmenu      guifg=Black   guibg=#BDDFFF
+hi PmenuSel   guifg=Black   guibg=Orange
+hi PmenuSbar  guifg=#CCCCCC guibg=#CCCCCC
+hi PmenuThumb gui=reverse guifg=Black   guibg=#AAAAAA
 
 " Misc {{{1
-highlight KDE              guifg=magenta gui=NONE
-highlight mySpecialSymbols guifg=magenta gui=NONE 
+" 配对的括号
+hi MatchParen guibg=#ef008c guifg=black
 
 
-highlight MatchParen  term=reverse ctermbg=11 guibg=#ef008c guifg=black
-
-" help ** & ||
-highlight Ignore       guifg=#ef008c
-
-hi Underlined   guibg=#FF6EB4  guifg=black      gui=underline
-
-" 左侧的标志条
-hi SignColumn   guibg=white
-
-" 函数高亮
-"hi cFunction        gui=BOLD guifg=Blue
-hi Function        gui=BOLD guifg=Blue
-" 宏高亮
-hi MyMacro	guifg=#9A32CD			gui=none
-
-" 操作符高亮
-hi cMathOperator gui=NONE guifg=#FF0080
-hi cPointerOperator gui=NONE guifg=#FF0080
-hi cLogicalOperator gui=NONE guifg=#FF0080
-hi cBinaryOperator gui=NONE guifg=#FF0080
-hi cLogicalOperatorError gui=NONE guifg=#FF0080
+" TagHighlight
+" Class 类名
+hi Class guifg=Blue
+" Define
+hi DefinedName guifg=#9A32CD
+" Enumerator
+hi Enumerator guifg=Green
+" Enumeration name
+hi EnumerationName guifg=Green
+" Member (of structure or class)
+hi Member guifg=#5f8700
+" Global Constant
+hi GlobalConstant guifg=Red
+" Global Variable
+hi GlobalVariable guifg=#d75f00
+" Local Variable
+hi LocalVariable guifg=Yellow
 
 " vim600:foldmethod=marker

@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 06-05-2015 4:50:18 PM
+"         Modified: 24-11-2015 4:03:15 PM
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -58,6 +58,7 @@ set helplang=cn
 "-------------------------------------------------------------------------------
 colorscheme colorful
 "colorscheme bluechia
+"colorscheme solarized
 
 "-------------------------------------------------------------------------------
 " 字体 {{{2
@@ -71,7 +72,7 @@ else
 endif
 
 "-------------------------------------------------------------------------------
-" bundle设置 {{{2
+" Plugin设置 {{{2
 "-------------------------------------------------------------------------------
 call pathogen#infect()
 
@@ -97,8 +98,6 @@ Plugin 'tacahiroy/ctrlp-funky'
 Plugin 'JazzCore/ctrlp-cmatcher'
 Plugin 'naquad/ctrlp-digraphs.vim'
 Plugin 'mattn/calendar-vim'
-Plugin 'mattn/webapi-vim'
-Plugin 'mattn/gist-vim'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'hynek/vim-python-pep8-indent'
 Plugin 'gregsexton/MatchTag'
@@ -106,6 +105,7 @@ Plugin 'wannesm/wmgraphviz.vim'
 Plugin 'aklt/plantuml-syntax'
 Plugin 'mbbill/fencview'
 Plugin 'Raimondi/delimitMate'
+Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
 Plugin 'lilydjwg/colorizer'
 Bundle 'luochen1990/rainbow'
@@ -118,8 +118,7 @@ Plugin 'matchit.zip'
 Plugin 'python_match.vim'
 Plugin 'OmniCppComplete'
 Plugin 'VisIncr'
-Plugin 'nvie/vim-rst-tables'
-Plugin 'tpope/vim-fugitive'
+Plugin 'TagHighlight'
 
 call vundle#end()            " required
 "-------------------------------------------------------------------------------
@@ -182,6 +181,11 @@ if has("persistent_undo")
         call mkdir(&undodir)
     endif
     set undofile
+endif
+
+let &viewdir=expand(temp_dir . "vim_data/view")
+if !isdirectory(&viewdir)
+    call mkdir(&viewdir)
 endif
 
 if g:computer_enviroment == "grundfos"
@@ -380,7 +384,7 @@ nmap <leader>v <C-W>v
 " 切换窗口
 nmap <leader>w <C-W>W
 " 用浏览器打开当前文件
-nmap <leader>f :silent !explorer %:p:h<CR>
+nmap <leader>o :silent !explorer %:p:h<CR>
 " 切换行号/相对行号
 nmap <leader>l :ToggleNuMode<CR>
 
@@ -467,8 +471,8 @@ nmap <S-UP> <ESC>:Calendar<CR>
 
 " Insert下Alt+h,j,k,l移动光标
 imap <M-h> <LEFT>
-imap <M-j> <DOWN>
-imap <M-k> <UP>
+imap <C-j> <DOWN>
+imap <C-k> <UP>
 imap <M-l> <RIGHT>
 
 " Ctrl+h,j,k,l切换窗口
@@ -556,8 +560,8 @@ let g:neocomplete#enable_at_startup = 1
 " 使neocomplete自动选择第一个
 let g:neocomplete#enable_auto_select = 1
 " <C-u>取消选择
-imap <expr><M-y>  neocomplete#close_popup()
-imap <expr><M-u>  neocomplete#cancel_popup()
+imap <expr><M-u>  neocomplete#close_popup()
+imap <expr><C-u>  neocomplete#cancel_popup()
 
 let g:neocomplete#sources#omni#functions = {'python': 'jedi#completions', 'dot': 'GraphvizComplete'}
 
@@ -595,7 +599,7 @@ call neocomplete#custom#source('syntax', 'mark', '[语法]')
 "-------------------------------------------------------------------------------
 " neosnippet {{{2
 " ------------------------------------------------------------------------------
-let g:neocomplete#data_directory = expand(temp_dir . 'vim_data/.neosnippet')
+let g:neosnippet#data_directory = expand(temp_dir . 'vim_data/.neosnippet')
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
@@ -779,11 +783,12 @@ let g:WMGraphviz_dot = $VIM . "/tools/Graphviz/bin/dot.exe"
 " ctrlp {{{2
 " ------------------------------------------------------------------------------
 " 修改该选项为1，设置默认为按文件名搜索（否则为全路径）。在提示符面板内可以使用 <c-d> 来切换。
+let g:ctrlp_cache_dir = expand(temp_dir . 'vim_data/.ctrlp')
 let g:ctrlp_by_filename = 1
 " 改变匹配窗口的位置，结果的排列顺序，最小和最大高度:
 let g:ctrlp_match_window = 'bottom,order:ttb,results:50'
 " 使用该选项来设置自定义的根目录标记作为对默认标记(.hg, .svn, .bzr, and _darcs)的补充。自定义的标记具有优先权:
-let g:ctrlp_root_markers = ['.git', 'view.dat']
+let g:ctrlp_root_markers = ['.git', 'view.dat', '.svn', 'f3make.bat']
 " 扩展
 "let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
 let g:ctrlp_extensions = ['funky']
@@ -792,13 +797,15 @@ let g:ctrlp_max_files = 0
 " 在CtrlP中隐藏的文件和目录
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\v[\/]\.(git|hg|svn)$|debug$|release$|objs$',
-    \ 'file': '\v\.(exe|so|dat|dll|bin|hex|doc|docx|ppt|pptx|xls|xlsx|mdb|lib|o|ncb|pyc|obj|msi|resources|jpg|bmp|png|temp|tmp)$',
+    \ 'file': '\v\.(exe|so|dat|dll|bin|hex|doc|docx|ppt|pptx|xls|xlsx|vsd|mdb|lib|o|ncb|pyc|obj|msi|resources|jpg|bmp|png|temp|tmp)$',
     \ }
 
 " 为CtrlP设置一个额外的模糊匹配函数
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 
 let g:ctrlp_funky_syntax_highlight = 1
+
+nnoremap <Leader>f :CtrlPFunky<Cr>
 
 "}}}1
 

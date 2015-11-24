@@ -31,7 +31,7 @@ endfunction"}}}
 function! s:source.gather_candidates(context) "{{{
     "if (neocomplete#is_text_mode() && a:context.complete_str !~# '[[:alpha:]]\+$')
     " 只有纯文本或注释里才返回补全列表
-    if !(neocomplete#is_text_mode() || neocomplete#within_comment()) || a:context.complete_str !~ '^[[:alpha:]]\+$'
+    if !(neocomplete#is_text_mode() || neocomplete#within_comment() || neocomplete#get_context_filetype() == 'nothing') || a:context.complete_str !~ '^[[:alpha:]]\+$'
         return []
     endif
     "return neocomplete#sources#english#grep_get_candidates(a:context)

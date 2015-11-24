@@ -157,6 +157,7 @@ syn keyword pythonConditional   if elif else
 syn keyword pythonImport        import from
 syn keyword pythonException     try except finally
 syn keyword pythonOperator      and in is not or
+syn match	pythonOperator		display "[-+\*/%=]"
 
 if s:Python2Syntax()
   if !s:Enabled("g:python_print_as_function")
