@@ -18,16 +18,16 @@ else
 endif
 
 " Insert mode
-let s:I1 = [ '#141413' , '#FDE76E' , 232 , 227 ]
-let s:I2 = [ '#FDE76E' , '#32322F' , 227 , 236 ]
-let s:I3 = [ '#FDE76E' , '#242424' , 227 , 234 ]
-let s:I4 = [ '#FADE3E' , 221 ]
+let s:I1 = [ '#141413' , '#B5D3F3' , 232 , 153 ]
+let s:I2 = [ '#B5D3F3' , '#32322F' , 153 , 236 ]
+let s:I3 = [ '#B5D3F3' , '#242424' , 153 , 234 ]
+let s:I4 = [ '#7CB0E6' , 111 ]
 
 " Visual mode
-let s:V1 = [ '#141413' , '#FFAF00' , 232 , 153 ]
-let s:V2 = [ '#B5D3F3' , '#32322F' , 153 , 236 ]
-let s:V3 = [ '#B5D3F3' , '#242424' , 153 , 234 ]
-let s:V4 = [ '#7CB0E6' , 111 ]
+let s:V1 = [ '#141413' , '#FDE76E' , 232 , 227 ]
+let s:V2 = [ '#FDE76E' , '#32322F' , 227 , 236 ]
+let s:V3 = [ '#FDE76E' , '#242424' , 227 , 234 ]
+let s:V4 = [ '#FADE3E' , 221 ]
 
 " Replace mode
 let s:R1 = [ '#141413' , '#E5786D' , 232 , 173 ]
@@ -93,7 +93,6 @@ if !get(g:, 'loaded_ctrlp', 0)
   finish
 endif
 let g:airline#themes#mytheme#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(
-      \ [ '#DADADA' , '#242424' , 253 , 234 , ''     ] ,
-      \ [ '#DADADA' , '#40403C' , 253 , 238 , ''     ] ,
-      \ [ '#141413' , '#DADADA' , 232 , 253 , 'bold' ] )
-
+      \ [ '#f8f8f0' , '#4E4E4E' , 253 , 67  , ''     ] ,
+      \ [ '#f8f8f0' , '#232526' , 253 , 16  , ''     ] ,
+      \ [ '#080808' , '#e6db74' , 232 , 144 , 'bold' ] )

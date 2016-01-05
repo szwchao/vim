@@ -1,0 +1,292 @@
+commit 97f3c3c27e4058c7da930ee4d22a70c5f1503423 (HEAD, tag: release-1.19.3, origin/master, origin/HEAD, master)
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-12-06
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-12-06
+
+    Update bash_completion
+
+commit 5456e91d61aebfc31bf8dcd1b0734aad75ba9fbb
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-12-06
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-12-06
+
+    Update openssl version to 1.0.2e in Android build README
+
+commit c12d64ff25d4e2b1182982f1cbe3635206f26800
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-12-05
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-12-05
+
+    Update NEWS
+
+commit b858d2054838daa39664e91c54aff382f0cc51bc
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-12-05
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-12-05
+
+    Bump up version number to 1.19.3
+
+commit 9a77c404f7dd73cf7b22603f3a4a34301c842650
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-12-02
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-12-02
+
+    Fix bug that pause/unpause seeding torrent prevents new downloads from starting
+    
+    Previously, with --bt-detach-seed-only, when user issued pause and
+    unpause command to seeding torrent, and it was started again, and it
+    immediately got seeding status, but aria2 did not start new download
+    waiting in the queue.  This commit fixes this bug.
+    
+    See GH-490
+
+commit fb4310e8493bfaa7f7ed5b4e3a5f2fb6a3a4460e
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-12-02
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-12-02
+
+    Detailed docker copy instruction
+
+commit 6f857fe332e0e0db0f2bc1cb98a0ebef27f1917d
+Merge: cccbc59 3de11fa
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-12-01
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-12-01
+
+    Merge pull request #498 from ITriskTI/patch-1
+    
+    Update aria2c.rst
+
+commit cccbc59026263bcdcb5f60bf2702141f12df5543
+Author:     Nils Maier <maierman@web.de>
+AuthorDate: 2015-12-01
+Commit:     Nils Maier <maierman@web.de>
+CommitDate: 2015-12-01
+
+    mingw: fix handle leak in File::size
+
+commit 3de11fa24606a8b84eaaf64621e7ef8c5c26f957
+Author:     ITriskTI <ITriskTI@gmail.com>
+AuthorDate: 2015-12-01
+Commit:     ITriskTI <ITriskTI@gmail.com>
+CommitDate: 2015-12-01
+
+    Update aria2c.rst
+
+commit 8fbfb3ac84f53839de486a9748679bdf21e010ac
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-30
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-30
+
+    Log tracker request URI when processing response failed
+
+commit c63e315d3b4665eff4f52c79ca4974b95aba0809
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-29
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-29
+
+    Update sphinx_rtd_theme
+
+commit 35f08f05efcb2c7503abe11af036e8533d5a7b71
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-29
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-29
+
+    Add --bt-enable-hook-after-hash-check option
+    
+    This option sets flag which allows hook command invocation after hash
+    check (see -V option) in BitTorrent download.  By default, when hash
+    check succeeds, the command given by --on-bt-download-complete is
+    executed.  To disable this action, give false to this option.
+
+commit 6a0638c158b3046c6f384267744897fa9d014ab0
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-28
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-28
+
+    Update doc
+
+commit e8a9a366db7bf834a3e93c6ec05336e5aca882c4
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-28
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-28
+
+    Add --socket-recv-buffer-size option
+    
+    Set the maximum socket receive buffer in bytes. Specifing 0 will
+    disable this option. This value will be set to socket file descriptor
+    using SO_RCVBUF socket option with setsockopt() call.
+    
+    See GH-487 about the usecase of this option
+
+commit 699f04d0b8a93dd92a85f68cd8c307b5f3fb4741
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-28
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-28
+
+    Disable --deferred-input when --save-session is used together
+    
+    With --deferred-input=true, aria2 only reads input file to fill active
+    download slots, while keeping input file open.  Meanwhile,
+    --save-session saves all download info inside memory, but this does
+    not take into account of unread item in input file.  This will lead to
+    lose input data in saved session file.  Also current BufferedFile
+    implementation used to read/write input/output file take a lock on
+    Windows.  This effectively prevents session serializer from writing
+    session data to the same file which is still kept open because of
+    --deferred-input.  See GH-493
+
+commit d0b6a88f9c2eeea46ea4a8d2fd769b45d138185d
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-25
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-25
+
+    Base32 decode lowercased characters as well
+
+commit 432675e51292754aa15f04d448397e9d06986856
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-23
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-23
+
+    mingw: Use GetFileSize to get file size
+    
+    _wstat family does not work with symbolic links.  They always returns
+    size 0.  To workaround this, we now use GetFileSize to get file size.
+    To do that, we need to first obtain file HANDLE, which is a bit
+    tedious because of the messy interface of CreateFileW, but we have no
+    way to get around it.
+
+commit c2157e608e8225040cf3cc0d288a2c641d33f14c
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-22
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-22
+
+    Fix bug that file allocation=trunc get stuck with Windows symlink
+
+commit 2eb92bc4be8f7b493252e809bc57dcd72f2b3f8d
+Merge: 9bce4eb f9ce272
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-21
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-21
+
+    Merge branch 'jsnajdr-master'
+
+commit f9ce272bf0188dace217aecf224065e4c9f2dc8c
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-21
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-21
+
+    Document errorMessage in aria2.tellStatus RPC method response
+
+commit 06b8874a49a03ac51e687c8eaf0631cab70e21f3
+Author:     Jarda Snajdr <jsnajdr@gmail.com>
+AuthorDate: 2015-11-16
+Commit:     Jarda Snajdr <jsnajdr@gmail.com>
+CommitDate: 2015-11-18
+
+    Send the last error message as part of tellStatus RPC response
+
+commit 9bce4eb925794528b21b4cdb0f7777ac24ffd7c2
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-17
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-17
+
+    doc: Use binary input mode in RPC example python code
+
+commit e934f177fff09dd74ae418b4fd623d82dada2f13
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-14
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-14
+
+    Add required packages when building from git
+
+commit dfadc2e68b859698beae47db1e23ad2887105b44
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-14
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-14
+
+    Use cached filesize instead of calling size() again
+
+commit 3974c1223b19a8647d7e361fa130d0fa78a41026
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-12
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-12
+
+    Don't enable mmap if file allocation is disabled
+    
+    Without file allocation, we cannot map file because file length could
+    be zero.
+    
+    This could fix bug reported at GH-478
+
+commit af98861aff50737f87d9c251ee9a68280bba3e64 (origin/gh-478)
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-11
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-11
+
+    Evict timed out pooled socket periodically
+    
+    Previously we only scanned pool socket to check they are timed out
+    when we pooled another socket.  This means that pooled socket is not
+    closed long time (stays in CLOSE-WAIT state) if we don't pool any more
+    socket.  In this commit, we now check pooled socket periodically (30
+    seconds) to avoid the sockets hanging in CLOSE-WAIT state long time.
+    
+    See GH-477
+
+commit 269520ee69e2306eaf792ccff916ba5486d2bb5f
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-10
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-10
+
+    Don't write control file if content is not changed from previous one
+    
+    This is desirable so that we don't have to wake up disk if control
+    file is not changed, and it is not have to be written again.  We use
+    the same method (SHA1 hash) to check the content is the same.  The
+    limitation is the hash is stored in memory, so we have to write the
+    first time in each session.
+    
+    See GH-382
+
+commit 5ccd5b6953c95986407a735a41e8c36cf05944d1
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-11-04
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-11-04
+
+    Remove content-length and content-range if transfer-encoding is given
+    
+    See GH-473
+
+commit 4bbc71c8e6c6aa7b5441e30da3a5efc5b810073a
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2015-10-24
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2015-10-24
+
+    Retry after 404 status if --max-file-not-found > 0

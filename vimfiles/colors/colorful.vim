@@ -153,6 +153,12 @@ hi htmlBoldUnderlineItalic  gui=BOLD,UNDERLINE,ITALIC
 hi htmlItalic               gui=ITALIC
 hi htmlUnderline            gui=UNDERLINE
 hi htmlUnderlineItalic      gui=UNDERLINE,ITALIC
+hi htmlH1                   gui=BOLD    guifg=#103040
+hi htmlH2                   gui=BOLD    guifg=#507030
+hi htmlH3                   gui=BOLD    guifg=#aa5858
+hi htmlH4                   gui=BOLD    guifg=#6090e0
+hi htmlH5                   gui=BOLD    guifg=#103040
+hi htmlH6                   gui=BOLD    guifg=#103040
 
 " Tabs {{{1
 hi TabLine     gui=underline guibg=LightGrey

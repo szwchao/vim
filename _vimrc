@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 24-11-2015 4:03:15 PM
+"         Modified: 05-01-2016 4:28:02 PM
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -24,9 +24,6 @@ endif
 if isdirectory("c:/Users/55602")
     let g:computer_enviroment = "grundfos"
     let temp_dir = "c:/local/temp/"
-elseif matchstr(expand("~"), "435736")
-    let g:computer_enviroment = "seagate"
-    let temp_dir = expand("~") . "//"
 else
     let g:computer_enviroment = "normal"
     let temp_dir = expand("~") . "//"
@@ -56,8 +53,8 @@ set helplang=cn
 "-------------------------------------------------------------------------------
 " 配色方案 {{{2
 "-------------------------------------------------------------------------------
-colorscheme colorful
-"colorscheme bluechia
+"colorscheme colorful
+colorscheme bluechia
 "colorscheme solarized
 
 "-------------------------------------------------------------------------------
@@ -85,7 +82,7 @@ else
     call vundle#begin('~/.vim/vundle/')
 endif
 Plugin 'gmarik/Vundle.vim'
-Plugin 'szwchao/vimwiki'
+"Plugin 'szwchao/vimwiki'
 Plugin 'bling/vim-airline'
 Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdcommenter'
@@ -118,7 +115,10 @@ Plugin 'matchit.zip'
 Plugin 'python_match.vim'
 Plugin 'OmniCppComplete'
 Plugin 'VisIncr'
-Plugin 'TagHighlight'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-shell'
 
 call vundle#end()            " required
 "-------------------------------------------------------------------------------
@@ -197,14 +197,9 @@ if g:computer_enviroment == "grundfos"
     " Alt+t用TotalCommander打开当前文件
     "nmap <M-t> :!start <C-R>=$g:totalcommander_exe /o /t /l '%:p'
     nmap <M-t> :!start "c:\local\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
+    " Alt+c用cmder打开当前文件所在目录
+    nmap <M-c> :!start "c:\local\Software\cmder\Cmder.exe" "%:p:h"<CR>
     let root_path = "c:/local"
-elseif g:computer_enviroment == "seagate"
-    autocmd FileType c,cpp,h set tabstop=3
-    autocmd FileType c,cpp,h set shiftwidth=3
-    autocmd FileType python set tabstop=3
-    autocmd FileType python set shiftwidth=3
-    nmap <M-t> :!start "D:\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
-    let root_path = "E:"
 else
     autocmd FileType c,cpp,h set tabstop=4
     autocmd FileType c,cpp,h set shiftwidth=4
@@ -271,6 +266,8 @@ autocmd FileType * setl fo-=cro
 autocmd FileType qf :call QuickfixMap()
 " 在wiki文件中的map
 autocmd FileType vimwiki :call WikiMap()
+" 在markdown文件中的map
+autocmd FileType markdown :call MarkdownMap()
 " txt, cue, lrc
 autocmd BufNewFile,BufRead *.txt    setf txt
 autocmd BufNewFile,BufRead *.cue    setf cue
@@ -280,7 +277,7 @@ autocmd FileType python set foldmethod=indent
 " html和css文件的折叠方式
 autocmd FileType html,htmldjango,xml,css set foldmethod=indent
 " markdown 文件
-au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=mkd
+au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=markdown
 " 编程时超过80行提示
 "autocmd FileType c,cpp :match ErrorMsg /\%>80v.\+/
 " 关闭python的补全预览窗口
@@ -347,8 +344,8 @@ nmap <C-D> :b #<CR>
 nmap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<cr><c-o>
 "gW 光标所在单词和上一个单词交换
 nmap <silent> gW "_yiw:s/\(\w\+\)\(\_W\+\)\(\%#\w\+\)/\3\2\1/<cr><c-o>
-"gp 删除光标所在单词并粘贴剪切板内容
-nmap <silent> gp "_diwP
+"gp 删除光标所在单词并粘贴系统剪切板内容
+nmap <silent> gp "_ciw<C-r>*<ESC>
 " Y复制到行末
 nmap Y y$
 " 分为两行
@@ -509,6 +506,9 @@ else
     let g:MyProjectConfigDir = expand('~/MyProject')
 endif
 
+exe "nmap <leader>ww :<C-u>CtrlP " . "c:\\local\\My\\blog\\source\\_posts\\" . "<CR>"
+
+
 "-------------------------------------------------------------------------------
 " Calendar {{{2
 " ------------------------------------------------------------------------------
@@ -569,8 +569,8 @@ let g:neocomplete#sources#omni#functions = {'python': 'jedi#completions', 'dot':
 let g:neocomplete#sources#dictionary#dictionaries = {
             \ 'default' : '',
             \ 'c' : $VIM.'/vimfiles/dict/c.dict',
-            \ 'cpp' : $VIM.'/viiles/dict/cpp.dict',
-            \ 'vim' : $VIM.'/viiles/dict/vim.dict'
+            \ 'cpp' : $VIM.'/vimfiles/dict/cpp.dict',
+            \ 'vim' : $VIM.'/vimfiles/dict/vim.dict'
             \ }
 
 " jedi-vim配置
@@ -604,6 +604,9 @@ let g:neosnippet#data_directory = expand(temp_dir . 'vim_data/.neosnippet')
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
+" 自定义的显示所有snippet的快捷键
+inoremap <M-a> <C-R>=ListAllSnippets()<CR>
+
 "-------------------------------------------------------------------------------
 " FuzzyFinder.vim {{{2
 "-------------------------------------------------------------------------------
@@ -629,6 +632,12 @@ nmap <M-k> :FufChangeList<CR>
 let g:tagbar_sort = 0
 let g:tagbar_show_visibility = 1
 let g:tagbar_show_linenumbers = 1
+
+" delimitMate {{{2
+"-------------------------------------------------------------------------------
+" python docstring ", '
+au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
+au FileType markdown let b:delimitMate_nesting_quotes = ['`']
 
 "-------------------------------------------------------------------------------
 " OmniCppComplete {{{2
@@ -697,12 +706,6 @@ autocmd FileType vimwiki map <M-Enter> <Plug>VimwikiToggleListItem
 
 let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown', '.wiki': 'vimwiki'}
 
-let seagate_wiki = {'path': root_path . '/My/MyWiki/SeagateWiki/wiki_files/',
-            \ 'path_html': root_path . '/My/MyWiki/SeagateWiki/',
-            \ 'template_path': root_path . '/My/MyWiki/SeagateWiki/assets/template/',
-            \ 'template_default': 'template',
-            \ 'template_ext': '.html',
-            \ 'diary_link_count': 6}
 let wiki = {'path': root_path . '/My/Wiki/wiki_files/',
             \ 'path_html': root_path . '/My/Wiki/',
             \ 'syntax': 'markdown', 'ext': '.md',
@@ -710,13 +713,13 @@ let wiki = {'path': root_path . '/My/Wiki/wiki_files/',
             \ 'template_default': 'template',
             \ 'template_ext': '.html',}
 
+let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c'}
 let g:vimwiki_list = [wiki]
 
 "-------------------------------------------------------------------------------
 " rainbow {{{2
 " ------------------------------------------------------------------------------
 let g:rainbow_active = 1
-let g:rainbow_operators = 1
 
 "-------------------------------------------------------------------------------
 " Vim-Airline {{{2
@@ -733,6 +736,10 @@ let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline#extensions#tabline#excludes = ['__doc__']
 " 打开buffer的index
 let g:airline#extensions#tabline#buffer_idx_mode = 1
+" 关闭wordcount，否则txt，markdown里鼠标不能用
+let g:airline#extensions#wordcount#enabled = 0
+
+let g:airline#extensions#hunks#hunk_symbols = ['+', '~', '-']
 " 切换buffer快捷键
 nmap <M-1> <Plug>AirlineSelectTab1
 nmap <M-2> <Plug>AirlineSelectTab2

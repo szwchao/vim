@@ -11,13 +11,6 @@ let g:loaded_mycompile = 1
 "------------------------------------------------------------------------------"
 "定义CompileRun函数，用来调用进行编译和运行
 func! CompileRun()
-    if exists('g:current_project_name')
-        if !empty(g:current_project_name)
-            echo "开始编译工程（增量）：" . g:current_project_name
-            call F3make(1)
-            return
-        endif
-    endif
     if (&filetype != 'c') && (&filetype != 'cpp') && (&filetype != 'python') && (&filetype != 'dot')
         echo '只能编译c,cpp,python,dot文件!'
         return
@@ -79,13 +72,6 @@ endfunc
 
 "定义Debug函数，用来调试程序
 func! Debug()
-    if exists('g:current_project_name')
-        if !empty(g:current_project_name)
-            echo "开始编译工程（全新）：" . g:current_project_name
-            call F3make(0)
-            return
-        endif
-    endif
     exec "w"
     "C程序
     if &filetype == 'c'
@@ -103,7 +89,7 @@ func! Debug()
 endfunc
 "结束定义Debug
 "------------------------------------------------------------------------------"
-" s:Show_F3Make_Result: 显示结果 {{{
+" s:Show_Compile_Result: 显示结果 {{{
 "* --------------------------------------------------------------------------*/
 " @函数说明：   显示结果
 " @参    数：   result: 结果
@@ -163,7 +149,7 @@ fun! s:Show_Compile_Result(result, open_close_option)
 endfun
 "}}}
 
-" ToggleF3MakeResultWindow: 切换结果显示窗口 {{{
+" ToggleCompileResultWindow: 切换结果显示窗口 {{{
 "* --------------------------------------------------------------------------*/
 " @函数说明：   切换结果显示窗口
 " @返 回 值：   无

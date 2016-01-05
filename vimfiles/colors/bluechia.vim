@@ -114,7 +114,8 @@ hi! link Exception    Statement
 
 "*PreProc	v 通用预处理命令
 "hi PreProc    guifg=#8ddaea            gui=none
-hi PreProc    guifg=#A83D8B            gui=none
+"hi PreProc    guifg=#A83D8B            gui=none
+hi PreProc    guifg=#8959a8            gui=none
 "Include	v 预处理命令 #include
 hi! link Include      PreProc
 "Define		v 预处理命令 #define
@@ -161,6 +162,22 @@ hi Todo        guifg=#d33682    guibg=NONE gui=Bold
 
 
 "hi Constant    guifg=#eb7aa0            gui=none
+
+" HTML {{{1
+hi htmlLink                 gui=UNDERLINE guifg=#87CEEB guibg=NONE
+hi htmlBold                 gui=BOLD
+hi htmlBoldItalic           gui=BOLD,ITALIC
+hi htmlBoldUnderline        gui=BOLD,UNDERLINE
+hi htmlBoldUnderlineItalic  gui=BOLD,UNDERLINE,ITALIC
+hi htmlItalic               gui=ITALIC
+hi htmlUnderline            gui=UNDERLINE
+hi htmlUnderlineItalic      gui=UNDERLINE,ITALIC
+hi htmlH1                   gui=BOLD    guifg=#4682B4
+hi htmlH2                   gui=BOLD    guifg=#507030
+hi htmlH3                   gui=BOLD    guifg=#aa5858
+hi htmlH4                   gui=BOLD    guifg=#8B3A62
+hi htmlH5                   gui=BOLD    guifg=#9C9C9C
+hi htmlH6                   gui=BOLD    guifg=#5C5C5C
 
 " status line
 hi StatusLine    guifg=#cfddea    guibg=#4E4E4E    gui=bold

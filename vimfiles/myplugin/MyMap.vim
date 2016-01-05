@@ -3,6 +3,7 @@ if exists('my_map') || &cp || version < 700
 endif
 let my_map = 1
 
+" ===================================== quickfix ================================
 fun! QuickfixMap()
     nnoremap <buffer> v <Enter>zz:wincmd p<Enter>
     nnoremap <buffer> <ESC> :ccl<CR>
@@ -27,6 +28,30 @@ augroup QFixToggle
     autocmd BufWinEnter quickfix let g:qfix_win = bufnr("$")
     autocmd BufWinLeave * if exists("g:qfix_win") && expand("<abuf>") == g:qfix_win | unlet! g:qfix_win | endif
 augroup END
+
+" ===================================== Markdown ================================
+fun! MarkdownMap()
+    " normal下行首到行尾加`
+    "nmap <buffer> ` ^i`<ESC>$a`<ESC>
+    " normal下无序列表
+    nmap <buffer> * ^i*<Space><ESC>^
+
+    " visual模式
+    "zd把选中的内容删除放入z寄存器，<C-R>z读出
+    " code
+    vmap ` "zdi`<C-R>z`<ESC>
+    " 粗体
+    vmap * "zdi*<C-R>z*<ESC>
+    " 斜体
+    vmap _ "zdi_<C-R>z_<ESC>
+    " 删除线
+    vmap ~ "zdi~<C-R>z~<ESC>
+    nmap <silent><buffer> = <Plug>MarkdownAddHeaderLevel
+    nnoremap <silent><buffer> <Plug>MarkdownAddHeaderLevel :\<C-U>call MarkdownAddHeaderLevel()<CR>
+
+    nmap <silent><buffer> - <Plug>MarkdownRemoveHeaderLevel
+    nnoremap <silent><buffer> <Plug>MarkdownRemoveHeaderLevel :\<C-U>call MarkdownRemoveHeaderLevel()<CR>
+endfun
 
 " ===================================== vimwiki ================================
 fun! WikiMap()
@@ -102,4 +127,73 @@ function! VisualWrap(token_before, token_after)
     normal `>
     :call cursor(l:wRow, l:wCol) 
 endfunction
+
+func! ListAllSnippets()
+    if !exists('g:loaded_neosnippet')
+        finish
+    endif
+    let all_snippets = neosnippet#helpers#get_completion_snippets()
+    let source_snippets = sort(values(all_snippets))
+    let snipptes = map(copy(source_snippets), "{
+        \   'word' : v:val.word,
+        \   'abbr' : printf('%-50s %s', v:val.word, v:val.menu_abbr),
+        \ }")
+    call complete(col('.'), snipptes)
+    return ''
+endfunc
+
+function! s:count_first_sym(line) "{{{
+  let first_sym = matchstr(a:line, '\S')
+  return len(matchstr(a:line, first_sym.'\+'))
+endfunction "}}}
+
+let s:markdown_header = '^\s*\(#\{1,6}\)\zs[^#].*\ze$'
+function! MarkdownAddHeaderLevel() "{{{
+  let lnum = line('.')
+  let line = getline(lnum)
+  let rxHdr = '#'
+  if line =~ '^\s*$'
+    return
+  endif
+
+  if line =~ s:markdown_header
+    let level = s:count_first_sym(line)
+    if level < 6
+      let line = substitute(line, '\('.rxHdr.'\+\).\+', rxHdr.'&', '')
+      call setline(lnum, line)
+    endif
+  else
+    let line = substitute(line, '^\s*', '&'.rxHdr.' ', '')
+    call setline(lnum, line)
+  endif
+endfunction "}}}
+
+function! MarkdownRemoveHeaderLevel() "{{{
+  let lnum = line('.')
+  let line = getline(lnum)
+  let rxHdr = '#'
+  if line =~ '^\s*$'
+    return
+  endif
+
+  if line =~ s:markdown_header
+    let level = s:count_first_sym(line)
+    let old = repeat(rxHdr, level)
+    let new = repeat(rxHdr, level - 1)
+
+    let chomp = line =~ rxHdr.'\s'
+
+    let line = substitute(line, old, new, '')
+
+    if level == 1 && chomp
+      let line = substitute(line, '^\s', '', 'g')
+      let line = substitute(line, '\s$', '', 'g')
+    endif
+
+    let line = substitute(line, '\s*$', '', '')
+
+    call setline(lnum, line)
+  endif
+endfunction " }}}
+"}}}
 
