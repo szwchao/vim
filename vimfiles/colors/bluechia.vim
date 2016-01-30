@@ -115,7 +115,7 @@ hi! link Exception    Statement
 "*PreProc	v 通用预处理命令
 "hi PreProc    guifg=#8ddaea            gui=none
 "hi PreProc    guifg=#A83D8B            gui=none
-hi PreProc    guifg=#8959a8            gui=none
+hi PreProc    guifg=#b294bb             gui=none
 "Include	v 预处理命令 #include
 hi! link Include      PreProc
 "Define		v 预处理命令 #define
