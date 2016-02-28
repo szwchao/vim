@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 30-01-2016 11:29:43 AM
+"         Modified: 28-02-2016 8:44:05 PM
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -107,6 +107,11 @@ Plugin 'tpope/vim-surround'
 Plugin 'lilydjwg/colorizer'
 Bundle 'luochen1990/rainbow'
 Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-shell'
+Plugin 'maxbrunsfeld/vim-yankstack'
 Plugin 'a.vim'
 Plugin 'CRefVim'
 Plugin 'Mark--Karkat'
@@ -116,10 +121,6 @@ Plugin 'matchit.zip'
 Plugin 'python_match.vim'
 Plugin 'OmniCppComplete'
 Plugin 'VisIncr'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-shell'
 
 call vundle#end()            " required
 "-------------------------------------------------------------------------------
