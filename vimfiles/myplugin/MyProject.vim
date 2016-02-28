@@ -508,7 +508,9 @@ fun! s:LoadProjectUnderCursor()
         call s:SetTagsCscopeFilenametags()
         if exists('g:loaded_airline')
             let symbol = get(g:, 'airline#extensions#branch#symbol', g:airline_symbols.branch)
-            let g:airline_section_b = symbol . GetProjectName()
+            "let g:airline_section_b = symbol . GetProjectName()
+            call airline#parts#define_function('prj', 'GetProjectName')
+            let g:airline_section_a = airline#section#create(['mode', ' ★ ', 'prj'])
             exe ":AirlineRefresh"
         endif
     elseif
