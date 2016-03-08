@@ -2,7 +2,7 @@
 "         Filename: vimrc
 "         Author: Wang Chao
 "         Email: szwchao@gmail.com
-"         Modified: 28-02-2016 8:44:05 PM
+"         Modified: 07-03-2016 4:39:10 PM
 "===============================================================================
 "设置 {{{1
 "===============================================================================
@@ -51,11 +51,11 @@ set langmenu=zh_CN.UTF-8
 set helplang=cn
 
 "-------------------------------------------------------------------------------
-" 配色方案 {{{2
+" 插件及设置 {{{2
 "-------------------------------------------------------------------------------
-"colorscheme colorful
-colorscheme bluechia
-"colorscheme solarized
+if filereadable(expand("$VIM/_vimrc.plugins"))
+  source $VIM/_vimrc.plugins
+endif
 
 "-------------------------------------------------------------------------------
 " 字体 {{{2
@@ -69,60 +69,12 @@ else
 endif
 
 "-------------------------------------------------------------------------------
-" Plugin设置 {{{2
+" 配色方案 {{{2
 "-------------------------------------------------------------------------------
-call pathogen#infect()
+colorscheme colorful
+"colorscheme bluechia
+"colorscheme solarized
 
-filetype off                   " required!
-if g:platform == 'win'
-    set rtp+=$VIM/vimfiles/vundle/vundle.vim
-    call vundle#begin('$VIM/vimfiles/vundle/')
-else
-    set rtp+=~/.vim/vundle/vundle.vim
-    call vundle#begin('~/.vim/vundle/')
-endif
-Plugin 'gmarik/Vundle.vim'
-"Plugin 'szwchao/vimwiki'
-Plugin 'bling/vim-airline'
-Plugin 'majutsushi/tagbar'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
-Plugin 'Shougo/neocomplete.vim'
-Plugin 'Shougo/neosnippet.vim'
-Plugin 'Shougo/neosnippet-snippets'
-Plugin 'kien/ctrlp.vim'
-Plugin 'tacahiroy/ctrlp-funky'
-Plugin 'JazzCore/ctrlp-cmatcher'
-Plugin 'naquad/ctrlp-digraphs.vim'
-Plugin 'mattn/calendar-vim'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'hynek/vim-python-pep8-indent'
-Plugin 'gregsexton/MatchTag'
-Plugin 'wannesm/wmgraphviz.vim'
-Plugin 'aklt/plantuml-syntax'
-Plugin 'mbbill/fencview'
-Plugin 'Raimondi/delimitMate'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-Plugin 'lilydjwg/colorizer'
-Bundle 'luochen1990/rainbow'
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-shell'
-Plugin 'maxbrunsfeld/vim-yankstack'
-Plugin 'a.vim'
-Plugin 'CRefVim'
-Plugin 'Mark--Karkat'
-Plugin 'mru.vim'
-Plugin 'DoxygenToolkit.vim'
-Plugin 'matchit.zip'
-Plugin 'python_match.vim'
-Plugin 'OmniCppComplete'
-Plugin 'VisIncr'
-
-call vundle#end()            " required
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
 "-------------------------------------------------------------------------------
@@ -201,14 +153,12 @@ if g:computer_enviroment == "grundfos"
     nmap <M-t> :!start "c:\local\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
     " Alt+c用cmder打开当前文件所在目录
     nmap <M-c> :!start "c:\local\Software\cmder\Cmder.exe" "%:p:h"<CR>
-    let root_path = "c:/local"
 else
     autocmd FileType c,cpp,h set tabstop=4
     autocmd FileType c,cpp,h set shiftwidth=4
     autocmd FileType python set tabstop=4
     autocmd FileType python set shiftwidth=4
     nmap <M-t> :!start "D:\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
-    let root_path = "D:"
 endif
 
 "-------------------------------------------------------------------------------
@@ -251,7 +201,7 @@ set laststatus=2                          " 显示状态栏 (默认值为 1, 无
 "当vimrc改变时自动重新载入vimrc
 "autocmd! bufwritepost _vimrc source $VIM\\_vimrc
 "当vimrc改变时自动更新修改时间
-autocmd BufWritePre * call LastModified()
+"autocmd BufWritePre * call LastModified()
 " 彻底关闭警告声
 autocmd VimEnter * set vb t_vb=
 if g:platform == 'win'
@@ -264,10 +214,10 @@ autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `
 "autocmd BufWritePost * filet detect
 " 取消换行时自动添加注释符
 autocmd FileType * setl fo-=cro
+" help文件不隐藏||,**
+autocmd FileType help setl cole=0
 " 在quickfix窗口中的快捷键
 autocmd FileType qf :call QuickfixMap()
-" 在wiki文件中的map
-autocmd FileType vimwiki :call WikiMap()
 " 在markdown文件中的map
 autocmd FileType markdown :call MarkdownMap()
 " txt, cue, lrc
@@ -346,8 +296,8 @@ nmap <C-D> :b #<CR>
 nmap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<cr><c-o>
 "gW 光标所在单词和上一个单词交换
 nmap <silent> gW "_yiw:s/\(\w\+\)\(\_W\+\)\(\%#\w\+\)/\3\2\1/<cr><c-o>
-"gp 删除光标所在单词并粘贴系统剪切板内容
-nmap <silent> gp "_ciw<C-r>*<ESC>
+"dp 删除光标所在单词并粘贴系统剪切板内容
+nmap <silent> dp "_ciw<C-r>*<ESC>
 " Y复制到行末
 nmap Y y$
 " 分为两行
@@ -365,11 +315,13 @@ if g:platform == 'win'
     "nmap <silent> <leader>rr :source $VIM\\_vimrc<cr>
     " <leader>e编辑vimrc
     nmap <silent> <leader>e :e $VIM\\_vimrc<cr>
+    nmap <silent> <leader>ep :e $VIM\\_vimrc.plugins<cr>
 else
     " <leader>rr重新载入vimrc
     "nmap <silent> <leader>rr :source ~/.vimrc<cr>
     " <leader>e编辑vimrc
     nmap <silent> <leader>e :e ~/.vimrc<cr>
+    nmap <silent> <leader>ep :e ~/.vimrc.plugins<cr>
 endif
 
 " 复制到系统剪贴板
@@ -386,6 +338,9 @@ nmap <leader>w <C-W>W
 nmap <leader>o :silent !explorer %:p:h<CR>
 " 切换行号/相对行号
 nmap <leader>l :ToggleNuMode<CR>
+
+exe "nmap <leader>ww :<C-u>CtrlP " . "c:\\local\\My\\blog\\source\\_posts\\" . "<CR>"
+nnoremap <Leader>f :CtrlPFunky<Cr>
 
 "-------------------------------------------------------------------------------
 " Fx相关 {{{2
@@ -494,339 +449,6 @@ vmap { <Esc>:call VisualWrap('{', '}')<CR>
 vmap " <Esc>:call VisualWrap('"', '"')<CR>
 vmap ' <Esc>:call VisualWrap("'", "'")<CR>
 
-"===============================================================================
-"插件配置 {{{1
-"===============================================================================
-
-"-------------------------------------------------------------------------------
-" MyProject {{{2
-"-------------------------------------------------------------------------------
-" 工程目录
-if g:platform == 'win'
-    let g:MyProjectConfigDir = root_path . '/Workspace/MyProject'
-else
-    let g:MyProjectConfigDir = expand('~/MyProject')
-endif
-
-exe "nmap <leader>ww :<C-u>CtrlP " . "c:\\local\\My\\blog\\source\\_posts\\" . "<CR>"
-
-
-"-------------------------------------------------------------------------------
-" Calendar {{{2
-" ------------------------------------------------------------------------------
-let g:calendar_mruler = '一月,二月,三月,四月,五月,六月,七月,八月,九月,十月,十一月,十二月'
-let g:calendar_wruler = '日 一 二 三 四 五 六'
-let g:calendar_navi_label = '上月,今天,下月'
-let g:calendar_monday = 1
-let g:calendar_weeknm = 1 " WK01
-let g:calendar_datetime = 'title'
-
-"-------------------------------------------------------------------------------
-" Mark {{{2
-" ------------------------------------------------------------------------------
-highlight def MarkWord1  ctermbg=Cyan     ctermfg=Black  guibg=#8CCBEA    guifg=Black
-highlight def MarkWord2  ctermbg=Green    ctermfg=Black  guibg=#A4E57E    guifg=Black
-highlight def MarkWord3  ctermbg=Yellow   ctermfg=Black  guibg=#D2691E    guifg=Black
-highlight def MarkWord4  ctermbg=Red      ctermfg=Black  guibg=#FF7272    guifg=Black
-highlight def MarkWord5  ctermbg=Magenta  ctermfg=Black  guibg=#FFB3FF    guifg=Black
-highlight def MarkWord6  ctermbg=Blue     ctermfg=Black  guibg=#9999FF    guifg=Black
-highlight def MarkWord7  ctermbg=Red      ctermfg=Black  guibg=#BA55D3    guifg=Black
-
-"-------------------------------------------------------------------------------
-" startify {{{2
-"-------------------------------------------------------------------------------
-let g:startify_show_sessions = 1
-let g:startify_custom_header = [
-\' ___    __    ___  ______  __    __       ___       ______    __     _______.   ___    ___  __  .___  ___. ',
-\' \  \  /  \  /  / /      ||  |  |  |     /   \     /  __  \  (_ )   /       |   \  \  /  / |  | |   \/   | ',
-\'  \  \/    \/  / |  .----`|  |__|  |    /  ^  \   |  |  |  |  |/   |   (----`    \  \/  /  |  | |  \  /  | ',
-\'   \          /  |  |     |   __   |   /  /_\  \  |  |  |  |        \   \         \    /   |  | |  |\/|  | ',
-\'    \   /\   /   |  `----.|  |  |  |  /  _____  \ |  `--`  |    .----)   |         \  /    |  | |  |  |  | ',
-\'     \_/  \_/     \______||__|  |__| /__/     \__\ \______/     |_______/           \/     |__| |__|  |__| ',
-\'',
-\]
-
-"-------------------------------------------------------------------------------
-" fencview.vim {{{2
-"-------------------------------------------------------------------------------
-" 不自动检测编码
-let g:fencview_autodetect = 0
-
-"-------------------------------------------------------------------------------
-" MRU.vim {{{2
-"-------------------------------------------------------------------------------
-" 最大列表数目200
-let MRU_File = expand(temp_dir . "vim_data/_vim_mru_files")
-let MRU_Max_Entries = 200
-
-"-------------------------------------------------------------------------------
-" CRefVim.vim {{{2
-"-------------------------------------------------------------------------------
-map <silent> <unique> <Leader>ct <Plug>CRV_CRefVimInvoke
-
-"-------------------------------------------------------------------------------
-" neocomplete {{{2
-" ------------------------------------------------------------------------------
-let g:neocomplete#data_directory = expand(temp_dir . 'vim_data/.neocomplete')
-" 使neocomplete自动启动
-let g:neocomplete#enable_at_startup = 1
-" 使neocomplete自动选择第一个
-let g:neocomplete#enable_auto_select = 1
-" <C-u>取消选择
-imap <expr><M-u>  neocomplete#close_popup()
-imap <expr><C-u>  neocomplete#cancel_popup()
-
-let g:neocomplete#sources#omni#functions = {'python': 'jedi#completions', 'dot': 'GraphvizComplete'}
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-            \ 'default' : '',
-            \ 'c' : $VIM.'/vimfiles/dict/c.dict',
-            \ 'cpp' : $VIM.'/vimfiles/dict/cpp.dict',
-            \ 'vim' : $VIM.'/vimfiles/dict/vim.dict'
-            \ }
-
-" jedi-vim配置
-autocmd FileType python setlocal omnifunc=jedi#completions
-let g:jedi#completions_enabled = 0
-let g:jedi#auto_vim_configuration = 0
-
-if !exists('g:neocomplete#force_omni_input_patterns')
-    let g:neocomplete#force_omni_input_patterns = {}
-endif
-let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
-
-let g:jedi#completions_command = "<C-N>"
-
-" 处于文本模式的文件类型
-let g:neocomplete#text_mode_filetypes = {'markdown' : 1, 'gitcommit' : 1, 'text' : 1, 'vimwiki' : 1,}
-
-call neocomplete#custom#source('buffer', 'mark', '[缓冲区]')
-call neocomplete#custom#source('dictionary', 'mark', '[字典]')
-call neocomplete#custom#source('file', 'mark', '[文件]')
-call neocomplete#custom#source('member', 'mark', '[成员]')
-call neocomplete#custom#source('omni', 'mark', '[OMNI]')
-call neocomplete#custom#source('syntax', 'mark', '[语法]')
-
-
-"-------------------------------------------------------------------------------
-" neosnippet {{{2
-" ------------------------------------------------------------------------------
-let g:neosnippet#data_directory = expand(temp_dir . 'vim_data/.neosnippet')
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" 自定义的显示所有snippet的快捷键
-inoremap <M-a> <C-R>=ListAllSnippets()<CR>
-
-"-------------------------------------------------------------------------------
-" FuzzyFinder.vim {{{2
-"-------------------------------------------------------------------------------
-let g:fuf_dataDir = expand(temp_dir . 'vim_data/.vim-fuf-data')
-let g:fuf_keyPreview = '<M-x>'
-let g:fuf_previewHeight = 0
-let g:fuf_autoPreview = 0
-let g:fuf_maxMenuWidth = 200
-nmap <M-a> :FufBookmarkFile<CR>
-nmap <M-r> :FufTaggedFile<CR>
-nmap <M-d> :FufBuffer<CR>
-nmap <M-f> :FufFile<CR>
-nmap <M-q> :FufQuickfix<CR>
-nmap <M-w> :call fuf#mycmd#launch('', 0, '')<CR>
-nmap <M-e> :FufLine<CR>
-nmap <M-s> :FufMyProject<CR>
-nmap <M-j> :FufJumpList<CR>
-nmap <M-k> :FufChangeList<CR>
-
-"-------------------------------------------------------------------------------
-" TagBar {{{2
-"-------------------------------------------------------------------------------
-let g:tagbar_sort = 0
-let g:tagbar_show_visibility = 1
-let g:tagbar_show_linenumbers = 1
-
-" delimitMate {{{2
-"-------------------------------------------------------------------------------
-" python docstring ", '
-au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
-au FileType markdown let b:delimitMate_nesting_quotes = ['`']
-
-"-------------------------------------------------------------------------------
-" OmniCppComplete {{{2
-" ------------------------------------------------------------------------------
-" 命名空间查找控制。0 : 禁止查找命名空间, 1 : 查找当前文件缓冲区内的命名空间(缺省), 2 : 查找当前文件缓冲区和包含文件中的命名空间
-let OmniCpp_NamespaceSearch = 1
-" 全局查找控制。0:禁止；1:允许(缺省)
-let OmniCpp_GlobalScopeSearch = 1
-" 是否显示访问控制信息('+', '-', '#')。0/1, 缺省为1(显示)
-let OmniCpp_ShowAccess = 1
-" 是否是补全提示缩略信息中显示函数原型。0：不显示，1：显示（缺省）
-let OmniCpp_ShowPrototypeInAbbr = 1
-" 在'.'号后是否自动给出提示信息。0/1, 缺省为1
-let OmniCpp_MayCompleteDot = 1
-" 在'->'号后是否自动给出提示信息。0/1, 缺省为1
-let OmniCpp_MayCompleteArrow = 1
-" 在'::'号后是否自动给出提示信息。0/1, 缺省为1
-let OmniCpp_MayCompleteScope = 1
-" 是否自动选择第一个匹配项。0 : 不选择第一项(缺省) 1 : 选择第一项并插入到光标位置 2 : 选择第一项但不插入光标位置
-let OmniCpp_SelectFirstItem = 2
-" 默认命名空间列表，项目间使用','隔开。
-let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-
-"-------------------------------------------------------------------------------
-" NERD_commenter {{{2
-" ------------------------------------------------------------------------------
-" 将C语言的注释符号改为//, 默认是/**/
-"let NERD_c_alt_style = 1
-" 定义Alt+/为注释快捷键
-nmap <M-/> ,cc
-" 定义Alt+.为取消注释快捷键
-nmap <M-.> ,cu
-
-"-------------------------------------------------------------------------------
-" DoxygenToolkit.vim {{{2
-" ------------------------------------------------------------------------------
-let g:DoxygenToolkit_compactDoc = "yes"
-"let g:DoxygenToolkit_commentType = "C++"
-let g:doxygenToolkit_briefTag_funcName="yes"
-
-"let g:DoxygenToolkit_briefTag_pre="@函数说明：   "
-"let g:DoxygenToolkit_paramTag_pre="@参    数：   "
-"let g:DoxygenToolkit_returnTag="@返 回 值：   "
-let g:DoxygenToolkit_blockHeader="--------------------------------------------------------------------------"
-let g:DoxygenToolkit_blockFooter="--------------------------------------------------------------------------"
-let g:DoxygenToolkit_authorName="wchao"
-let g:doxygen_enhanced_color = 1
-
-"-------------------------------------------------------------------------------
-" VimWiki {{{2
-" ------------------------------------------------------------------------------
-" 设置编码
-let g:vimwiki_w32_dir_enc = 'utf-8'
-" 使用鼠标
-let g:vimwiki_use_mouse = 1
-" 高亮标题颜色
-let g:vimwiki_hl_headers = 1
-" 是否开启按语法折叠  会让文件比较慢
-"let g:vimwiki_folding = 1
-" 是否在计算字串长度时用特别考虑中文字符
-let g:vimwiki_CJK_length = 1
-" 设置在wiki内使用的html标识
-let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,del,br,hr,div,code,ul,li,p,a,small'
-" 切换todo
-autocmd FileType vimwiki map <M-Enter> <Plug>VimwikiToggleListItem
-
-let g:vimwiki_ext2syntax = {'.md': 'markdown', '.mkd': 'markdown', '.wiki': 'vimwiki'}
-
-let wiki = {'path': root_path . '/My/Wiki/wiki_files/',
-            \ 'path_html': root_path . '/My/Wiki/',
-            \ 'syntax': 'markdown', 'ext': '.md',
-            \ 'template_path': root_path. '/My/Wiki/assets/template/',
-            \ 'template_default': 'template',
-            \ 'template_ext': '.html',}
-
-let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'c': 'c'}
-let g:vimwiki_list = [wiki]
-
-"-------------------------------------------------------------------------------
-" rainbow {{{2
-" ------------------------------------------------------------------------------
-let g:rainbow_active = 1
-
-"-------------------------------------------------------------------------------
-" Vim-Airline {{{2
-" ------------------------------------------------------------------------------
-" 不自动检测行尾空格
-let g:airline#extensions#whitespace#enabled = 0
-" 打开上面的smarttab
-let g:airline#extensions#tabline#enabled = 1
-" smartbar只留文件名和扩展名
-let g:airline#extensions#tabline#fnamemod = ':t'
-let g:airline#extensions#tabline#left_sep = ''
-let g:airline#extensions#tabline#left_alt_sep = ''
-" 不包含在tabline里的文件
-let g:airline#extensions#tabline#excludes = ['__doc__']
-" 打开buffer的index
-let g:airline#extensions#tabline#buffer_idx_mode = 1
-" 关闭wordcount，否则txt，markdown里鼠标不能用
-let g:airline#extensions#wordcount#enabled = 0
-
-let g:airline#extensions#hunks#hunk_symbols = ['+', '~', '-']
-" 切换buffer快捷键
-nmap <M-1> <Plug>AirlineSelectTab1
-nmap <M-2> <Plug>AirlineSelectTab2
-nmap <M-3> <Plug>AirlineSelectTab3
-nmap <M-4> <Plug>AirlineSelectTab4
-nmap <M-5> <Plug>AirlineSelectTab5
-nmap <M-6> <Plug>AirlineSelectTab6
-nmap <M-7> <Plug>AirlineSelectTab7
-nmap <M-8> <Plug>AirlineSelectTab8
-nmap <M-9> <Plug>AirlineSelectTab9
-
-" 更换主题
-let g:airline_theme='mytheme'
-" 关闭tagbar，防止每次都调用ctags
-let g:airline#extensions#tagbar#enabled = 0
-" 语法检查
-let g:airline#extensions#syntastic#enabled = 1
-" 增强字体
-let g:airline_powerline_fonts = 1
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-
-" powerline symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ' '
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ' '
-
-"-------------------------------------------------------------------------------
-" Tabular {{{2
-" ------------------------------------------------------------------------------
-vmap <Enter> :Tab /
-
-"-------------------------------------------------------------------------------
-" plantuml {{{2
-" ------------------------------------------------------------------------------
-let g:plantuml_executable_script = $VIM. '/tools/plantuml/plantuml.jar -charset utf-8 '
-
-"-------------------------------------------------------------------------------
-" WMGraphviz_dot {{{2
-" ------------------------------------------------------------------------------
-let g:WMGraphviz_dot = $VIM . "/tools/Graphviz/bin/dot.exe"
-
-" ctrlp {{{2
-" ------------------------------------------------------------------------------
-" 修改该选项为1，设置默认为按文件名搜索（否则为全路径）。在提示符面板内可以使用 <c-d> 来切换。
-let g:ctrlp_cache_dir = expand(temp_dir . 'vim_data/.ctrlp')
-let g:ctrlp_by_filename = 1
-" 改变匹配窗口的位置，结果的排列顺序，最小和最大高度:
-let g:ctrlp_match_window = 'bottom,order:ttb,results:50'
-" 使用该选项来设置自定义的根目录标记作为对默认标记(.hg, .svn, .bzr, and _darcs)的补充。自定义的标记具有优先权:
-let g:ctrlp_root_markers = ['.git', 'view.dat', '.svn', 'f3make.bat']
-" 扩展
-"let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
-let g:ctrlp_extensions = ['funky']
-" 扫描文件的最大数量，设置为0时不进行限制
-let g:ctrlp_max_files = 0
-" 在CtrlP中隐藏的文件和目录
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/]\.(git|hg|svn)$|debug$|release$|objs$',
-    \ 'file': '\v\.(exe|so|dat|dll|bin|hex|doc|docx|ppt|pptx|xls|xlsx|vsd|mdb|lib|o|ncb|pyc|obj|msi|resources|jpg|bmp|png|temp|tmp)$',
-    \ }
-
-" 为CtrlP设置一个额外的模糊匹配函数
-let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
-
-let g:ctrlp_funky_syntax_highlight = 1
-
-nnoremap <Leader>f :CtrlPFunky<Cr>
-
-"}}}1
+"}}}2
 
 " vim:fdm=marker:fmr={{{,}}} foldlevel=1:

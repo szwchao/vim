@@ -7,3 +7,6 @@ tools/Graphviz
 vim74
 vimfiles/vundle
 vimfiles/backup
+vimfiles/plug
+/vimfiles/autoload/plug.vim
+/vimfiles/autoload/pathogen.vim
