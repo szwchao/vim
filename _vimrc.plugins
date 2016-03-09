@@ -12,6 +12,8 @@ else
 endif
 
 Plug 'szwchao/my-vim-plugins'
+" 各种文件图标
+Plug 'ryanoasis/vim-devicons'
 " 状态栏
 Plug 'bling/vim-airline'
 " 标签列表
@@ -26,11 +28,12 @@ Plug 'Shougo/neocomplete.vim'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 " 全路径模糊文件, 缓冲区, MRU, 标签, ... 检索。
-Plug 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 " ctrlp插件，函数列表
 Plug 'tacahiroy/ctrlp-funky'
 " ctrlp插件，c实现的查找引擎
 Plug 'JazzCore/ctrlp-cmatcher', {'do': 'install_windows.bat'}
+Plug 'ivalkeen/vim-ctrlp-tjump'
 " 日历插件
 Plug 'mattn/calendar-vim'
 " jedi python补全
@@ -77,9 +80,9 @@ Plug 'DoxygenToolkit.vim'
 Plug 'OmniCppComplete'
 " visual模式下自动增加数字
 Plug 'VisIncr'
-Plug 'junegunn/gv.vim'
 Plug 'cohama/agit.vim'
 Plug 'mattn/emoji-vim'
+Plug 'jasoncodes/ctrlp-modified.vim'
 
 call plug#end()
 
@@ -446,7 +449,22 @@ endfunction
 "-------------------------------------------------------------------------------
 " vim-gitgutter {{{2
 " ------------------------------------------------------------------------------
-let g:gitgutter_diff_args = '--strip-trailing-cr'
-" }}}2
 
+"-------------------------------------------------------------------------------
+" vim-ctrlp-tjump {{{2
+" ------------------------------------------------------------------------------
+nnoremap <c-]> :CtrlPtjump<cr>
+vnoremap <c-]> :CtrlPtjumpVisual<cr>
+
+"-------------------------------------------------------------------------------
+" vim-devicons {{{2
+" ------------------------------------------------------------------------------
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+let g:DevIconsEnableFolderExtensionPatternMatching = 1
+
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {} " needed let
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['xml'] = ''
+
+" }}}2
 " vim:fdm=marker:fmr={{{,}}} foldlevel=1:
