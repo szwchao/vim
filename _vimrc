@@ -348,8 +348,6 @@ nnoremap <Leader>f :CtrlPFunky<Cr>
 " F1加载项目
 nmap <F1> :call StartMyProject()<CR>
 nmap <C-F1> :call StartVCProject()<CR>
-" F2跳转书签
-nmap <F2> <Plug>Vm_goto_next_sign
 " F3查找
 nmap <F3> /\<<C-R><C-W>\><CR>
 " Alt+F3多文件内vimgrep查找
@@ -369,10 +367,6 @@ nmap <F7> <ESC>:ToggleColorScheme<CR>
 " F8为函数添加注释(DoxygenToolkit.vim)
 nmap <F8> :Dox<CR>
 autocmd FileType python nmap <F8> :PD<CR>
-" F10将wiki转换为html
-map <F10> :Wiki2Html<cr>
-" Ctrl+F10将所有wiki转换为html
-map <C-F10> :WikiAll2Html<cr>
 " F11全屏
 nmap <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
 " F12切换c/h文件(a.vim)
