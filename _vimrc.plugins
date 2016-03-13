@@ -31,8 +31,6 @@ Plug 'szwchao/my-vim-extensions'
 Plug 'bling/vim-airline'
 " 启动画面
 Plug 'mhinz/vim-startify'
-" 各种文件图标
-Plug 'ryanoasis/vim-devicons'
 " 可视化书签
 Plug 'MattesGroeger/vim-bookmarks'
 " 标签列表
@@ -52,6 +50,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tacahiroy/ctrlp-funky'
 " ctrlp插件，c实现的查找引擎
 Plug 'JazzCore/ctrlp-cmatcher', {'do': 'install_windows.bat'}
+" ctrlp插件，tag跳转
 Plug 'ivalkeen/vim-ctrlp-tjump'
 " 日历插件
 Plug 'mattn/calendar-vim'
@@ -75,6 +74,8 @@ Plug 'airblade/vim-gitgutter'
 Plug 'cohama/agit.vim'
 " 为字符串包围/改变或去除引号/括号或者HTML标签
 Plug 'tpope/vim-surround'
+" 各种文件图标
+Plug 'ryanoasis/vim-devicons'
 " 自动着色
 Plug 'lilydjwg/colorizer'
 " 彩色括号
@@ -413,7 +414,7 @@ endfunction
 " vim-gitgutter {{{2
 " ------------------------------------------------------------------------------
 let g:gitgutter_sign_added = '䁕'
-let g:gitgutter_sign_modified = '䀡'
+let g:gitgutter_sign_modified = '䁚'
 let g:gitgutter_sign_removed = '䁖'
 let g:gitgutter_sign_modified_removed = '䁗'
 
@@ -441,23 +442,32 @@ let icons = {
             \'jpg': '䇅', 'jpeg': '䇅', 'bmp': '䇅', 'png': '䇅', 'gif': '䇅', 'ico': '䇅',
             \'mp3': '䇇', 'ape': '䇇', 'flac': '䇇',
             \'avi': '䇈', 'mkv': '䇈', 'mp4': '䇈', 'flv': '䇈',
-            \'vim': '㛅', 'txt': '䃶',
-            \'gitignore': '䂛',
-            \'py': '㘼', 'js': '㙎', 'java': '㘸', 'php': '㘽',
-            \'md': '㘾', 'html': '㔘', 'xml': '㔘',
+            \'vim': '㛅', 'txt': '䃶', 'json': '㔋',
+            \'bat': '㚕', 'cmd': '㚕',
+            \'mdb': '㘆',
+            \'sln': '㘌', 'suo': '㘌', 'vcproj': '㘌',
+            \'py': '㘼', 'js': '㙎', 'java': '㘸', 'php': '㘽', 'rb': '䈙',
+            \'md': '㘾', 'html': '㔘', 'xml': '㔘', 'css': '㔔',
             \'cpp': '㔝', 'c': '㔞', 'h': '㔞',
             \}
 for key in keys(icons)
     let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols[key] = icons[key]
+endfor
+let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {} " needed let
+let icons = {
+            \'.gitignore': '䂛', '.gitconfig': '䂛',
+            \}
+for key in keys(icons)
+    let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols[key] = icons[key]
 endfor
 
 "-------------------------------------------------------------------------------
 " vim-bookmarks {{{2
 " ------------------------------------------------------------------------------
 " 书签符号
-let g:bookmark_sign = '䂤'
+let g:bookmark_sign = '䂗'
 " 带注释的书签符号
-let g:bookmark_annotation_sign = '䂍'
+let g:bookmark_annotation_sign = '䃥'
 " 高亮书签栏
 let g:bookmark_highlight_lines = 1
 " 自动保存的文件
