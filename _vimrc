@@ -354,8 +354,6 @@ nmap <F3> /\<<C-R><C-W>\><CR>
 nmap <M-F3> <ESC>:call MyVimGrep()<CR>
 " Ctrl+F3多文件内GNUGrep查找
 nmap <C-F3> <ESC>:MyGrep<CR>
-" F4打开最近文件(MRU.vim)
-nmap <F4> :MRU<cr>
 " F5编译运行C、C++、Python程序
 nmap <F5> :call CompileRun()<CR>
 " Ctrl+F5调试C、C++、Python程序
