@@ -11,6 +11,8 @@ endif
 
 " c,cpp,h文件切换
 Plug 'a.vim'
+" 最近使用的文件列表
+Plug 'mru.vim'
 " word标记
 Plug 'Mark--Karkat'
 " cpp自动补全
@@ -54,8 +56,6 @@ Plug 'davidhalter/jedi-vim', {'for': 'python'}
 Plug 'hynek/vim-python-pep8-indent', {'for': 'python'}
 " html,xml的%跳转
 Plug 'gregsexton/MatchTag'
-" 编码检测，只在执行FencAutoDetec命令时加载
-Plug 'mbbill/fencview', {'on': 'FencAutoDetec'}
 " yank循环
 Plug 'maxbrunsfeld/vim-yankstack'
 " 分隔符补全
@@ -148,22 +148,13 @@ let g:startify_bookmarks = [{'v': $VIM.'\_vimrc'},
             \]
 
 "-------------------------------------------------------------------------------
-" fencview.vim {{{2
-"-------------------------------------------------------------------------------
-" 不自动检测编码
-let g:fencview_autodetect = 0
-
-"-------------------------------------------------------------------------------
 " MRU.vim {{{2
 "-------------------------------------------------------------------------------
 " 最大列表数目200
 let MRU_File = expand(vim_data_path . "/_vim_mru_files")
 let MRU_Max_Entries = 200
-
-"-------------------------------------------------------------------------------
-" CRefVim.vim {{{2
-"-------------------------------------------------------------------------------
-map <silent> <unique> <Leader>ct <Plug>CRV_CRefVimInvoke
+" F4打开最近文件(MRU.vim)
+nmap <F4> :MRU<cr>
 
 "-------------------------------------------------------------------------------
 " neocomplete {{{2
@@ -345,9 +336,8 @@ let g:ctrlp_match_window = 'bottom,order:ttb,results:50'
 " 使用该选项来设置自定义的根目录标记作为对默认标记(.hg, .svn, .bzr, and _darcs)的补充。自定义的标记具有优先权:
 let g:ctrlp_root_markers = ['.git', 'view.dat', '.svn']
 " 设置该选项为1将只显示在当前工作目录内的MRU文件
-let g:ctrlp_mruf_relative = 1
+"let g:ctrlp_mruf_relative = 1
 " 扩展
-"let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
 let g:ctrlp_extensions = ['funky', 'cmd', 'branches', 'modified', 'lastcommit']
 " 扫描文件的最大数量，设置为0时不进行限制
 let g:ctrlp_max_files = 0
@@ -362,8 +352,6 @@ let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 
 let g:ctrlp_funky_syntax_highlight = 1
 
-" F4打开最近文件(MRU.vim)
-nmap <F4> :CtrlPMRUFiles<cr>
 nmap <M-d> :CtrlPBuffer<CR>
 nmap <M-f> :CtrlPCurFile<CR>
 nmap <M-q> :CtrlPQuickfix<CR>

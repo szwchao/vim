@@ -159,6 +159,8 @@ else
     autocmd FileType python set tabstop=4
     autocmd FileType python set shiftwidth=4
     nmap <M-t> :!start "D:\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
+    " Alt+c用cmder打开当前文件所在目录
+    nmap <M-c> :!start "d:\Software\cmder\Cmder.exe" "%:p:h"<CR>
 endif
 
 "-------------------------------------------------------------------------------
@@ -216,6 +218,8 @@ autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `
 autocmd FileType * setl fo-=cro
 " help文件不隐藏||,**
 autocmd FileType help setl cole=0
+" help文件ESC退出
+autocmd FileType help nnoremap <buffer> <ESC> :q<CR>
 " 在quickfix窗口中的快捷键
 autocmd FileType qf :call QuickfixMap()
 " 在markdown文件中的map
@@ -234,6 +238,8 @@ au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=markdow
 "autocmd FileType c,cpp :match ErrorMsg /\%>80v.\+/
 " 关闭python的补全预览窗口
 autocmd FileType python setlocal completeopt-=preview
+" gitcommit设置拼写检查
+autocmd Filetype gitcommit setlocal spell
 
 "-------------------------------------------------------------------------------
 " 查找/替换相关的设置 {{{2
