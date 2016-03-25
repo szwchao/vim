@@ -83,7 +83,7 @@ if g:platform == 'win'
     source $VIMRUNTIME/mswin.vim          " 加载mswin.vim
     unmap <C-A>
     behave mswin
-    set fileformat=dos                    " 文件格式为dos，否则记事本打开有黑框
+    "set fileformat=dos                    " 文件格式为dos，否则记事本打开有黑框
 elseif g:platform = 'mac'
     set macmeta
     set fileformat=unix
@@ -271,7 +271,8 @@ inoremap <expr> <C-K>      pumvisible()?"\<PageUp>\<C-P>\<C-N>":"\<C-K>"
 "-------------------------------------------------------------------------------
 " 代码折叠 {{{2
 "-------------------------------------------------------------------------------
-set foldmethod=syntax
+"set foldmethod=syntax
+set foldmethod=indent
 set foldenable
 set foldlevel=100
 

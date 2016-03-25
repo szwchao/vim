@@ -76,6 +76,8 @@ Plug 'lilydjwg/colorizer'
 Plug 'luochen1990/rainbow'
 " 对齐/格式化文本
 Plug 'godlygeek/tabular'
+" 跳转
+Plug 'easymotion/vim-easymotion'
 " markdown
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 Plug 'xolox/vim-misc'
@@ -144,7 +146,6 @@ let g:startify_session_dir = vim_data_path . "/session"
 " 防止其他插件打开文件后startify仍然存在
 autocmd User Startified setlocal buftype=
 let g:startify_bookmarks = [{'v': $VIM.'\_vimrc'},
-            \{'t': 'c:\local\Workspace\55602_DC_V04.01.00_dev\tools\run.py'},
             \]
 
 "-------------------------------------------------------------------------------
@@ -360,26 +361,19 @@ nmap <M-e> :CtrlPLine<CR>
 nmap <M-s> :CtrlPTag<CR>
 nmap <M-j> :CtrlPBufTag<CR>
 nmap <M-k> :CtrlPChange<CR>
-
-nmap <C-m> :CtrlPMenu<CR>
+nmap <M-o> :CtrlPMenu<CR>
 
 "-------------------------------------------------------------------------------
-" vim-multiple-cursors {{{2
+" vim-ctrlp-tjump {{{2
 " ------------------------------------------------------------------------------
-set selection=inclusive                   " 定义选择区的行为
-" Called once right before you start selecting multiple cursors
-function! Multiple_cursors_before()
-  if exists(':NeoCompleteLock')==2
-    exe 'NeoCompleteLock'
-  endif
-endfunction
+nnoremap <c-]> :CtrlPtjump<cr>
+vnoremap <c-]> :CtrlPtjumpVisual<cr>
+let g:ctrlp_tjump_only_silent = 1
 
-" Called once only when the multiple selection is canceled (default <Esc>)
-function! Multiple_cursors_after()
-  if exists(':NeoCompleteUnlock')==2
-    exe 'NeoCompleteUnlock'
-  endif
-endfunction
+"-------------------------------------------------------------------------------
+" vim-markdown {{{2
+" ------------------------------------------------------------------------------
+let g:vim_markdown_folding_disabled = 1
 
 "-------------------------------------------------------------------------------
 " vim-gitgutter {{{2
@@ -388,13 +382,6 @@ let g:gitgutter_sign_added = '䁕'
 let g:gitgutter_sign_modified = '䁚'
 let g:gitgutter_sign_removed = '䁖'
 let g:gitgutter_sign_modified_removed = '䁗'
-
-"-------------------------------------------------------------------------------
-" vim-ctrlp-tjump {{{2
-" ------------------------------------------------------------------------------
-nnoremap <c-]> :CtrlPtjump<cr>
-vnoremap <c-]> :CtrlPtjumpVisual<cr>
-let g:ctrlp_tjump_only_silent = 1
 
 "-------------------------------------------------------------------------------
 " vim-devicons {{{2
