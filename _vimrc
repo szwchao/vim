@@ -71,9 +71,11 @@ endif
 "-------------------------------------------------------------------------------
 " 配色方案 {{{2
 "-------------------------------------------------------------------------------
-colorscheme colorful
-"colorscheme bluechia
+set background=light
+
+colorscheme mycolor
 "colorscheme solarized
+
 
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
@@ -296,7 +298,7 @@ vmap t 0
 nnoremap zz <ESC>$
 vmap zz $
 " 切换buf
-nmap <C-D> :b #<CR>
+nmap <C-Tab> :b #<CR>
 " Ctrl+m到较新位置，其实<C-I>等同于<Tab>
 "nmap <C-m> <ESC><C-I>
 "gw 光标所在单词和下一个单词交换
@@ -374,8 +376,8 @@ nmap <F8> :Dox<CR>
 autocmd FileType python nmap <F8> :PD<CR>
 " F11全屏
 nmap <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
-" F12切换c/h文件(a.vim)
-nmap <silent> <F12> :A<CR>
+" F12切换c/h文件(fswitch.vim)
+nmap <silent> <F12> :FSHere<CR>
 " Ctrl+F12生成tags
 nmap <silent> <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 
@@ -437,8 +439,6 @@ map <C-l> <C-W>l
 " Alt+h向前切换buf，Alt+l向后切换buf
 nmap <M-h> :bp<CR>
 nmap <M-l> :bn<CR>
-nmap <M-u> :tabp<CR>
-nmap <M-o> :tabn<CR>
 
 " 用相应符号包围visual选择的部分
 vmap ( <Esc>:call VisualWrap('(', ')')<CR>

@@ -8,9 +8,9 @@ if g:platform == 'win'
 else
     call plug#begin('~/.vim/plug/')
 endif
+" 加大vim-plug的timeout
+let g:plug_timeout = 600
 
-" c,cpp,h文件切换
-Plug 'a.vim'
 " 最近使用的文件列表
 Plug 'mru.vim'
 " word标记
@@ -23,12 +23,18 @@ Plug 'VisIncr'
 Plug 'szwchao/my-vim-plugins'
 " 自己的对第三方插件的扩展
 Plug 'szwchao/my-vim-extensions'
+" vim中文文档，包含一些插件的翻译文档
+Plug 'asins/vimcdoc'
 " 状态栏
 Plug 'bling/vim-airline'
 " 启动画面
 Plug 'mhinz/vim-startify'
 " 可视化书签
 Plug 'MattesGroeger/vim-bookmarks'
+" 显示搜索数目
+Plug 'google/vim-searchindex'
+" 头文件切换
+Plug 'derekwyatt/vim-fswitch'
 " 标签列表
 Plug 'majutsushi/tagbar'
 " 快速注释
@@ -80,6 +86,12 @@ Plug 'godlygeek/tabular'
 Plug 'easymotion/vim-easymotion'
 " markdown
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+" markdown预览
+Plug 'iamcco/markdown-preview.vim'
+" 自动格式化
+Plug 'Chiel92/vim-autoformat'
+" 扩展选择内容
+Plug 'terryma/vim-expand-region'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-shell'
 
@@ -96,6 +108,7 @@ else
     let temp_dir = expand("~") . "//"
 endif
 let vim_data_path = expand(temp_dir . "vim_data")
+
 
 "-------------------------------------------------------------------------------
 " MyProject {{{2
@@ -133,14 +146,14 @@ highlight def MarkWord7  ctermbg=Red      ctermfg=Black  guibg=#BA55D3    guifg=
 "-------------------------------------------------------------------------------
 let g:startify_show_sessions = 1
 let g:startify_custom_header = [
-\' ___    __    ___  ______  __    __       ___       ______    __     _______.   ___    ___  __  .___  ___. ',
-\' \  \  /  \  /  / /      ||  |  |  |     /   \     /  __  \  (_ )   /       |   \  \  /  / |  | |   \/   | ',
-\'  \  \/    \/  / |  .----`|  |__|  |    /  ^  \   |  |  |  |  |/   |   (----`    \  \/  /  |  | |  \  /  | ',
-\'   \          /  |  |     |   __   |   /  /_\  \  |  |  |  |        \   \         \    /   |  | |  |\/|  | ',
-\'    \   /\   /   |  `----.|  |  |  |  /  _____  \ |  `--`  |    .----)   |         \  /    |  | |  |  |  | ',
-\'     \_/  \_/     \______||__|  |__| /__/     \__\ \______/     |_______/           \/     |__| |__|  |__| ',
-\'',
-\]
+            \' ___    __    ___  ______  __    __       ___       ______    __     _______.   ___    ___  __  .___  ___. ',
+            \' \  \  /  \  /  / /      ||  |  |  |     /   \     /  __  \  (_ )   /       |   \  \  /  / |  | |   \/   | ',
+            \'  \  \/    \/  / |  .----`|  |__|  |    /  ^  \   |  |  |  |  |/   |   (----`    \  \/  /  |  | |  \  /  | ',
+            \'   \          /  |  |     |   __   |   /  /_\  \  |  |  |  |        \   \         \    /   |  | |  |\/|  | ',
+            \'    \   /\   /   |  `----.|  |  |  |  /  _____  \ |  `--`  |    .----)   |         \  /    |  | |  |  |  | ',
+            \'     \_/  \_/     \______||__|  |__| /__/     \__\ \______/     |_______/           \/     |__| |__|  |__| ',
+            \'',
+            \]
 
 let g:startify_session_dir = vim_data_path . "/session"
 " 防止其他插件打开文件后startify仍然存在
@@ -158,6 +171,18 @@ let MRU_Max_Entries = 200
 nmap <F4> :MRU<cr>
 
 "-------------------------------------------------------------------------------
+" jedi-vim {{{2
+" ------------------------------------------------------------------------------
+" jedi-vim配置
+autocmd FileType python setlocal omnifunc=jedi#completions
+" 使用python3
+let g:jedi#force_py_version = 3
+let g:jedi#completions_enabled = 0
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#popup_on_dot = 0
+let g:jedi#completions_command = "<C-N>"
+
+"-------------------------------------------------------------------------------
 " neocomplete {{{2
 " ------------------------------------------------------------------------------
 let g:neocomplete#data_directory = expand(vim_data_path . '/.neocomplete')
@@ -171,25 +196,11 @@ imap <expr><C-u>  neocomplete#cancel_popup()
 
 let g:neocomplete#sources#omni#functions = {'python': 'jedi#completions', 'dot': 'GraphvizComplete'}
 
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-            \ 'default' : '',
-            \ 'c' : $VIM.'/vimfiles/dict/c.dict',
-            \ 'cpp' : $VIM.'/vimfiles/dict/cpp.dict',
-            \ 'vim' : $VIM.'/vimfiles/dict/vim.dict'
-            \ }
-
-" jedi-vim配置
-autocmd FileType python setlocal omnifunc=jedi#completions
-let g:jedi#completions_enabled = 0
-let g:jedi#auto_vim_configuration = 0
-
 if !exists('g:neocomplete#force_omni_input_patterns')
     let g:neocomplete#force_omni_input_patterns = {}
 endif
 let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
 
-let g:jedi#completions_command = "<C-N>"
 
 " 处于文本模式的文件类型
 let g:neocomplete#text_mode_filetypes = {'markdown' : 1, 'gitcommit' : 1, 'text' : 1, }
@@ -200,7 +211,6 @@ call neocomplete#custom#source('file', 'mark', '[文件]')
 call neocomplete#custom#source('member', 'mark', '[成员]')
 call neocomplete#custom#source('omni', 'mark', '[OMNI]')
 call neocomplete#custom#source('syntax', 'mark', '[语法]')
-
 
 "-------------------------------------------------------------------------------
 " neosnippet {{{2
@@ -374,6 +384,17 @@ let g:ctrlp_tjump_only_silent = 1
 " vim-markdown {{{2
 " ------------------------------------------------------------------------------
 let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_conceal = 0
+
+"-------------------------------------------------------------------------------
+" markdown-preview {{{2
+" ------------------------------------------------------------------------------
+if g:computer_enviroment == "grundfos"
+    let g:mkdp_path_to_chrome = expand("~")."\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe"
+else
+    let g:mkdp_path_to_chrome = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+endif
+
 
 "-------------------------------------------------------------------------------
 " vim-gitgutter {{{2
@@ -396,7 +417,7 @@ let g:DevIconsDefaultFolderOpenSymbol = '䄕'
 let g:WebDevIconsUnicodeDecorateFileNodesDefaultSymbol = '䀖'
 let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {} " needed let
 let icons = {
-            \'doc': '䇂', 'docx': '䇂', 'ppt': '䇄', 'pptx': '䇄', 'xls': '䇃', 'xlsx': '䇃', 'pdf': '䇁', 
+            \'doc': '䇂', 'docx': '䇂', 'ppt': '䇄', 'pptx': '䇄', 'xls': '䇃', 'xlsx': '䇃', 'pdf': '䇁',
             \'jpg': '䇅', 'jpeg': '䇅', 'bmp': '䇅', 'png': '䇅', 'gif': '䇅', 'ico': '䇅',
             \'mp3': '䇇', 'ape': '䇇', 'flac': '䇇',
             \'avi': '䇈', 'mkv': '䇈', 'mp4': '䇈', 'flv': '䇈',
