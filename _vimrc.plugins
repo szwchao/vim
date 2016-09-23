@@ -52,8 +52,6 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tacahiroy/ctrlp-funky'
 " ctrlp插件，c实现的查找引擎
 Plug 'JazzCore/ctrlp-cmatcher', {'do': 'install_windows.bat'}
-" ctrlp插件，tag跳转
-Plug 'ivalkeen/vim-ctrlp-tjump'
 " 日历插件
 Plug 'mattn/calendar-vim'
 " jedi python补全
@@ -62,32 +60,26 @@ Plug 'davidhalter/jedi-vim', {'for': 'python'}
 Plug 'hynek/vim-python-pep8-indent', {'for': 'python'}
 " html,xml的%跳转
 Plug 'gregsexton/MatchTag'
-" yank循环
-Plug 'maxbrunsfeld/vim-yankstack'
 " 分隔符补全
-Plug 'Raimondi/delimitMate'
+"Plug 'Raimondi/delimitMate'
+Plug 'jiangmiao/auto-pairs'
 " git wrapper
 Plug 'tpope/vim-fugitive'
 " 基于git显示文件的改动
 Plug 'airblade/vim-gitgutter'
-" gitk
-Plug 'cohama/agit.vim'
 " 为字符串包围/改变或去除引号/括号或者HTML标签
 Plug 'tpope/vim-surround'
-" 各种文件图标
-Plug 'ryanoasis/vim-devicons'
+Plug 'tpope/vim-repeat'
 " 自动着色
 Plug 'lilydjwg/colorizer'
 " 彩色括号
 Plug 'luochen1990/rainbow'
 " 对齐/格式化文本
 Plug 'godlygeek/tabular'
-" 跳转
-Plug 'easymotion/vim-easymotion'
 " markdown
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 " markdown预览
-Plug 'iamcco/markdown-preview.vim'
+Plug 'iamcco/markdown-preview.vim', {'for': 'markdown'}
 " 自动格式化
 Plug 'Chiel92/vim-autoformat'
 " 扩展选择内容
@@ -160,6 +152,8 @@ let g:startify_session_dir = vim_data_path . "/session"
 autocmd User Startified setlocal buftype=
 let g:startify_bookmarks = [{'v': $VIM.'\_vimrc'},
             \]
+" 实时更新
+let g:startify_update_oldfiles = 1
 
 "-------------------------------------------------------------------------------
 " MRU.vim {{{2
@@ -200,6 +194,9 @@ if !exists('g:neocomplete#force_omni_input_patterns')
     let g:neocomplete#force_omni_input_patterns = {}
 endif
 let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
+let g:neocomplete#force_omni_input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
+let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\%(\h\w*\)\?'
 
 
 " 处于文本模式的文件类型
@@ -352,9 +349,14 @@ let g:ctrlp_root_markers = ['.git', 'view.dat', '.svn']
 let g:ctrlp_extensions = ['funky', 'cmd', 'branches', 'modified', 'lastcommit']
 " 扫描文件的最大数量，设置为0时不进行限制
 let g:ctrlp_max_files = 0
+" 修改默认快捷键，使其支持Ctrl+v粘贴
+let g:ctrlp_prompt_mappings = {
+            \ 'AcceptSelection("v")': ['<RightMouse>'],
+            \ 'PrtInsert("c")':       ['<MiddleMouse>', '<insert>', '<c-v>'],
+            \ }
 " 在CtrlP中隐藏的文件和目录
 let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\v[\/]\.(git|hg|svn)$|debug$|release$|objs$',
+            \ 'dir':  '\v[\/]\.(git|hg|svn)$|debug$|release$|objs$|cu3x1Platform_TEST$|node_modules$',
             \ 'file': '\v\.(exe|so|dat|dll|bin|hex|doc|docx|ppt|pptx|xls|xlsx|vsd|mdb|lib|o|ncb|pyc|obj|msi|resources|jpg|bmp|png|temp|tmp)$',
             \ }
 
@@ -372,13 +374,7 @@ nmap <M-s> :CtrlPTag<CR>
 nmap <M-j> :CtrlPBufTag<CR>
 nmap <M-k> :CtrlPChange<CR>
 nmap <M-o> :CtrlPMenu<CR>
-
-"-------------------------------------------------------------------------------
-" vim-ctrlp-tjump {{{2
-" ------------------------------------------------------------------------------
-nnoremap <c-]> :CtrlPtjump<cr>
-vnoremap <c-]> :CtrlPtjumpVisual<cr>
-let g:ctrlp_tjump_only_silent = 1
+nmap <M-i> :CtrlPMdImg<CR>
 
 "-------------------------------------------------------------------------------
 " vim-markdown {{{2
@@ -390,7 +386,7 @@ let g:vim_markdown_conceal = 0
 " markdown-preview {{{2
 " ------------------------------------------------------------------------------
 if g:computer_enviroment == "grundfos"
-    let g:mkdp_path_to_chrome = expand("~")."\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe"
+    let g:mkdp_path_to_chrome = "c:\\Users\\55602\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe"
 else
     let g:mkdp_path_to_chrome = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
 endif
@@ -403,42 +399,6 @@ let g:gitgutter_sign_added = '䁕'
 let g:gitgutter_sign_modified = '䁚'
 let g:gitgutter_sign_removed = '䁖'
 let g:gitgutter_sign_modified_removed = '䁗'
-
-"-------------------------------------------------------------------------------
-" vim-devicons {{{2
-" ------------------------------------------------------------------------------
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:DevIconsEnableFoldersOpenClose = 1
-let g:DevIconsEnableFolderExtensionPatternMatching = 1
-let g:webdevicons_enable_airline_statusline_fileformat_symbols = 0
-
-let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol = '䄔'
-let g:DevIconsDefaultFolderOpenSymbol = '䄕'
-let g:WebDevIconsUnicodeDecorateFileNodesDefaultSymbol = '䀖'
-let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {} " needed let
-let icons = {
-            \'doc': '䇂', 'docx': '䇂', 'ppt': '䇄', 'pptx': '䇄', 'xls': '䇃', 'xlsx': '䇃', 'pdf': '䇁',
-            \'jpg': '䇅', 'jpeg': '䇅', 'bmp': '䇅', 'png': '䇅', 'gif': '䇅', 'ico': '䇅',
-            \'mp3': '䇇', 'ape': '䇇', 'flac': '䇇',
-            \'avi': '䇈', 'mkv': '䇈', 'mp4': '䇈', 'flv': '䇈',
-            \'vim': '㛅', 'txt': '䃶', 'json': '㔋',
-            \'bat': '㚕', 'cmd': '㚕',
-            \'mdb': '㘆',
-            \'sln': '㘌', 'suo': '㘌', 'vcproj': '㘌',
-            \'py': '㘼', 'js': '㙎', 'java': '㘸', 'php': '㘽', 'rb': '䈙',
-            \'md': '㘾', 'html': '㔘', 'xml': '㔘', 'css': '㔔',
-            \'cpp': '㔝', 'c': '㔞', 'h': '㔞',
-            \}
-for key in keys(icons)
-    let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols[key] = icons[key]
-endfor
-let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {} " needed let
-let icons = {
-            \'.gitignore': '䂛', '.gitconfig': '䂛',
-            \}
-for key in keys(icons)
-    let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols[key] = icons[key]
-endfor
 
 "-------------------------------------------------------------------------------
 " vim-bookmarks {{{2

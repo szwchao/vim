@@ -3,17 +3,11 @@
 *.jpeg
 *.bmp
 *.png
+*.ico
 *.pdf
 *.bin
 *.data
 *.dat
-
-# for seagate
-*.lod
-*.loz
-*.RAP
-*.sym
-*.xsl
 
 # for grundfos
 *.bdf
@@ -160,7 +154,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+#lib/
 lib64/
 parts/
 sdist/

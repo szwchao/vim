@@ -5,10 +5,9 @@ vim_dir = os.path.dirname(os.path.dirname(current_dir))
 vim_tool_dir = os.path.join(vim_dir, "tools")
 new_env_vars = {
         "PATH":[
-            "c:\\python27\\",
-            "c:\\Python27\\Scripts",
-            os.path.join(vim_dir, "vim74"),
-            os.path.join(vim_tool_dir, "Git\\cmd"),
+            "c:\\python35\\",
+            "c:\\Python35\\Scripts",
+            os.path.join(vim_dir, "vim80"),
             os.path.join(vim_tool_dir, "MINGW\\bin\\"),
             os.path.join(vim_tool_dir, "GnuWin32\\bin\\"),
             os.path.join(vim_tool_dir, "exe"),
@@ -46,13 +45,13 @@ class Win32Environment:
         except WindowsError:
             value = ''
             self.setenv(name, value)
-            print "set new null environment variable: %s!" % name
+            print("set new null environment variable: %s!" % name)
         return value
 
     def setenv(self, name, value):
         setx = r"c:/windows/System32/setx.exe"
         if os.path.isfile(setx):
-            print "now setting...\n%s=%s" %(name, value)
+            print("now setting...\n%s=%s" %(name, value))
             cmd = setx + ' ' + name + ' "' + value + '"'
             #print cmd
             os.system(cmd)
@@ -64,7 +63,7 @@ class Win32Environment:
             #最后不已;结尾要补上;
             if old_env[-1] != ";":
                 old_env = old_env + ";"
-            print "Old environment variable...\n%s" %(old_env)
+            print("Old environment variable...\n%s" %(old_env))
             #全部转换成小写并按;分割
             old_env_list = old_env.lower().split(";")
         else:
@@ -76,7 +75,7 @@ class Win32Environment:
             #查找新添加字符串是否已经在旧的环境变量里。先转换成小写字母并同时在尾部加\判断
             if (p.lower() not in old_env_list) and ((p+'\\').lower() not in old_env_list):
                 append_str = append_str + p + ";"
-                print "add new string: %s" %append_str
+                print("add new string: %s" %append_str)
         new_str = old_env + append_str
         return new_str
 
