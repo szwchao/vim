@@ -61,7 +61,7 @@ endif
 " 字体 {{{2
 "-------------------------------------------------------------------------------
 if g:platform == 'win'
-    set guifont=YaHei\ Consolas\ Hybrid:h12:cANSI
+    set guifont=YaHei\ Consolas\ Hybrid:h14:cANSI
 elseif g:platform == 'mac'
     set guifont=YaHei\ Consolas\ Hybrid:h18
 else
@@ -72,10 +72,7 @@ endif
 " 配色方案 {{{2
 "-------------------------------------------------------------------------------
 set background=light
-
 colorscheme mycolor
-"colorscheme solarized
-
 
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
@@ -85,7 +82,7 @@ if g:platform == 'win'
     source $VIMRUNTIME/mswin.vim          " 加载mswin.vim
     unmap <C-A>
     behave mswin
-    "set fileformat=dos                    " 文件格式为dos，否则记事本打开有黑框
+    set fileformat=dos                    " 文件格式为dos，否则记事本打开有黑框
 elseif g:platform = 'mac'
     set macmeta
     set fileformat=unix

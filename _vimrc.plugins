@@ -48,8 +48,6 @@ Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 " 全路径模糊文件, 缓冲区, MRU, 标签, ... 检索。
 Plug 'ctrlpvim/ctrlp.vim'
-" ctrlp插件，函数列表
-Plug 'tacahiroy/ctrlp-funky'
 " ctrlp插件，c实现的查找引擎
 Plug 'JazzCore/ctrlp-cmatcher', {'do': 'install_windows.bat'}
 " 日历插件
@@ -61,7 +59,6 @@ Plug 'hynek/vim-python-pep8-indent', {'for': 'python'}
 " html,xml的%跳转
 Plug 'gregsexton/MatchTag'
 " 分隔符补全
-"Plug 'Raimondi/delimitMate'
 Plug 'jiangmiao/auto-pairs'
 " git wrapper
 Plug 'tpope/vim-fugitive'
@@ -76,14 +73,15 @@ Plug 'lilydjwg/colorizer'
 Plug 'luochen1990/rainbow'
 " 对齐/格式化文本
 Plug 'godlygeek/tabular'
+" 缩进线
+Plug 'Yggdroot/indentLine'
+" 更好的缩进
+Plug 'pseewald/vim-anyfold'
 " markdown
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 " markdown预览
 Plug 'iamcco/markdown-preview.vim', {'for': 'markdown'}
-" 自动格式化
-Plug 'Chiel92/vim-autoformat'
-" 扩展选择内容
-Plug 'terryma/vim-expand-region'
+" 供其它plugin使用，避免开小窗口
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-shell'
 
@@ -227,11 +225,10 @@ let g:tagbar_sort = 0
 let g:tagbar_show_visibility = 1
 let g:tagbar_show_linenumbers = 1
 
-" delimitMate {{{2
 "-------------------------------------------------------------------------------
-" python docstring ", '
-au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
-au FileType markdown let b:delimitMate_nesting_quotes = ['`']
+" auto-pairs {{{2
+"-------------------------------------------------------------------------------
+let AutoPairsCenterLine = 0
 
 "-------------------------------------------------------------------------------
 " OmniCppComplete {{{2
@@ -271,11 +268,25 @@ nmap <M-,> ,cA
 " rainbow {{{2
 " ------------------------------------------------------------------------------
 let g:rainbow_active = 1
-
-"-------------------------------------------------------------------------------
-" yank-stack {{{2
-" ------------------------------------------------------------------------------
-let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 'y']
+let g:rainbow_conf = {
+            \	'guifgs': ['royalblue3', 'darkorange3', 'MediumPurple', 'firebrick'],
+            \	'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+            \	'operators': '_,_',
+            \	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+            \	'separately': {
+            \		'*': {},
+            \		'tex': {
+            \			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
+            \		},
+            \		'vim': {
+            \			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
+            \		},
+            \		'html': {
+            \			'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
+            \		},
+            \		'css': 0,
+            \	}
+            \}
 
 "-------------------------------------------------------------------------------
 " Vim-Airline {{{2
@@ -363,8 +374,6 @@ let g:ctrlp_custom_ignore = {
 " 为CtrlP设置一个额外的模糊匹配函数
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 
-let g:ctrlp_funky_syntax_highlight = 1
-
 nmap <M-d> :CtrlPBuffer<CR>
 nmap <M-f> :CtrlPCurFile<CR>
 nmap <M-q> :CtrlPQuickfix<CR>
@@ -385,12 +394,7 @@ let g:vim_markdown_conceal = 0
 "-------------------------------------------------------------------------------
 " markdown-preview {{{2
 " ------------------------------------------------------------------------------
-if g:computer_enviroment == "grundfos"
-    let g:mkdp_path_to_chrome = "c:\\Users\\55602\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe"
-else
-    let g:mkdp_path_to_chrome = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
-endif
-
+let g:mkdp_path_to_chrome = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
 
 "-------------------------------------------------------------------------------
 " vim-gitgutter {{{2
@@ -399,6 +403,8 @@ let g:gitgutter_sign_added = '䁕'
 let g:gitgutter_sign_modified = '䁚'
 let g:gitgutter_sign_removed = '䁖'
 let g:gitgutter_sign_modified_removed = '䁗'
+" 关掉async模式，有bug
+let g:gitgutter_async = 0
 
 "-------------------------------------------------------------------------------
 " vim-bookmarks {{{2
@@ -417,12 +423,25 @@ highlight link BookmarkAnnotationSign   Special
 highlight link BookmarkLine             BookmarkLineColor
 highlight link BookmarkAnnotationLine   BookmarkLineColor
 
-
 nmap mm <Plug>BookmarkToggle
 nmap ma <Plug>BookmarkAnnotate
 nmap ms <Plug>BookmarkShowAll
 nmap mc <Plug>BookmarkClearAll
 nmap <F2> <Plug>BookmarkNext
+
+"-------------------------------------------------------------------------------
+" indentLine {{{2
+" ------------------------------------------------------------------------------
+"let g:indentLine_char = '┊'
+let g:indentLine_faster = 1
+"let g:indentLine_conceallevel = 0
+let g:indentLine_fileTypeExclude = ['json']
+
+"-------------------------------------------------------------------------------
+" anyfold {{{2
+" ------------------------------------------------------------------------------
+let anyfold_activate=1
+let anyfold_fold_comments=1
 
 " }}}2
 " vim:fdm=marker:fmr={{{,}}} foldlevel=1:
