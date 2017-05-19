@@ -13,6 +13,7 @@ new_env_vars = {
             os.path.join(vim_tool_dir, "exe"),
             os.path.join(vim_tool_dir, "ag"),
             os.path.join(vim_tool_dir, "gtags\\bin"),
+            os.path.join(vim_tool_dir, "putty"),
             ],
         "GRAPHVIZ_DOT":[
             os.path.join(vim_tool_dir, "Graphviz\\bin\\dot.exe"),

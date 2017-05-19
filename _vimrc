@@ -42,7 +42,7 @@ if has("win32")
 else
     set fileencoding=utf-8
 endif
-"解决consle输出乱码
+"解决console输出乱码
 language messages zh_CN.utf-8
 "set encoding=utf-8
 "let &termencoding=&encoding
@@ -53,8 +53,14 @@ set helplang=cn
 "-------------------------------------------------------------------------------
 " 插件及设置 {{{2
 "-------------------------------------------------------------------------------
-if filereadable(expand("$VIM/_vimrc.plugins"))
-  source $VIM/_vimrc.plugins
+if g:platform == 'win'
+    if filereadable(expand("$VIM/_vimrc.plugins"))
+        source $VIM/_vimrc.plugins
+    endif
+else
+    if filereadable(expand("~/_vimrc.plugins"))
+        source ~/_vimrc.plugins
+    endif
 endif
 
 "-------------------------------------------------------------------------------
@@ -65,14 +71,16 @@ if g:platform == 'win'
 elseif g:platform == 'mac'
     set guifont=YaHei\ Consolas\ Hybrid:h18
 else
-    set guifont=YaHei\ Consolas\ Hybrid\ 12
+    set guifont=Source\ Code\ Pro\ for\ Powerline\ 14
+    "set guifont=YaHei\ Consolas\ Hybrid\ 14
 endif
 
 "-------------------------------------------------------------------------------
 " 配色方案 {{{2
 "-------------------------------------------------------------------------------
-set background=light
+"set background=light
 colorscheme mycolor
+"colorscheme solarized
 
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
@@ -83,7 +91,7 @@ if g:platform == 'win'
     unmap <C-A>
     behave mswin
     set fileformat=dos                    " 文件格式为dos，否则记事本打开有黑框
-elseif g:platform = 'mac'
+elseif g:platform == 'mac'
     set macmeta
     set fileformat=unix
 else
@@ -96,7 +104,11 @@ set wildmenu                              " 在输入命令时列出匹配项目
 set noerrorbells                          " 无响铃
 set novisualbell                          " 使用可视响铃代替鸣叫
 set history=500                           " history文件中需要记录的行数
-set clipboard+=unnamed                    " 与Windows共享剪贴板
+if g:platform == 'win'
+    set clipboard+=unnamed                    " 与Windows共享剪贴板
+else
+    set clipboard=unnamedplus
+endif
 set smarttab                              " 智能tab，退格时删除tab长度
 set expandtab                             " 插入<Tab>时使用空格
 set tabstop=4                             " 设置tab键的宽度
@@ -147,6 +159,7 @@ if g:computer_enviroment == "grundfos"
     autocmd FileType c,cpp,h set shiftwidth=2
     autocmd FileType python set tabstop=4
     autocmd FileType python set shiftwidth=4
+    set viminfo+=nc:/local/temp/vim_data/viminfo
     " Alt+t用TotalCommander打开当前文件
     "nmap <M-t> :!start <C-R>=$g:totalcommander_exe /o /t /l '%:p'
     nmap <M-t> :!start "c:\local\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
@@ -172,6 +185,14 @@ set smartindent                           " 智能对齐方式
 set autoindent                            " 自动对齐
 set cindent                               " C格式自动缩进
 set ai!                                   " 设置自动缩进
+
+"-------------------------------------------------------------------------------
+" 代码折叠 {{{2
+"-------------------------------------------------------------------------------
+"set foldmethod=syntax
+set foldmethod=indent
+set foldenable
+set foldlevel=100
 
 "-------------------------------------------------------------------------------
 " cscope设置 {{{2
@@ -201,8 +222,6 @@ set laststatus=2                          " 显示状态栏 (默认值为 1, 无
 "-------------------------------------------------------------------------------
 "当vimrc改变时自动重新载入vimrc
 "autocmd! bufwritepost _vimrc source $VIM\\_vimrc
-"当vimrc改变时自动更新修改时间
-"autocmd BufWritePre * call LastModified()
 " 彻底关闭警告声
 autocmd VimEnter * set vb t_vb=
 if g:platform == 'win'
@@ -212,7 +231,7 @@ endif
 " 让打开文件时光标自动到上次退出该文件时的光标所在位置
 autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif
 " 缓冲区写入文件的时候自动检查文件类型
-"autocmd BufWritePost * filet detect
+autocmd BufWritePost * filet detect
 " 取消换行时自动添加注释符
 autocmd FileType * setl fo-=cro
 " help文件不隐藏||,**
@@ -225,8 +244,6 @@ autocmd FileType qf :call QuickfixMap()
 autocmd FileType markdown :call MarkdownMap()
 " txt, cue, lrc
 autocmd BufNewFile,BufRead *.txt    setf txt
-autocmd BufNewFile,BufRead *.cue    setf cue
-autocmd BufNewFile,BufRead *.lrc    setf lrc
 " python的折叠方式
 autocmd FileType python set foldmethod=indent
 " html和css文件的折叠方式
@@ -266,14 +283,6 @@ inoremap <expr> <CR>       pumvisible()?"\<C-Y>":"\<CR>"
 inoremap <expr> <C-J>      pumvisible()?"\<PageDown>\<C-N>\<C-P>":"\<C-X><C-O>"
 inoremap <expr> <C-K>      pumvisible()?"\<PageUp>\<C-P>\<C-N>":"\<C-K>"
 "inoremap <expr> <C-U>      pumvisible()?"\<C-E>":"\<C-U>"
-
-"-------------------------------------------------------------------------------
-" 代码折叠 {{{2
-"-------------------------------------------------------------------------------
-"set foldmethod=syntax
-set foldmethod=indent
-set foldenable
-set foldlevel=100
 
 "===============================================================================
 " 自定义快捷键 {{{1
@@ -420,6 +429,8 @@ nmap <S-LEFT> <ESC>:NERDTreeToggle<CR>
 nmap <S-RIGHT> <ESC>:TagbarToggle<CR>
 " Shift+UP打开Calendar
 nmap <S-UP> <ESC>:Calendar<CR>
+" Shift+DOWN打开Quickfix
+nmap <S-DOWN> <ESC>:cw<CR>
 
 " Insert下Alt+h,j,k,l移动光标
 imap <M-h> <LEFT>
