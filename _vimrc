@@ -4,7 +4,7 @@
 "         Email: szwchao@gmail.com
 "         Modified: 07-03-2016 4:39:10 PM
 "===============================================================================
-"设置 {{{1
+" 设置 {{{1
 "===============================================================================
 
 "-------------------------------------------------------------------------------
@@ -12,23 +12,13 @@
 "-------------------------------------------------------------------------------
 if (has("win32") || has("win95") || has("win64") || has("win16"))
     let g:platform = 'win'
-    let g:slash = '\'
 elseif (has("mac"))
     let g:platform = 'mac'
-    let g:slash = '/'
 else
     let g:platform = 'linux'
-    let g:slash = '/'
 endif
 
-if isdirectory("c:/Users/55602")
-    let g:computer_enviroment = "grundfos"
-    let temp_dir = "c:/local/temp/"
-else
-    let g:computer_enviroment = "normal"
-    let temp_dir = expand("~") . "//"
-endif
-let vim_data_path = expand(temp_dir . "vim_data")
+let vim_data_path = expand("~" . "/vim_data")
 if !isdirectory(vim_data_path)
     call mkdir(vim_data_path)
 endif
@@ -44,9 +34,7 @@ else
 endif
 "解决console输出乱码
 language messages zh_CN.utf-8
-"set encoding=utf-8
-"let &termencoding=&encoding
-"set fileencodings=ucs-bom,utf-8,gbk,cp936
+let &termencoding=&encoding
 set langmenu=zh_CN.UTF-8
 set helplang=cn
 
@@ -67,20 +55,24 @@ endif
 " 字体 {{{2
 "-------------------------------------------------------------------------------
 if g:platform == 'win'
-    set guifont=YaHei\ Consolas\ Hybrid:h14:cANSI
+    set guifont=SauceCodePro_NF:h14
+    set guifontwide=YaHei\ Consolas\ Hybrid:h14:cANSI
 elseif g:platform == 'mac'
-    set guifont=YaHei\ Consolas\ Hybrid:h18
+    set guifont=SauceCodePro\ NF:h18
 else
-    set guifont=Source\ Code\ Pro\ for\ Powerline\ 14
-    "set guifont=YaHei\ Consolas\ Hybrid\ 14
+    set guifont=SauceCodePro\ NF\ 13
 endif
 
 "-------------------------------------------------------------------------------
 " 配色方案 {{{2
 "-------------------------------------------------------------------------------
-"set background=light
-colorscheme mycolor
-"colorscheme solarized
+if (has("gui_running"))
+    "set background=light
+    colorscheme mycolor
+else
+    set background=light
+    colorscheme solarized
+endif
 
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
@@ -91,9 +83,6 @@ if g:platform == 'win'
     unmap <C-A>
     behave mswin
     set fileformat=dos                    " 文件格式为dos，否则记事本打开有黑框
-elseif g:platform == 'mac'
-    set macmeta
-    set fileformat=unix
 else
     set fileformat=unix
 endif
@@ -104,10 +93,10 @@ set wildmenu                              " 在输入命令时列出匹配项目
 set noerrorbells                          " 无响铃
 set novisualbell                          " 使用可视响铃代替鸣叫
 set history=500                           " history文件中需要记录的行数
-if g:platform == 'win'
-    set clipboard+=unnamed                    " 与Windows共享剪贴板
+if has('unnamedplus')
+    set clipboard=unnamed,unnamedplus     " Linux共享系统剪贴板
 else
-    set clipboard=unnamedplus
+    set clipboard+=unnamed                " Windows和Mac共享系统剪贴板
 endif
 set smarttab                              " 智能tab，退格时删除tab长度
 set expandtab                             " 插入<Tab>时使用空格
@@ -133,46 +122,24 @@ filetype on                               " 自动检测文件类型
 filetype plugin on                        " 特定文件类型加载插件
 filetype indent on                        " 特定文件类型加载缩进
 
-"set viminfo+=n~/vim_data/viminfo
-let &backupdir=expand(temp_dir . "vim_data/vimbackup")
+set viminfo+=n~/vim_data/viminfo
+let &backupdir=expand(vim_data_path . "/vimbackup")
 if !isdirectory(&backupdir)
     call mkdir(&backupdir)
 endif
 set backup                                " 打开自动备份功能
 
 if has("persistent_undo")
-    let &undodir=expand(temp_dir . "vim_data/vimundo")
+    let &undodir=expand(vim_data_path . "/vimundo")
     if !isdirectory(&undodir)
         call mkdir(&undodir)
     endif
     set undofile
 endif
 
-let &viewdir=expand(temp_dir . "vim_data/view")
+let &viewdir=expand(vim_data_path . "/view")
 if !isdirectory(&viewdir)
     call mkdir(&viewdir)
-endif
-
-if g:computer_enviroment == "grundfos"
-    " tab长度
-    autocmd FileType c,cpp,h set tabstop=2
-    autocmd FileType c,cpp,h set shiftwidth=2
-    autocmd FileType python set tabstop=4
-    autocmd FileType python set shiftwidth=4
-    set viminfo+=nc:/local/temp/vim_data/viminfo
-    " Alt+t用TotalCommander打开当前文件
-    "nmap <M-t> :!start <C-R>=$g:totalcommander_exe /o /t /l '%:p'
-    nmap <M-t> :!start "c:\local\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
-    " Alt+c用cmder打开当前文件所在目录
-    nmap <M-c> :!start "c:\local\Software\cmder\Cmder.exe" "%:p:h"<CR>
-else
-    autocmd FileType c,cpp,h set tabstop=4
-    autocmd FileType c,cpp,h set shiftwidth=4
-    autocmd FileType python set tabstop=4
-    autocmd FileType python set shiftwidth=4
-    nmap <M-t> :!start "D:\Software\TotalCMD\TOTALCMD64.EXE" /o /t /l "%:p"<CR>
-    " Alt+c用cmder打开当前文件所在目录
-    nmap <M-c> :!start "d:\Software\cmder\Cmder.exe" "%:p:h"<CR>
 endif
 
 "-------------------------------------------------------------------------------
@@ -207,8 +174,10 @@ set csto=1                                " |:cstag| 命令查找的次序。0:c
 if has('mouse')
   set mouse=a
 endif
-set cursorline                            " 增加鼠标水平线
-set cursorcolumn                          " 增加鼠标垂直线
+if g:platform == 'win'
+  set cursorline                            " 增加鼠标水平线
+  set cursorcolumn                          " 增加鼠标垂直线
+endif
 
 "-------------------------------------------------------------------------------
 " 状态栏 {{{2
@@ -234,6 +203,10 @@ autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `
 autocmd BufWritePost * filet detect
 " 取消换行时自动添加注释符
 autocmd FileType * setl fo-=cro
+" tab长度
+autocmd FileType c,cpp,h set tabstop=2
+" 缩进长度
+autocmd FileType c,cpp,h set shiftwidth=2
 " help文件不隐藏||,**
 autocmd FileType help setl cole=0
 " help文件ESC退出
@@ -256,6 +229,8 @@ au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=markdow
 autocmd FileType python setlocal completeopt-=preview
 " gitcommit设置拼写检查
 autocmd Filetype gitcommit setlocal spell
+" gitcommit将光标移至第一行
+autocmd FileType gitcommit autocmd! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 
 "-------------------------------------------------------------------------------
 " 查找/替换相关的设置 {{{2
@@ -336,7 +311,7 @@ else
     "nmap <silent> <leader>rr :source ~/.vimrc<cr>
     " <leader>e编辑vimrc
     nmap <silent> <leader>e :e ~/.vimrc<cr>
-    nmap <silent> <leader>ep :e ~/.vimrc.plugins<cr>
+    nmap <silent> <leader>ep :e ~/_vimrc.plugins<cr>
 endif
 
 " 复制到系统剪贴板
@@ -355,14 +330,14 @@ nmap <leader>o :silent !explorer %:p:h<CR>
 nmap <leader>l :ToggleNuMode<CR>
 
 exe "nmap <leader>ww :<C-u>CtrlP " . "c:\\local\\My\\blog\\source\\_posts\\" . "<CR>"
-nnoremap <Leader>f :CtrlPFunky<Cr>
+" 列出当前单词所在行并提供跳转
+nmap <Leader>f [I:let nr = input("跳转到：")<Bar>exe "normal " . nr ."[\t"<CR>
 
 "-------------------------------------------------------------------------------
 " Fx相关 {{{2
 "-------------------------------------------------------------------------------
 " F1加载项目
 nmap <F1> :call StartMyProject()<CR>
-nmap <C-F1> :call StartVCProject()<CR>
 " F3查找
 nmap <F3> /\<<C-R><C-W>\><CR>
 " Alt+F3多文件内vimgrep查找
@@ -375,13 +350,19 @@ nmap <F5> :call CompileRun()<CR>
 nmap <C-F5> :call Debug()<CR>
 " F6 FindEverything
 nmap <F6> :FE<CR>
-" F7更换配色方案
-nmap <F7> <ESC>:ToggleColorScheme<CR>
+" F7切换背景
+nmap <F7> <ESC>:ToggleBackground<CR>
+" Ctrl+F7更换配色方案
+nmap <C-F7> <ESC>:ToggleColorScheme<CR>
 " F8为函数添加注释(DoxygenToolkit.vim)
 nmap <F8> :Dox<CR>
 autocmd FileType python nmap <F8> :PD<CR>
 " F11全屏
-nmap <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+if g:platform == 'win'
+    nmap <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+else
+    map <silent> <F11> :call system("wmctrl -ir " . v:windowid . " -b toggle,fullscreen")<CR>
+endif    
 " F12切换c/h文件(fswitch.vim)
 nmap <silent> <F12> :FSHere<CR>
 " Ctrl+F12生成tags
@@ -427,8 +408,6 @@ nmap <C-PageDown> <C-W>-
 nmap <S-LEFT> <ESC>:NERDTreeToggle<CR>
 " Shift+RIGHT打开Tlist
 nmap <S-RIGHT> <ESC>:TagbarToggle<CR>
-" Shift+UP打开Calendar
-nmap <S-UP> <ESC>:Calendar<CR>
 " Shift+DOWN打开Quickfix
 nmap <S-DOWN> <ESC>:cw<CR>
 
@@ -455,6 +434,13 @@ vmap { <Esc>:call VisualWrap('{', '}')<CR>
 "vmap < <Esc>:call VisualWrap('<', '>')<CR>
 vmap " <Esc>:call VisualWrap('"', '"')<CR>
 vmap ' <Esc>:call VisualWrap("'", "'")<CR>
+
+if g:platform == 'win'
+    " Alt+t用TotalCommander打开当前文件
+    nmap <M-t> :!start TOTALCMD64.EXE /o /t /l "%:p"<CR>
+    " Alt+c用cmder打开当前文件所在目录
+    nmap <M-c> :!start Cmder "%:p:h"<CR>
+endif
 
 "}}}2
 
