@@ -42,8 +42,12 @@ set helplang=cn
 " 插件及设置 {{{2
 "-------------------------------------------------------------------------------
 if g:platform == 'win'
-    if filereadable(expand("$VIM/_vimrc.plugins"))
-        source $VIM/_vimrc.plugins
+    if has('nvim')
+        source ~/AppData/Local/nvim/_vimrc.plugins
+    else
+        if filereadable(expand("$VIM/_vimrc.plugins"))
+            source $VIM/_vimrc.plugins
+        endif
     endif
 else
     if filereadable(expand("~/_vimrc.plugins"))
@@ -60,19 +64,15 @@ if g:platform == 'win'
 elseif g:platform == 'mac'
     set guifont=SauceCodePro\ NF:h18
 else
-    set guifont=SauceCodePro\ NF\ 13
+    set guifont=SauceCodePro\ Nerd\ Font\ Mono\ 13
 endif
 
 "-------------------------------------------------------------------------------
 " 配色方案 {{{2
 "-------------------------------------------------------------------------------
-if (has("gui_running"))
-    "set background=light
-    colorscheme mycolor
-else
-    set background=light
-    colorscheme solarized
-endif
+set termguicolors
+set background=dark
+colorscheme mycolor
 
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
@@ -84,6 +84,12 @@ if g:platform == 'win'
     behave mswin
     set fileformat=dos                    " 文件格式为dos，否则记事本打开有黑框
 else
+    exe 'inoremap <script> <C-V> <C-G>u' . paste#paste_cmd['i']
+    exe 'vnoremap <script> <C-V> ' . paste#paste_cmd['v']
+    noremap <C-Q>		<C-V>
+    noremap <C-S>		:update<CR>
+    vnoremap <C-S>		<C-C>:update<CR>
+    inoremap <C-S>		<C-O>:update<CR>
     set fileformat=unix
 endif
 set nocompatible                          " 去掉关vi一致性模式，避免以前版本的一些bug和局限
@@ -122,7 +128,10 @@ filetype on                               " 自动检测文件类型
 filetype plugin on                        " 特定文件类型加载插件
 filetype indent on                        " 特定文件类型加载缩进
 
-set viminfo+=n~/vim_data/viminfo
+if (!has('nvim'))
+    set viminfo+=n~/vim_data/viminfo
+endif
+
 let &backupdir=expand(vim_data_path . "/vimbackup")
 if !isdirectory(&backupdir)
     call mkdir(&backupdir)
@@ -145,7 +154,7 @@ endif
 "-------------------------------------------------------------------------------
 " 编程相关的设置 {{{2
 "-------------------------------------------------------------------------------
-set completeopt=longest,menu              " 关掉智能补全时的预览窗口
+set completeopt=longest,menu,noinsert     " 关掉智能补全时的预览窗口
 set showmatch                             " 设置匹配模式，类似当输入一个左括号时会匹配相应的那个右括号
 set matchtime=0                           " 配对括号的显示时间
 set smartindent                           " 智能对齐方式
@@ -174,10 +183,8 @@ set csto=1                                " |:cstag| 命令查找的次序。0:c
 if has('mouse')
   set mouse=a
 endif
-if g:platform == 'win'
-  set cursorline                            " 增加鼠标水平线
-  set cursorcolumn                          " 增加鼠标垂直线
-endif
+set cursorline                            " 增加鼠标水平线
+set cursorcolumn                          " 增加鼠标垂直线
 
 "-------------------------------------------------------------------------------
 " 状态栏 {{{2
@@ -301,15 +308,14 @@ nmap S :ToggleQuickfixWindow<CR>
 " <Leader>相关 {{{2
 "-------------------------------------------------------------------------------
 if g:platform == 'win'
-    " <leader>rr重新载入vimrc
-    "nmap <silent> <leader>rr :source $VIM\\_vimrc<cr>
-    " <leader>e编辑vimrc
-    nmap <silent> <leader>e :e $VIM\\_vimrc<cr>
-    nmap <silent> <leader>ep :e $VIM\\_vimrc.plugins<cr>
+    if has('nvim')
+        nmap <silent> <leader>e :e ~/AppData/Local/nvim/init.vim<cr>
+        nmap <silent> <leader>ep :e ~/AppData/Local/nvim/_vimrc.plugins<cr>
+    else
+        nmap <silent> <leader>e :e $VIM\\_vimrc<cr>
+        nmap <silent> <leader>ep :e $VIM\\_vimrc.plugins<cr>
+    endif
 else
-    " <leader>rr重新载入vimrc
-    "nmap <silent> <leader>rr :source ~/.vimrc<cr>
-    " <leader>e编辑vimrc
     nmap <silent> <leader>e :e ~/.vimrc<cr>
     nmap <silent> <leader>ep :e ~/_vimrc.plugins<cr>
 endif
@@ -329,7 +335,7 @@ nmap <leader>o :silent !explorer %:p:h<CR>
 " 切换行号/相对行号
 nmap <leader>l :ToggleNuMode<CR>
 
-exe "nmap <leader>ww :<C-u>CtrlP " . "c:\\local\\My\\blog\\source\\_posts\\" . "<CR>"
+exe "nmap <leader>ww :<C-u>CtrlP " . "c:\\personal\\My\\blog\\source\\_posts\\" . "<CR>"
 " 列出当前单词所在行并提供跳转
 nmap <Leader>f [I:let nr = input("跳转到：")<Bar>exe "normal " . nr ."[\t"<CR>
 
@@ -391,8 +397,16 @@ nmap <C-\>i :cs find i <C-R>=expand("%")<CR><CR>
 "-------------------------------------------------------------------------------
 " 其它 {{{2
 "-------------------------------------------------------------------------------
+if g:platform == 'win'
+    let g:python_host_prog  = 'c:/Python27/python.exe'
+    let g:python3_host_prog = 'c:/Python36/python.exe'
+else
+    let g:python_host_prog  = '/usr/bin/python'
+    let g:python3_host_prog = '/usr/bin/python3'
+endif
+
 " 按Alt+m即可切换显示或者关闭显示菜单栏和工具栏.
-map <silent> <M-m> :if &guioptions =~# 'T' <Bar>
+map <silent> <S-M-m> :if &guioptions =~# 'T' <Bar>
          \set guioptions-=T <Bar>
          \set guioptions-=m <bar>
          \else <Bar>
