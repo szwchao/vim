@@ -49,8 +49,8 @@ if g:platform == 'win'
         source ~/.vim/.vimrc.plugins
     endif
 else
-    if filereadable(expand("~/_vimrc.plugins"))
-        source ~/_vimrc.plugins
+    if filereadable(expand("~/.vim/.vimrc.plugins"))
+        source ~/.vim/.vimrc.plugins
     endif
 endif
 
@@ -71,7 +71,9 @@ endif
 "-------------------------------------------------------------------------------
 set termguicolors
 set background=dark
-colorscheme mycolor
+try
+    colorscheme mycolor
+endtry
 
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
