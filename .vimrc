@@ -314,12 +314,12 @@ if g:platform == 'win'
         nmap <silent> <leader>e :e ~/AppData/Local/nvim/init.vim<cr>
         nmap <silent> <leader>ep :e ~/AppData/Local/nvim/_vimrc.plugins<cr>
     else
-        nmap <silent> <leader>e :e $VIM\\_vimrc<cr>
-        nmap <silent> <leader>ep :e $VIM\\_vimrc.plugins<cr>
+        nmap <silent> <leader>e :e ./vim/.vimrc<cr>
+        nmap <silent> <leader>ep :e ./vim/.vimrc.plugins<cr>
     endif
 else
     nmap <silent> <leader>e :e ~/.vimrc<cr>
-    nmap <silent> <leader>ep :e ~/_vimrc.plugins<cr>
+    nmap <silent> <leader>ep :e ~/.vimrc.plugins<cr>
 endif
 
 " 复制到系统剪贴板
