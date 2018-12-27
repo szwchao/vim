@@ -45,9 +45,8 @@ if g:platform == 'win'
     if has('nvim')
         source ~/AppData/Local/nvim/_vimrc.plugins
     else
-        if filereadable(expand("$VIM/_vimrc.plugins"))
-            source $VIM/_vimrc.plugins
-        endif
+        set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME
+        source ~/.vim/.vimrc.plugins
     endif
 else
     if filereadable(expand("~/_vimrc.plugins"))
