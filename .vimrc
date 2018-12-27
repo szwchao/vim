@@ -73,6 +73,7 @@ set termguicolors
 set background=dark
 try
     colorscheme mycolor
+catch
 endtry
 
 "-------------------------------------------------------------------------------
