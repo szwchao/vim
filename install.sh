@@ -6,6 +6,16 @@ function get_platform_type()
     echo $(uname)
 }
 
+function clone_repo()
+{
+    rm -rf ~/.vim_bak
+    mv ~/.vim ~/.vim_bak
+    git clone https://github.com/szwchao/vim ~/.vim
+    cd ~/.vim
+    git fetch origin test:test
+    git checkout test
+}
+
 # 获取linux平台类型，ubuntu还是centos
 function get_linux_platform_type()
 {
@@ -18,11 +28,6 @@ function get_linux_platform_type()
     else
         echo "invaild"
     fi
-}
-
-function clone_repo()
-{
-    git clone https://github.com/szwchao/vim ~/.vim   
 }
 
 # 安装mac平台必要软件
@@ -42,10 +47,10 @@ function install_prepare_software_on_ubuntu()
 function copy_files()
 {
     rm -rf ~/.vimrc
-    ln -s ${PWD}/.vimrc ~
+    ln -s ~/.vim/.vimrc ~/.vim
 
-    rm -rf ~/.vimrc.plugins
-    ln -s  ${PWD}/.vimrc.plugins ~
+    rm -rf ~/.vimrc.local
+    ln -s ~/.vim/.vimrc.plugins ~/.vim
 }
 
 # 安装mac平台字体
@@ -58,6 +63,7 @@ function install_fonts_on_mac()
 # 安装linux平台字体
 function install_fonts_on_linux()
 {
+    mkdir ~/.fonts
     curl -fLo ~/.fonts/Sauce\ Code\ Pro\ Nerd\ Font\ Complete\ Mono.ttf --create-dirs https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete%20Mono.ttf
 
     fc-cache -vf ~/.fonts
@@ -120,9 +126,9 @@ function begin_install_vimplus()
 # 在ubuntu发行版安装vimplus
 function install_vimplus_on_ubuntu()
 {
-    #install_prepare_software_on_ubuntu
+    install_prepare_software_on_ubuntu
     download_font
-    #begin_install_vimplus
+    begin_install_vimplus
 }
 
 # 在linux平台安装vimplus
