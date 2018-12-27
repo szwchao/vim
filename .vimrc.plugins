@@ -462,12 +462,14 @@ let g:gutentags_modules = ['ctags', 'cscope']
 let g:gutentags_cache_dir = expand('~/.cache/tags')
 "let g:gutentags_file_list_command = 'dir /B /S /A-D /ON'
 let g:gutentags_ctags_exclude = ['cu3x1App_SRC']
-let g:gutentags_file_list_command = {
-                             \ 'markers': {
-                                 \ '.git': 'dir /B /S /A-D /ON',
-                                 \ '.hg': 'hg files',
-                                 \ },
-                             \ }
+if g:platform == 'win'
+    let g:gutentags_file_list_command = {
+                \ 'markers': {
+                \ '.git': 'dir /B /S /A-D /ON',
+                \ '.hg': 'hg files',
+                \ },
+                \ }
+endif
 
 " }}}2
 " vim:fdm=marker:fmr={{{,}}} foldlevel=1:
