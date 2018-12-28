@@ -96,7 +96,7 @@ function main()
 {
     if [ "$(uname)" == "Darwin" ]; then
         install_vim_on_mac
-    elif [ "$(uname)" == "Darwin" ]; then
+    elif [ "$(uname)" == "Linux" ]; then
         install_vim_on_linux
     else
         echo "not support platform type: "${type}
