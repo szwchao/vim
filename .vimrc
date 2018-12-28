@@ -45,13 +45,12 @@ if g:platform == 'win'
     if has('nvim')
         source ~/AppData/Local/nvim/_vimrc.plugins
     else
-        if filereadable(expand("$VIM/_vimrc.plugins"))
-            source $VIM/_vimrc.plugins
-        endif
+        set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME
+        source ~/.vim/.vimrc.plugins
     endif
 else
-    if filereadable(expand("~/_vimrc.plugins"))
-        source ~/_vimrc.plugins
+    if filereadable(expand("~/.vim/.vimrc.plugins"))
+        source ~/.vim/.vimrc.plugins
     endif
 endif
 
@@ -72,7 +71,10 @@ endif
 "-------------------------------------------------------------------------------
 set termguicolors
 set background=dark
-colorscheme mycolor
+try
+    colorscheme mycolor
+catch
+endtry
 
 "-------------------------------------------------------------------------------
 " 一般设置 {{{2
@@ -312,12 +314,12 @@ if g:platform == 'win'
         nmap <silent> <leader>e :e ~/AppData/Local/nvim/init.vim<cr>
         nmap <silent> <leader>ep :e ~/AppData/Local/nvim/_vimrc.plugins<cr>
     else
-        nmap <silent> <leader>e :e $VIM\\_vimrc<cr>
-        nmap <silent> <leader>ep :e $VIM\\_vimrc.plugins<cr>
+        nmap <silent> <leader>e :e ~/.vim/.vimrc<cr>
+        nmap <silent> <leader>ep :e ~/.vim/.vimrc.plugins<cr>
     endif
 else
     nmap <silent> <leader>e :e ~/.vimrc<cr>
-    nmap <silent> <leader>ep :e ~/_vimrc.plugins<cr>
+    nmap <silent> <leader>ep :e ~/.vimrc.plugins<cr>
 endif
 
 " 复制到系统剪贴板

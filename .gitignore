@@ -1,12 +1,3 @@
 *.pyc
-tools/Everything
-tools/Git
-tools/MINGW
-tools/Graphviz
-vim74
-vim80
-vimfiles/vundle
-vimfiles/backup
-vimfiles/plug
-/vimfiles/autoload/plug.vim
-/vimfiles/autoload/pathogen.vim
+autoload
+plug
