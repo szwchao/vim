@@ -27,9 +27,9 @@ IF NOT EXIST "%APP_PATH%/autoload" (
     call curl -fLo %APP_PATH%/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 )
 
-REM IF NOT EXIST "%APP_PATH%/fonts" (
+IF NOT EXIST "%APP_PATH%/fonts" (
     call curl -fLo %APP_PATH%/fonts/SauceCodeProNerdFontCompleteMonoWindowsCompatible.ttf --create-dirs "https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%%20Code%%20Pro%%20Nerd%%20Font%%20Complete%%20Mono%%20Windows%%20Compatible.ttf"
-REM )
+)
 
 call vim -c "PlugInstall" -c "q" -c "q"
 chdir /d "%ORIGINAL_DIR%"
