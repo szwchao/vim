@@ -314,8 +314,8 @@ if g:platform == 'win'
         nmap <silent> <leader>e :e ~/AppData/Local/nvim/init.vim<cr>
         nmap <silent> <leader>ep :e ~/AppData/Local/nvim/_vimrc.plugins<cr>
     else
-        nmap <silent> <leader>e :e ./vim/.vimrc<cr>
-        nmap <silent> <leader>ep :e ./vim/.vimrc.plugins<cr>
+        nmap <silent> <leader>e :e ~/.vim/.vimrc<cr>
+        nmap <silent> <leader>ep :e ~/.vim/.vimrc.plugins<cr>
     endif
 else
     nmap <silent> <leader>e :e ~/.vimrc<cr>
