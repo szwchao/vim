@@ -1,10 +1,5 @@
 #!/bin/bash
 
-function get_platform_type()
-{
-    echo $(uname)
-}
-
 function clone_repo()
 {
     rm -rf ~/.vim_bak
@@ -99,12 +94,9 @@ function install_vim_on_linux()
 
 function main()
 {
-    type=`get_platform_type`
-    echo "platform type: "${type}
-
-    if [ ${type} == "Darwin" ]; then 
+    if [ "$(uname)" == "Darwin" ]; then
         install_vim_on_mac
-    elif [ ${type} == "Linux" ]; then
+    elif [ "$(uname)" == "Darwin" ]; then
         install_vim_on_linux
     else
         echo "not support platform type: "${type}
