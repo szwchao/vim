@@ -41,18 +41,10 @@ set helplang=cn
 "-------------------------------------------------------------------------------
 " 插件及设置 {{{2
 "-------------------------------------------------------------------------------
-if g:platform == 'win'
-    if has('nvim')
-        source ~/AppData/Local/nvim/_vimrc.plugins
-    else
-        set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME
-        source ~/.vim/.vimrc.plugins
-    endif
-else
-    if filereadable(expand("~/.vim/.vimrc.plugins"))
-        source ~/.vim/.vimrc.plugins
-    endif
+if (!has('nvim'))
+    set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME
 endif
+source ~/.vim/.vimrc.plugins
 
 "-------------------------------------------------------------------------------
 " 字体 {{{2
@@ -73,6 +65,8 @@ set termguicolors
 set background=dark
 try
     colorscheme mycolor
+    "colorscheme solarized
+    "colorscheme OceanicNext
 catch
 endtry
 
@@ -80,18 +74,20 @@ endtry
 " 一般设置 {{{2
 "-------------------------------------------------------------------------------
 let mapleader = ","                       " 设置mapleader为,键
-if g:platform == 'win'
+if g:platform == 'win' && !has('nvim')
     source $VIMRUNTIME/mswin.vim          " 加载mswin.vim
     unmap <C-A>
+    unmap <C-F>
     behave mswin
     set fileformat=dos                    " 文件格式为dos，否则记事本打开有黑框
 else
     exe 'inoremap <script> <C-V> <C-G>u' . paste#paste_cmd['i']
     exe 'vnoremap <script> <C-V> ' . paste#paste_cmd['v']
-    noremap <C-Q>		<C-V>
-    noremap <C-S>		:update<CR>
-    vnoremap <C-S>		<C-C>:update<CR>
-    inoremap <C-S>		<C-O>:update<CR>
+    noremap  <C-Q>  <C-V>
+    noremap  <C-S>  :update<CR>
+    vnoremap <C-S>  <C-C>:update<CR>
+    inoremap <C-S>  <C-O>:update<CR>
+    cnoremap <C-V>  <C-R>+
     set fileformat=unix
 endif
 set nocompatible                          " 去掉关vi一致性模式，避免以前版本的一些bug和局限
@@ -123,6 +119,8 @@ set autochdir                             " 自动设置目录为正在编辑的
 set hidden                                " 没有保存的缓冲区可以自动被隐藏
 set scrolloff=3                           " 光标离窗口上下边界的3行时会引起窗口滚动
 set noswapfile                            " 禁用swf交换文件
+set noautoread                            " 不自动加载外部修改的文件
+set noautowrite                           " 不自动加载外部修改的文件
 "set iskeyword+=-                         " 形如a-b的作为整词
 
 syntax on                                 " 打开语法高亮
@@ -167,7 +165,6 @@ set ai!                                   " 设置自动缩进
 "-------------------------------------------------------------------------------
 " 代码折叠 {{{2
 "-------------------------------------------------------------------------------
-"set foldmethod=syntax
 set foldmethod=indent
 set foldenable
 set foldlevel=100
@@ -213,9 +210,11 @@ autocmd BufWritePost * filet detect
 " 取消换行时自动添加注释符
 autocmd FileType * setl fo-=cro
 " tab长度
-autocmd FileType c,cpp,h set tabstop=2
+autocmd FileType c,cpp,h set tabstop=4
 " 缩进长度
-autocmd FileType c,cpp,h set shiftwidth=2
+autocmd FileType c,cpp,h set shiftwidth=4
+" c的折叠方式
+autocmd FileType c,cpp,h set foldmethod=syntax
 " help文件不隐藏||,**
 autocmd FileType help setl cole=0
 " help文件ESC退出
@@ -231,7 +230,8 @@ autocmd FileType python set foldmethod=indent
 " html和css文件的折叠方式
 autocmd FileType html,htmldjango,xml,css set foldmethod=indent
 " markdown 文件
-au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=markdown
+autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=markdown
+
 " 编程时超过80行提示
 "autocmd FileType c,cpp :match ErrorMsg /\%>80v.\+/
 " 关闭python的补全预览窗口
@@ -297,6 +297,11 @@ nmap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<cr><c-o>
 nmap <silent> gW "_yiw:s/\(\w\+\)\(\_W\+\)\(\%#\w\+\)/\3\2\1/<cr><c-o>
 "dp 删除光标所在单词并粘贴系统剪切板内容
 nmap <silent> dp "_ciw<C-r>*<ESC>
+nmap <silent> cp' "_ci'<C-r>*<ESC>
+nmap <silent> cp" "_ci"<C-r>*<ESC>
+nmap <silent> cp( "_ci(<C-r>*<ESC>
+nmap <silent> cp[ "_ci[<C-r>*<ESC>
+nmap <silent> cp{ "_ci{<C-r>*<ESC>
 " Y复制到行末
 nmap Y y$
 " 分为两行
@@ -309,18 +314,8 @@ nmap S :ToggleQuickfixWindow<CR>
 "-------------------------------------------------------------------------------
 " <Leader>相关 {{{2
 "-------------------------------------------------------------------------------
-if g:platform == 'win'
-    if has('nvim')
-        nmap <silent> <leader>e :e ~/AppData/Local/nvim/init.vim<cr>
-        nmap <silent> <leader>ep :e ~/AppData/Local/nvim/_vimrc.plugins<cr>
-    else
-        nmap <silent> <leader>e :e ~/.vim/.vimrc<cr>
-        nmap <silent> <leader>ep :e ~/.vim/.vimrc.plugins<cr>
-    endif
-else
-    nmap <silent> <leader>e :e ~/.vimrc<cr>
-    nmap <silent> <leader>ep :e ~/.vimrc.plugins<cr>
-endif
+nmap <silent> <leader>e :e ~/.vimrc<cr>
+nmap <silent> <leader>ep :e ~/.vim/.vimrc.plugins<cr>
 
 " 复制到系统剪贴板
 nmap <leader>y "*y
@@ -337,7 +332,7 @@ nmap <leader>o :silent !explorer %:p:h<CR>
 " 切换行号/相对行号
 nmap <leader>l :ToggleNuMode<CR>
 
-exe "nmap <leader>ww :<C-u>CtrlP " . "c:\\personal\\My\\blog\\source\\_posts\\" . "<CR>"
+exe "nmap <leader>ww :<C-u>CtrlP " . "d:\\My\\wiki\\source\\" . "<CR>"
 " 列出当前单词所在行并提供跳转
 nmap <Leader>f [I:let nr = input("跳转到：")<Bar>exe "normal " . nr ."[\t"<CR>
 
