@@ -25,7 +25,7 @@ Plug 'bling/vim-airline'
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 " 启动画面
-Plug 'mhinz/vim-startify'
+"Plug 'mhinz/vim-startify'
 " 可视化书签
 Plug 'MattesGroeger/vim-bookmarks'
 " 显示搜索数目
@@ -39,10 +39,10 @@ Plug 'scrooloose/nerdcommenter'
 " 文件浏览
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 " 自动补全
-"Plug 'Shougo/neocomplete.vim', {'for': 'python'}
-Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+Plug 'Shougo/neocomplete.vim'
 " jedi python补全
-"Plug 'davidhalter/jedi-vim', {'tag': '0.9.0', 'for': 'python'}
+Plug 'davidhalter/jedi-vim', {'tag': '0.9.0', 'for': 'python'}
+"Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
 " 代码模板
 Plug 'Shougo/neosnippet.vim'
 Plug 'szwchao/neosnippet-snippets'
@@ -93,6 +93,7 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'nfvs/vim-perforce'
 " 异步执行
 Plug 'skywind3000/asyncrun.vim'
+Plug 'skywind3000/gutentags_plus'
 
 call plug#end()
 
@@ -159,8 +160,8 @@ if !exists('g:neocomplete#force_omni_input_patterns')
     let g:neocomplete#force_omni_input_patterns = {}
 endif
 let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
-let g:neocomplete#force_omni_input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
-let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+"let g:neocomplete#force_omni_input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
+"let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
 let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\%(\h\w*\)\?'
 
 " 处于文本模式的文件类型
@@ -374,7 +375,7 @@ let g:ctrlp_by_filename = 1
 " 改变匹配窗口的位置，结果的排列顺序，最小和最大高度:
 let g:ctrlp_match_window = 'bottom,order:ttb,results:50'
 " 使用该选项来设置自定义的根目录标记作为对默认标记(.hg, .svn, .bzr, and _darcs)的补充。自定义的标记具有优先权:
-let g:ctrlp_root_markers = ['.git', 'view.dat', '.svn']
+let g:ctrlp_root_markers = ['.git', '.p4ignore', '.svn']
 " 设置该选项为1将只显示在当前工作目录内的MRU文件
 "let g:ctrlp_mruf_relative = 1
 " 扩展
@@ -409,6 +410,8 @@ nmap <M-i> :CtrlPMdImg<CR>
 nmap <M-m> :CtrlPModified<CR>
 nmap <M-s> :CtrlPLauncher<CR>
 
+call ctrlp_bdelete#init()
+
 "-------------------------------------------------------------------------------
 " vim-markdown {{{2
 " ------------------------------------------------------------------------------
@@ -429,7 +432,10 @@ let g:gitgutter_sign_modified_removed = "x"
 "highlight link GitGutterChangeDelete   DiffText
 
 let g:signify_vcs_list = ['git', 'perforce']
-
+let g:signify_vcs_cmds = {
+            \ 'git':      'git diff --no-color --no-ext-diff -U0 -- %f',
+            \ 'perforce': 'p4 diff -du0 %f',
+            \ }
 "-------------------------------------------------------------------------------
 " vim-bookmarks {{{2
 " ------------------------------------------------------------------------------
@@ -460,6 +466,8 @@ autocmd FileType markdown let g:indentLine_conceallevel = 0
 "-------------------------------------------------------------------------------
 " ale {{{2
 " ------------------------------------------------------------------------------
+" 对c, c++文件关闭lint
+let g:ale_linters = {'c': [], 'cpp': []}
 let g:ale_fixers = {
 \   'python': ['pylint', 'autopep8'],
 \}
@@ -476,7 +484,17 @@ nmap <silent> <F10> <Plug>(ale_previous)
 " vim-gutentags {{{2
 " ------------------------------------------------------------------------------
 "let g:gutentags_trace = 1
-let g:gutentags_modules = ['ctags', 'cscope']
+"let g:gutentags_modules = ['ctags', 'cscope']
+let g:gutentags_modules = []
+if executable('ctags')
+    let g:gutentags_modules += ['ctags']
+endif
+"if executable('cscope')
+    "let g:gutentags_modules += ['cscope']
+"endif
+if executable('gtags-cscope') && executable('gtags')
+    let g:gutentags_modules += ['gtags_cscope']
+endif
 let g:gutentags_cache_dir = expand('~/.cache/tags')
 "let g:gutentags_file_list_command = 'dir /B /S /A-D /ON'
 let g:gutentags_ctags_exclude = []
@@ -489,13 +507,23 @@ if g:platform == 'win'
                 \ '.hg': 'hg files',
                 \ },
                 \ }
+" 设置 ctags 的参数
+let g:gutentags_ctags_extra_args = []
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+
+" 使用 universal-ctags 的话需要下面这行，请反注释
+" let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
+
+" 禁止 gutentags 自动链接 gtags 数据库
+let g:gutentags_auto_add_gtags_cscope = 0
+
 endif
 
 "-------------------------------------------------------------------------------
 " asyncrun {{{2
 " ------------------------------------------------------------------------------
 " asyncrun
-let g:asyncrun_rootmarks = ['.git',] 
+let g:asyncrun_rootmarks = ['.git', '.p4ignore']
 let g:asyncrun_open = 15
 
 "-------------------------------------------------------------------------------
@@ -505,11 +533,14 @@ let g:asyncrun_open = 15
 "autocmd CursorHold * silent call CocActionAsync('highlight')
 "highlight default link CocHighlightText Underlined
 " Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+"nmap <silent> gd <Plug>(coc-definition)
+"nmap <silent> gy <Plug>(coc-type-definition)
+"nmap <silent> gi <Plug>(coc-implementation)
+"nmap <silent> gr <Plug>(coc-references)
 "autocmd FileType python CocDisable
+
+let Cscope_JumpError = 0 
+let Cscope_PopupMenu = 1 
 
 " }}}2
 " vim:fdm=marker:fmr={{{,}}} foldlevel=1:
